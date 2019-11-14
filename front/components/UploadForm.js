@@ -3,10 +3,13 @@ import styled from "styled-components";
 import ProfilePicture from "./ProfilePicture";
 import Textarea from "react-textarea-autosize";
 import { FaPlus } from "react-icons/fa";
+import usePost from "../hooks/usePost";
+import useUser from "../hooks/useUser";
 
 const Container = styled.div`
   width: 100%;
   max-height: 500px;
+  pointer-events: ${props => (props.isLoggedin ? null : "none")};
 `;
 
 const TitleContainer = styled.div`
@@ -24,7 +27,7 @@ const Title = styled.span`
   margin-left: 20px;
 `;
 
-const FormContainer = styled.div`
+const FormContainer = styled.form`
   width: 100%;
   min-height: 120px;
   border-bottom: 1px solid #e6ecf0;
@@ -102,14 +105,21 @@ const SubmitButton = styled.button`
 const UploadForm = () => {
   const [description, setDescription] = useState("");
   const [isAvailableUpload, setIsAvailableUpload] = useState(false);
+  const { onAddPost } = usePost();
+  const { user } = useUser();
 
   const onSubmit = useCallback(
     e => {
       e.preventDefault();
       if (description.length > 500) {
         alert("글자수가 너무 많아요.");
+        return;
       }
-      console.log(description);
+      if (!description || !description.trim()) {
+        return alert("글을 작성해주세요.");
+      }
+      onAddPost({ description });
+      setDescription("");
     },
     [description]
   );
@@ -119,9 +129,8 @@ const UploadForm = () => {
       const {
         target: { value }
       } = e;
-      console.log(value.length);
       setDescription(value);
-      if (value.length > 0) {
+      if (value.trim()) {
         setIsAvailableUpload(true);
       } else if (value.length === 0 || value.length > 500) {
         setIsAvailableUpload(false);
@@ -131,7 +140,7 @@ const UploadForm = () => {
   );
 
   return (
-    <Container>
+    <Container isLoggedin={user.isLoggedin}>
       <TitleContainer>
         <Title>Home</Title>
       </TitleContainer>
@@ -139,7 +148,12 @@ const UploadForm = () => {
         <FormUpSideContainer>
           <ProfilePicture />
           <UploadInput
-            placeholder="오늘은 어떤 멋진일이 있었나요?"
+            placeholder={`${
+              user.isLoggedin
+                ? "오늘은 어떤 멋진일이 있었나요?"
+                : "로그인 후 사용해주세요."
+            }`}
+            disabled={user.isLoggedin ? false : true}
             onChange={onChangeDescription}
             value={description}
           />
@@ -149,8 +163,7 @@ const UploadForm = () => {
           <IconContainer>
             <FaPlus />
           </IconContainer>
-
-          <SubmitButton isAvailableUpload={isAvailableUpload}>
+          <SubmitButton isAvailableUpload={isAvailableUpload} type="submit">
             업로드
           </SubmitButton>
         </FormUpSideContainer>

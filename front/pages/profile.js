@@ -35,7 +35,7 @@ const ContentBox = styled.div`
 
 const FollowBox = styled.div``;
 
-const profile = () => {
+const Profile = () => {
   return (
     <Container>
       <GridContainer>
@@ -49,4 +49,4 @@ const profile = () => {
   );
 };
 
-export default profile;
+export default Profile;

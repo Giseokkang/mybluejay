@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
 import { CHARACTER_COLOR, SKYBLUE, BORDER_COLOR } from "../utils/colors";
+import useUser from "../hooks/useUser";
 
 const dummy = {
   user: {
@@ -144,7 +145,9 @@ const Tab = styled.div`
 `;
 
 const ProfileCard = () => {
-  return (
+  const { user } = useUser();
+
+  return user.isLoggedin ? (
     <Container>
       <StickyContainer>
         <Link href="/">
@@ -154,7 +157,7 @@ const ProfileCard = () => {
             </BackIconContainer>
           </a>
         </Link>
-        <Name>{dummy.user.name}</Name>
+        <Name>{user.myInformation.nickname}</Name>
       </StickyContainer>
       <ProfileBackground>
         <ProfileImage></ProfileImage>
@@ -163,11 +166,11 @@ const ProfileCard = () => {
         <EditBtn>프로필수정</EditBtn>
       </EditContainer>
       <InformationContainer>
-        <Name>{dummy.user.name}</Name>
-        <SignUpDate>가입일 : {dummy.user.createAt}</SignUpDate>
+        <Name>{user.myInformation.nickname}</Name>
+        <SignUpDate>가입일 : {user.myInformation.createdAt}</SignUpDate>
         <FollowContainer>
-          <Follow>{dummy.user.following} 팔로잉</Follow>
-          <Follow>{dummy.user.follower} 팔로워</Follow>
+          <Follow>{user.myInformation.following} 팔로잉</Follow>
+          <Follow>{user.myInformation.follower} 팔로워</Follow>
         </FollowContainer>
       </InformationContainer>
       <TabsContainer>
@@ -176,6 +179,8 @@ const ProfileCard = () => {
         <Tab>마음에 들어요</Tab>
       </TabsContainer>
     </Container>
+  ) : (
+    <span>로그인 후 사용해 주세요</span>
   );
 };
 

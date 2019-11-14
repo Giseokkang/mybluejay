@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
+import { useRouter } from "next/router";
 import styled, { keyframes } from "styled-components";
-import UploadForm from "../components/UploadForm";
-import PostingCard from "../components/PostingCard";
-import { BORDER_COLOR } from "../utils/colors";
-import usePost from "../hooks/usePost";
-import usePopUp from "../hooks/usePopUp";
-import PopUp from "../components/PopUp";
+import usePost from "../../hooks/usePost";
+import usePopUp from "../../hooks/usePopUp";
+import PopUp from "../../components/PopUp";
+import PostingCard from "../../components/PostingCard";
+import { BORDER_COLOR } from "../../utils/colors";
 
 const fadeIn = keyframes`
   from{
@@ -46,16 +46,19 @@ const PostingBox = styled.div`
 
 const FollowBox = styled.div``;
 
-const home = () => {
+const PostDetail = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
   const {
-    onLoadPosts,
-    post: { mainPosts }
+    onLoadPostDetail,
+    post: { post }
   } = usePost();
 
   const { isOnPopUp } = usePopUp();
 
   useEffect(() => {
-    onLoadPosts();
+    onLoadPostDetail(id);
   }, []);
 
   return (
@@ -65,20 +68,17 @@ const home = () => {
         <GridContainer>
           <MenuBox />
           <ContentBox>
-            <UploadForm></UploadForm>
             <PostingBox>
-              {mainPosts &&
-                mainPosts.length > 0 &&
-                mainPosts.map(post => (
-                  <PostingCard
-                    key={post.id}
-                    id={post.id}
-                    userId={post.UserId}
-                    nickname={post.User.nickname}
-                    content={post.content}
-                    createdAt={post.createdAt}
-                  ></PostingCard>
-                ))}
+              {post && (
+                <PostingCard
+                  key={post.id}
+                  id={post.id}
+                  userId={post.UserId}
+                  nickname={post.User.nickname}
+                  content={post.content}
+                  createdAt={post.createdAt}
+                ></PostingCard>
+              )}
             </PostingBox>
           </ContentBox>
           <FollowBox />
@@ -88,4 +88,4 @@ const home = () => {
   );
 };
 
-export default home;
+export default PostDetail;

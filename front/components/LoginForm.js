@@ -1,8 +1,11 @@
 import React, { useState, useCallback } from "react";
 import Link from "next/link";
+import Router from "next/router";
 import styled from "styled-components";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { useInput } from "../utils/useInput";
+import useMembers from "../hooks/useMembers";
+import useUser from "../hooks/useUser";
 
 const Container = styled.div`
   width: 30%;
@@ -112,10 +115,12 @@ const LoginForm = () => {
   const [email, onChangeEmail] = useInput("");
   const [password, onChangePassword] = useInput("");
 
+  const { onLogInRequest } = useUser();
+
   const onSubmit = useCallback(
     e => {
       e.preventDefault();
-      console.log(email, password);
+      onLogInRequest({ email, password });
     },
     [email, password]
   );

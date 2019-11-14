@@ -1,18 +1,23 @@
-import React, { Children } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import Link from "next/link";
 import { FaSearch, FaHome } from "react-icons/fa";
+import { logIn } from "../reducers/user";
+import useUser from "../hooks/useUser";
+import usePopUp from "../hooks/usePopUp";
 
 const Container = styled.div`
   width: 100%;
   height: 77px;
+  position: sticky;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid rgba(var(--b6a, 219, 219, 219), 1);
   transition: height 0.2s ease-in-out;
-  position: sticky;
+  opacity: ${props => (props.isOnPopUp ? 0.2 : 1)};
+  pointer-events: ${props => (props.isOnPopUp ? "none" : null)};
 `;
 
 const ItemsContainer = styled.div`
@@ -94,48 +99,69 @@ const SearchIconContainer = styled.div`
   color: #70a1ff;
 `;
 
-const AppLayout = ({ children }) => (
-  <>
-    <Container>
-      <ItemsContainer>
-        <LinkContainer>
+const AppLayout = ({ children }) => {
+  const { user, onLogOutRequest, onLoadUserRequest } = useUser();
+  const { isOnPopUp } = usePopUp();
+
+  useEffect(() => {
+    if (!user.myInformation) {
+      onLoadUserRequest();
+    }
+  }, []);
+
+  return (
+    <>
+      <Container isOnPopUp={isOnPopUp}>
+        <ItemsContainer>
           <Link href="/">
-            <a>
-              <FaHome />
-            </a>
+            <LinkContainer>
+              <a>
+                <FaHome />
+              </a>
+            </LinkContainer>
           </Link>
-        </LinkContainer>
-        <LinkContainer>
           <Link href="/profile">
-            <a>Profile</a>
+            <LinkContainer>
+              <a>Profile</a>
+            </LinkContainer>
           </Link>
-        </LinkContainer>
-      </ItemsContainer>
-      <SearchForm>
-        <SearchBar tpye="text" placeholder="Search..." />
+        </ItemsContainer>
+        <SearchForm>
+          <SearchBar tpye="text" placeholder="Search..." />
 
-        <SearchIconContainer>
-          <FaSearch></FaSearch>
-        </SearchIconContainer>
-      </SearchForm>
+          <SearchIconContainer>
+            <FaSearch></FaSearch>
+          </SearchIconContainer>
+        </SearchForm>
 
-      <BtnContainer>
-        <Btn backgroundColor="#70a1ff">
-          <Link href="/signup">
-            <a>Sign Up</a>
-          </Link>
-        </Btn>
-        <Btn backgroundColor="#2ed573">
-          <Link href="/login">
-            <a>Login</a>
-          </Link>
-        </Btn>
-      </BtnContainer>
-    </Container>
-    {children}
-  </>
-);
+        <BtnContainer>
+          {user && user.isLoggedin ? (
+            <Link href="/">
+              <Btn backgroundColor="#70a1ff" onClick={() => onLogOutRequest()}>
+                <a>Log out</a>
+              </Btn>
+            </Link>
+          ) : (
+            <>
+              <Link href="/signup">
+                <Btn backgroundColor="#70a1ff">
+                  <a>Sign Up</a>
+                </Btn>
+              </Link>
 
+              <Link href="/login">
+                <Btn backgroundColor="#2ed573">
+                  <a>Login</a>
+                </Btn>
+              </Link>
+            </>
+          )}
+        </BtnContainer>
+      </Container>
+      {children}
+    </>
+  );
+};
 AppLayout.propTypes = {
   children: PropTypes.node
 };

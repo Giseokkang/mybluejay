@@ -2,6 +2,9 @@ import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { useInput } from "../utils/useInput";
+import useMembers from "../hooks/useMembers";
+import useUser from "../hooks/useUser";
+import Router from "next/router";
 
 const Container = styled.div`
   width: 30%;
@@ -120,9 +123,13 @@ const SignUpForm = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [onPasswordErrorMessage, setOnPasswordErrorMessage] = useState(false);
 
+  const { onLogInRequest, user } = useUser();
+  const { onSignUpRequest, members } = useMembers();
+
   const onSubmit = useCallback(
     e => {
       e.preventDefault();
+
       if (!isSamePassword) {
         alert("패스워드가 다릅니다.");
         return;
@@ -130,7 +137,11 @@ const SignUpForm = () => {
         alert("약관에 동의해 주세요.");
         return;
       } else {
-        console.log(nickname, email, password);
+        onSignUpRequest({
+          nickname,
+          email,
+          password
+        });
       }
     },
     [nickname, email, password, isSamePassword, isChecked]
