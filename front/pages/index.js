@@ -6,6 +6,7 @@ import { BORDER_COLOR } from "../utils/colors";
 import usePost from "../hooks/usePost";
 import usePopUp from "../hooks/usePopUp";
 import PopUp from "../components/PopUp";
+import { useRouter } from "next/router";
 
 const fadeIn = keyframes`
   from{
@@ -46,13 +47,14 @@ const PostingBox = styled.div`
 
 const FollowBox = styled.div``;
 
-const home = () => {
+const Home = () => {
   const {
     onLoadPosts,
     post: { mainPosts }
   } = usePost();
 
   const { isOnPopUp } = usePopUp();
+  const router = useRouter();
 
   useEffect(() => {
     onLoadPosts();
@@ -88,4 +90,4 @@ const home = () => {
   );
 };
 
-export default home;
+export default Home;

@@ -20,7 +20,10 @@ import {
   deletePostFailure,
   loadPostRequest,
   loadPostSuccess,
-  loadPostFailure
+  loadPostFailure,
+  loadHashtagPostsSuccess,
+  loadHashtagPostsFailure,
+  loadHashtagPostsRequest
 } from "../reducers/post";
 import axios from "axios";
 
@@ -84,6 +87,25 @@ function* watchLoadPost() {
   yield takeLatest(loadPostRequest().type, loadPost);
 }
 
+function loadHashtagPostsAPI(tag) {
+  // API 전송
+  return axios.get(`/api/hashtag/${tag}`);
+}
+
+function* loadHashtagPosts(action) {
+  try {
+    const result = yield call(loadHashtagPostsAPI, action.payload);
+    yield put(loadHashtagPostsSuccess(result.data));
+  } catch (e) {
+    console.log(e);
+    yield put(loadHashtagPostsFailure(e));
+  }
+}
+
+function* watchLoadHashtagPosts() {
+  yield takeLatest(loadHashtagPostsRequest().type, loadHashtagPosts);
+}
+
 function deletePostAPI(id) {
   // API 전송
   return axios.post(`/api/post/${id}/delete`, {
@@ -110,6 +132,7 @@ export default function* postsSaga() {
     fork(watchAddPost),
     fork(watchLoadMainPosts),
     fork(watchDeletePost),
-    fork(watchLoadPost)
+    fork(watchLoadPost),
+    fork(watchLoadHashtagPosts)
   ]);
 }

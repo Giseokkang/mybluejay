@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import ProfileCard from "../components/ProfileCard";
+import { useRouter } from "next/router";
+import useUser from "../hooks/useUser";
+import useOthers from "../hooks/useOthers";
 
 const fadeIn = keyframes`
   from{
@@ -36,12 +39,35 @@ const ContentBox = styled.div`
 const FollowBox = styled.div``;
 
 const Profile = () => {
+  const {
+    pathname,
+    query: { id }
+  } = useRouter();
+  const { user } = useUser();
+  const { others, onLoadOtherRequest } = useOthers();
+
+  const isMine = pathname === "/profile";
+
+  useEffect(() => {
+    if (id) {
+      onLoadOtherRequest(decodeURIComponent(id));
+    }
+  }, []);
+
   return (
     <Container>
       <GridContainer>
         <MenuBox />
         <ContentBox>
-          <ProfileCard />
+          {!id ? (
+            user.isLoggedin ? (
+              <ProfileCard info={user.myInformation} />
+            ) : (
+              <span>로그인 후 이용해주세요.</span>
+            )
+          ) : (
+            <ProfileCard info={others.information} />
+          )}
         </ContentBox>
         <FollowBox />
       </GridContainer>

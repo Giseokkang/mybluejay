@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
 import { CHARACTER_COLOR, SKYBLUE, BORDER_COLOR } from "../utils/colors";
 import useUser from "../hooks/useUser";
+import useOthers from "../hooks/useOthers";
+import { useRouter } from "next/router";
+import PostingCard from "./PostingCard";
 
 const dummy = {
   user: {
@@ -144,43 +147,61 @@ const Tab = styled.div`
   }
 `;
 
-const ProfileCard = () => {
-  const { user } = useUser();
+const ProfileCard = ({ info }) => {
+  const { pathname } = useRouter();
 
-  return user.isLoggedin ? (
-    <Container>
-      <StickyContainer>
-        <Link href="/">
-          <a>
-            <BackIconContainer>
-              <FaArrowLeft />
-            </BackIconContainer>
-          </a>
-        </Link>
-        <Name>{user.myInformation.nickname}</Name>
-      </StickyContainer>
-      <ProfileBackground>
-        <ProfileImage></ProfileImage>
-      </ProfileBackground>
-      <EditContainer>
-        <EditBtn>프로필수정</EditBtn>
-      </EditContainer>
-      <InformationContainer>
-        <Name>{user.myInformation.nickname}</Name>
-        <SignUpDate>가입일 : {user.myInformation.createdAt}</SignUpDate>
-        <FollowContainer>
-          <Follow>{user.myInformation.following} 팔로잉</Follow>
-          <Follow>{user.myInformation.follower} 팔로워</Follow>
-        </FollowContainer>
-      </InformationContainer>
-      <TabsContainer>
-        <Tab>트윗</Tab>
-        <Tab>트윗 및 답글</Tab>
-        <Tab>마음에 들어요</Tab>
-      </TabsContainer>
-    </Container>
-  ) : (
-    <span>로그인 후 사용해 주세요</span>
+  const isMine = pathname === "/profile";
+
+  return (
+    info && (
+      <Container>
+        <StickyContainer>
+          <Link href="/">
+            <a>
+              <BackIconContainer>
+                <FaArrowLeft />
+              </BackIconContainer>
+            </a>
+          </Link>
+          <Name>{info.nickname}</Name>
+        </StickyContainer>
+        <ProfileBackground>
+          <ProfileImage></ProfileImage>
+        </ProfileBackground>
+        <EditContainer>{isMine && <EditBtn>프로필수정</EditBtn>}</EditContainer>
+        <InformationContainer>
+          <Name>{info.nickname}</Name>
+          <SignUpDate>가입일 :{info.createdAt}</SignUpDate>
+          <FollowContainer>
+            <Follow>
+              {info.following}
+              팔로잉
+            </Follow>
+            <Follow>
+              {info.follower}
+              팔로워
+            </Follow>
+          </FollowContainer>
+        </InformationContainer>
+        <TabsContainer>
+          <Tab>트윗</Tab>
+          <Tab>트윗 및 답글</Tab>
+          <Tab>마음에 들어요</Tab>
+        </TabsContainer>
+        // 여기에 탭 목록들
+        {/* {info &&
+          info.Posts.map(post =>
+            // <PostingCard
+            //   id={post.id}
+            //   userId={post.userId}
+            //   nickname={post.nickname}
+            //   createdAt={post.createdAt}
+            //   imageUrl={post.imageUrl}
+            //   content={post.content}
+            // ></PostingCard>
+          )} */}
+      </Container>
+    )
   );
 };
 

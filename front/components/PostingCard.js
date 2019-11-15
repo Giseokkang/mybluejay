@@ -6,6 +6,7 @@ import Link from "next/link";
 import usePost from "../hooks/usePost";
 import usePopUp from "../hooks/usePopUp";
 import PopUp from "../components/PopUp";
+import useUser from "../hooks/useUser";
 
 // const dummy = {
 //   user: {
@@ -26,7 +27,6 @@ const Container = styled.div`
   border-bottom: 10px solid #e6ecf0;
   padding: 10px;
   cursor: pointer;
-
   &:hover {
     background-color: #f4f8fa;
   }
@@ -102,6 +102,7 @@ const Description = styled.span`
   width: 85%;
   padding-left: 10px;
   margin-top: 10px;
+  overflow: auto;
 `;
 
 const ALink = styled.a`
@@ -141,13 +142,14 @@ const PostingCard = ({
 }) => {
   const { onDeletePost } = usePost();
   const { isOnPopUp, turnOnPopUp, turnOffPopUp } = usePopUp();
+  const { user } = useUser();
 
   return (
     <>
       <Link href="/post/[id]" as={`/post/${id}`} key={id}>
         <Container>
           <PictureContainer>
-            <Link href={`/profile/${nickname}`}>
+            <Link href="/profile/[id]" as={`/profile/${nickname}`}>
               <a>
                 <ProfilePicture />
               </a>
@@ -163,14 +165,18 @@ const PostingCard = ({
                 </Link>
                 <Time>{createdAt}</Time>
               </div>
-              <DeleteBtn
-                onClick={e => {
-                  e.stopPropagation();
-                  turnOnPopUp(id);
-                }}
-              >
-                <FaTrashAlt />
-              </DeleteBtn>
+              {user.myInformation.id &&
+                userId &&
+                user.myInformation.id === userId && (
+                  <DeleteBtn
+                    onClick={e => {
+                      e.stopPropagation();
+                      turnOnPopUp(id);
+                    }}
+                  >
+                    <FaTrashAlt />
+                  </DeleteBtn>
+                )}
             </PostingInfomationContainer>
           </UpsideContainer>
           <ContentContainer>

@@ -6,7 +6,8 @@ import {
   updatePostRequest,
   likePostRequest,
   loadMainPostsRequest,
-  loadPostRequest
+  loadPostRequest,
+  loadHashtagPostsRequest
 } from "../reducers/post";
 
 const usePost = () => {
@@ -33,7 +34,11 @@ const usePost = () => {
     dispatch
   ]);
 
-  const onLikePost = useCallback(() => likePostRequest(), [dispatch]);
+  const onLikePost = useCallback(() => dispatch(likePostRequest()), [dispatch]);
+
+  const onLoadHashtagPosts = useCallback(tag =>
+    dispatch(loadHashtagPostsRequest(tag), [dispatch])
+  );
 
   return {
     post,
@@ -42,7 +47,8 @@ const usePost = () => {
     onAddPost,
     onDeletePost,
     onUpdatePost,
-    onLikePost
+    onLikePost,
+    onLoadHashtagPosts
   };
 };
 

@@ -6,6 +6,15 @@ import usePopUp from "../../hooks/usePopUp";
 import PopUp from "../../components/PopUp";
 import PostingCard from "../../components/PostingCard";
 import { BORDER_COLOR } from "../../utils/colors";
+import Comment from "../../components/Comment";
+import CommentUpload from "../../components/CommentUpload";
+
+const commentDummy = {
+  id: 0,
+  nickname: "닉네임",
+  content: "더미댓글",
+  createdAt: "2018년"
+};
 
 const fadeIn = keyframes`
   from{
@@ -39,7 +48,7 @@ const ContentBox = styled.div`
   border-left: 1px solid ${BORDER_COLOR};
 `;
 
-const PostingBox = styled.div`
+const CommentBox = styled.div`
   overflow: scroll;
   height: calc(100vh - 247px);
 `;
@@ -68,18 +77,20 @@ const PostDetail = () => {
         <GridContainer>
           <MenuBox />
           <ContentBox>
-            <PostingBox>
-              {post && (
-                <PostingCard
-                  key={post.id}
-                  id={post.id}
-                  userId={post.UserId}
-                  nickname={post.User.nickname}
-                  content={post.content}
-                  createdAt={post.createdAt}
-                ></PostingCard>
-              )}
-            </PostingBox>
+            {post && (
+              <PostingCard
+                key={post.id}
+                id={post.id}
+                userId={post.UserId}
+                nickname={post.User.nickname}
+                content={post.content}
+                createdAt={post.createdAt}
+              ></PostingCard>
+            )}
+            <CommentBox>
+              <CommentUpload />
+              <Comment />
+            </CommentBox>
           </ContentBox>
           <FollowBox />
         </GridContainer>

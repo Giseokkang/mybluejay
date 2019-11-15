@@ -121,14 +121,17 @@ export const loadUserPostsFailure = e => ({
   payload: e
 });
 
-export const loadHashtagPostsRequest = () => ({
-  type: LOAD_HASHTAG_POSTS_REQUEST
+export const loadHashtagPostsRequest = id => ({
+  type: LOAD_HASHTAG_POSTS_REQUEST,
+  payload: id
 });
-export const loadHashtagPostsSuccess = () => ({
-  type: LOAD_HASHTAG_POSTS_SUCCESS
+export const loadHashtagPostsSuccess = posts => ({
+  type: LOAD_HASHTAG_POSTS_SUCCESS,
+  payload: posts
 });
-export const loadHashtagPostsFailure = () => ({
-  type: LOAD_HASHTAG_POSTS_FAILURE
+export const loadHashtagPostsFailure = e => ({
+  type: LOAD_HASHTAG_POSTS_FAILURE,
+  payload: e
 });
 
 export const uploadImageRequest = () => ({ type: UPLOAD_IMAGE_REQUEST });
@@ -159,20 +162,6 @@ const initialState = {
   isUploading: false
 };
 
-const shape = {
-  creator: {
-    name: "",
-    id: ""
-  },
-  content: {
-    id: "",
-    imagePath: "",
-    description: "",
-    createAt: "",
-    like: 0
-  }
-};
-
 // Reducer
 
 const post = (state = initialState, action) => {
@@ -201,7 +190,7 @@ const post = (state = initialState, action) => {
     case LOAD_HASHTAG_POSTS_REQUEST:
       return { ...state };
     case LOAD_HASHTAG_POSTS_SUCCESS:
-      return { ...state };
+      return { ...state, mainPosts: action.payload };
     case LOAD_HASHTAG_POSTS_FAILURE:
       return { ...state, errorMessage: action.payload };
 

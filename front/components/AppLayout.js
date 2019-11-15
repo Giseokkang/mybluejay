@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import Link from "next/link";
@@ -6,6 +6,8 @@ import { FaSearch, FaHome } from "react-icons/fa";
 import { logIn } from "../reducers/user";
 import useUser from "../hooks/useUser";
 import usePopUp from "../hooks/usePopUp";
+import usePost from "../hooks/usePost";
+import router from "next/router";
 
 const Container = styled.div`
   width: 100%;
@@ -103,11 +105,25 @@ const AppLayout = ({ children }) => {
   const { user, onLogOutRequest, onLoadUserRequest } = useUser();
   const { isOnPopUp } = usePopUp();
 
+  const [term, setTerm] = useState("");
+
   useEffect(() => {
-    if (!user.myInformation) {
+    if (!user.myInformation.id) {
       onLoadUserRequest();
     }
   }, []);
+
+  const searchOnSubmit = useCallback(e => {
+    e.preventDefault();
+    router.push(`/hashtag/${term.trim()}`);
+  });
+
+  const searchOnChange = useCallback(e => {
+    const {
+      target: { value }
+    } = e;
+    setTerm(value);
+  });
 
   return (
     <>
@@ -126,8 +142,12 @@ const AppLayout = ({ children }) => {
             </LinkContainer>
           </Link>
         </ItemsContainer>
-        <SearchForm>
-          <SearchBar tpye="text" placeholder="Search..." />
+        <SearchForm onSubmit={searchOnSubmit}>
+          <SearchBar
+            type="text"
+            placeholder="Search..."
+            onChange={searchOnChange}
+          />
 
           <SearchIconContainer>
             <FaSearch></FaSearch>

@@ -74,7 +74,7 @@ const initialState = {
   isLoggingOut: false, // 로그 아웃 중
   isLoggingIn: false, // 로그인 중
   loginErrorReason: "", // 로그인 실패 에러
-  myInformation: null, // 내 정보
+  myInformation: {}, // 내 정보
   followingList: [], // 팔로잉 목록
   followerList: [], // 팔로워 목록
   peopleInformation: null // 다른 회원 정보
@@ -99,7 +99,7 @@ const user = (state = initialState, action) => {
         ...state,
         loginErrorReason: action.payload,
         isLoggingIn: false,
-        myInformation: null
+        myInformation: {}
       };
 
     case LOG_OUT_REQUEST:
@@ -108,7 +108,7 @@ const user = (state = initialState, action) => {
       return {
         ...state,
         isLoggedin: false,
-        myInformation: null,
+        myInformation: {},
         isLoggingOut: false
       };
     case LOG_OUT_FAILURE:
@@ -132,7 +132,7 @@ const user = (state = initialState, action) => {
         ...state,
         loginErrorReason: action.payload,
         isLoggingIn: false,
-        myInformation: null
+        myInformation: {}
       };
     default:
       return state;
