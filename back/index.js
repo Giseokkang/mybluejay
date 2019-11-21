@@ -12,6 +12,7 @@ import routes from "./routes";
 import userRouter from "./router/userRouter";
 import postRouter from "./router/postRouter";
 import hashtagRouter from "./router/hashtagRouter";
+import commentRouter from "./router/CommentRouter";
 
 dotenv.config();
 
@@ -20,14 +21,19 @@ db.sequelize.sync();
 passportConfig();
 
 app.use(helmet());
-app.use(cookieParser());
 app.use(morgan("dev"));
+app.use("/", express.static("uploads"));
 app.use(
   cors({
     origin: true,
     credentials: true
   })
 );
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 app.use(
   expressSession({
     resave: false,
@@ -43,11 +49,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 app.use(routes.user, userRouter);
 app.use(routes.post, postRouter);
 app.use(routes.hashtag, hashtagRouter);
+app.use(routes.comment, commentRouter);
 
 export default app;

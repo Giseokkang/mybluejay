@@ -13,10 +13,15 @@ const WITHDRAW = "/withdraw";
 
 const POST = "/api/post";
 const GET_POSTS = "/posts";
+const GET_USER_POSTS = "/:id/posts";
 const UPLOAD_POST = "/upload";
 const POST_DETAIL = "/:id";
 const EDIT_POST = "/:id/edit";
 const DELETE_POST = "/:id/delete";
+const LIKE_POST = "/:id/like";
+const UNLIKE_POST = "/:id/unlike";
+
+const UPLOAD_IMAGES = "/images/upload";
 
 // HASHTAG
 
@@ -24,6 +29,14 @@ const HASHTAG = "/api/hashtag";
 const HASHTAG_POSTS = "/:id";
 
 // Comment
+
+const COMMENT = "/api/comment";
+const GET_COMMENTS = "/:id";
+const UPLOAD_COMMENT = "/upload";
+const DELETE_COMMENT = "/:id/delete";
+const EDIT_COMMENT = "/:id/edit";
+
+// Images
 
 const routes = {
   user: USER,
@@ -45,8 +58,15 @@ const routes = {
   userWithdraw: WITHDRAW,
 
   post: POST,
+  getUserPosts: id => {
+    if (id) {
+      return `/post/${id}/posts`;
+    }
+    return GET_USER_POSTS;
+  },
   getPosts: GET_POSTS,
   uploadPost: UPLOAD_POST,
+  uploadImages: UPLOAD_IMAGES,
   postDetail: id => {
     if (id) {
       return `/post/${id}`;
@@ -65,12 +85,44 @@ const routes = {
     }
     return DELETE_POST;
   },
+  likePost: id => {
+    if (id) {
+      return `/post/${id}/like`;
+    }
+    return LIKE_POST;
+  },
+  unLikePost: id => {
+    if (id) {
+      return `/post/${id}/unlike`;
+    }
+    return UNLIKE_POST;
+  },
   hashtag: HASHTAG,
   hashtagPosts: id => {
     if (id) {
-      return `/${id}`;
+      return `/hashtag/${id}`;
     }
     return HASHTAG_POSTS;
+  },
+  comment: COMMENT,
+  getComments: id => {
+    if (id) {
+      return `/comment/${id}`;
+    }
+    return GET_COMMENTS;
+  },
+  uploadComment: UPLOAD_COMMENT,
+  deleteComment: id => {
+    if (id) {
+      return `/comment/${id}/delete`;
+    }
+    return DELETE_COMMENT;
+  },
+  editComment: id => {
+    if (id) {
+      return `/comment/${id}/edit`;
+    }
+    return EDIT_COMMENT;
   }
 };
 

@@ -100,6 +100,14 @@ export const postUserSignUp = async (req, res) => {
       res.status(400);
       res.send("이미 존재하는 아이디입니다.");
     }
+    const exNickname = await db.User.findOne({
+      where: {
+        nickname: req.body.nickname
+      }
+    });
+    if (exNickname) {
+      return res.status(400).send("이미 존재하는 닉네임입니다.");
+    }
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
     const newUser = await db.User.create({
       nickname: req.body.nickname,

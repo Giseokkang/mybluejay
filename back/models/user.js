@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
       // 테이블명은 users
       nickname: {
         type: DataTypes.STRING(20), // 20글자 이하
-        allowNull: false // 필수
+        allowNull: false, // 필수
+        unique: true // 고유한 값
       },
       email: {
         type: DataTypes.STRING(20),

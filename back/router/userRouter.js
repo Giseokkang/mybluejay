@@ -11,8 +11,8 @@ import {
 
 const userRouter = express.Router();
 
-userRouter.get(routes.userDetail(), getUserDetail);
 userRouter.get("/", getUser);
+userRouter.get(routes.userDetail(), getUserDetail);
 
 userRouter.post(routes.userLogIn, postUserLogIn);
 userRouter.post(routes.userLogOut, postUserLogOut);
