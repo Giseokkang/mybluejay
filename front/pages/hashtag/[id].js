@@ -82,6 +82,7 @@ const Hashtag = () => {
                     nickname={post.User.nickname}
                     content={post.content}
                     createdAt={post.createdAt}
+                    Likers={post.Likers}
                   ></PostingCard>
                 ))}
             </PostingBox>

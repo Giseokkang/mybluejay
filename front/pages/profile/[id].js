@@ -12,10 +12,10 @@ const ProfileDetail = () => {
   const { others, onLoadOtherRequest } = useOthers();
 
   useEffect(() => {
-    onLoadOtherRequest(decodeURIComponent(id));
+    if (id) {
+      onLoadOtherRequest(decodeURIComponent(id));
+    }
   }, []);
-
-  console.log(others);
 
   return <Profile></Profile>;
 };

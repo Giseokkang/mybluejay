@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useRef } from "react";
 import styled from "styled-components";
 import ProfilePicture from "./ProfilePicture";
 import Textarea from "react-textarea-autosize";
 import { FaPlus } from "react-icons/fa";
 import usePost from "../hooks/usePost";
 import useUser from "../hooks/useUser";
+import { IoMdRemove } from "react-icons/io";
 
 const Container = styled.div`
   width: 100%;
@@ -81,6 +82,38 @@ const IconContainer = styled.div`
   }
 `;
 
+const UploadImageContainer = styled.div`
+  display: flex;
+  overflow: scroll;
+  width: 50%;
+`;
+
+const ImgContainer = styled.div`
+  position: relative;
+`;
+
+const Img = styled.img`
+  width: 150px;
+  margin-left: 5px;
+`;
+
+const ImageDeleteIconContainer = styled.div`
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  color: red;
+  font-size: 2px;
+  border: 1px solid red;
+  border-radius: 50%;
+  padding: 1px;
+  opacity: 0.7;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+    transform: scale(0.98);
+  }
+`;
+
 const SubmitButton = styled.button`
   position: absolute;
   background-color: #6fa1ff;
@@ -105,8 +138,14 @@ const SubmitButton = styled.button`
 const UploadForm = () => {
   const [description, setDescription] = useState("");
   const [isAvailableUpload, setIsAvailableUpload] = useState(false);
-  const { onAddPost } = usePost();
+  const {
+    onAddPost,
+    onUploadImage,
+    onDeleteImage,
+    post: { imagePaths }
+  } = usePost();
   const { user } = useUser();
+  const imageInput = useRef();
 
   const onSubmit = useCallback(
     e => {
@@ -118,10 +157,13 @@ const UploadForm = () => {
       if (!description || !description.trim()) {
         return alert("글을 작성해주세요.");
       }
-      onAddPost({ description });
+      const formData = new FormData();
+      imagePaths.forEach(i => formData.append("image", i));
+      formData.append("description", description);
+      onAddPost(formData);
       setDescription("");
     },
-    [description]
+    [description, imagePaths]
   );
 
   const onChangeDescription = useCallback(
@@ -139,12 +181,32 @@ const UploadForm = () => {
     [description]
   );
 
+  const onClickImageUpload = useCallback(() => {
+    imageInput.current.click();
+  }, [imageInput.current]);
+
+  const onChangeImages = useCallback(e => {
+    const imageFormData = new FormData();
+    [].forEach.call(e.target.files, f => {
+      imageFormData.append("image", f);
+    });
+
+    onUploadImage(imageFormData);
+  }, []);
+
+  const onClickDeleteImage = useCallback(
+    index => () => {
+      onDeleteImage(index);
+    },
+    []
+  );
+
   return (
     <Container isLoggedin={user.isLoggedin}>
       <TitleContainer>
         <Title>Home</Title>
       </TitleContainer>
-      <FormContainer onSubmit={onSubmit}>
+      <FormContainer onSubmit={onSubmit} encType="multipart/form-data">
         <FormUpSideContainer>
           <ProfilePicture />
           <UploadInput
@@ -160,13 +222,36 @@ const UploadForm = () => {
           <LimitCharacters color={description.length > 500 ? "red" : "black"}>
             {description.length} / 500
           </LimitCharacters>
-          <IconContainer>
+          <input
+            type="file"
+            multiple
+            hidden
+            ref={imageInput}
+            onChange={onChangeImages}
+          ></input>
+          <IconContainer onClick={onClickImageUpload}>
             <FaPlus />
           </IconContainer>
           <SubmitButton isAvailableUpload={isAvailableUpload} type="submit">
             업로드
           </SubmitButton>
         </FormUpSideContainer>
+        {imagePaths && imagePaths.length > 0 && (
+          <UploadImageContainer>
+            {imagePaths.map((path, i) => (
+              <ImgContainer key={path}>
+                <Img
+                  src={`http://localhost:8000/${path}`}
+                  style={{ width: "50px" }}
+                  alt={path}
+                />
+                <ImageDeleteIconContainer onClick={onClickDeleteImage(i)}>
+                  <IoMdRemove />
+                </ImageDeleteIconContainer>
+              </ImgContainer>
+            ))}
+          </UploadImageContainer>
+        )}
       </FormContainer>
     </Container>
   );

@@ -7,15 +7,8 @@ import useUser from "../hooks/useUser";
 import useOthers from "../hooks/useOthers";
 import { useRouter } from "next/router";
 import PostingCard from "./PostingCard";
-
-const dummy = {
-  user: {
-    name: "강기석",
-    createAt: "2018.06.08",
-    following: 3,
-    follower: 5
-  }
-};
+import Tabs from "./Tabs";
+import usePost from "../hooks/usePost";
 
 const Container = styled.div`
   display: flex;
@@ -25,10 +18,14 @@ const Container = styled.div`
 const StickyContainer = styled.div`
   width: 100%;
   position: sticky;
+  top: 0;
   height: 55px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  z-index: 9;
+  background-color: white;
+  border-bottom: 2px solid ${BORDER_COLOR};
 `;
 
 const BackIconContainer = styled.div`
@@ -123,32 +120,13 @@ const Follow = styled.span`
   margin-right: 10px;
 `;
 
-const TabsContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-  height: 55px;
-  margin-top: 20px;
-`;
-
-const Tab = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  color: ${CHARACTER_COLOR};
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  border-bottom: 1px solid ${BORDER_COLOR};
-
-  &:hover {
-    background-color: ${SKYBLUE};
-    color: white;
-  }
-`;
+const UserPostsContainer = styled.div``;
 
 const ProfileCard = ({ info }) => {
   const { pathname } = useRouter();
+  const {
+    post: { userPosts }
+  } = usePost();
 
   const isMine = pathname === "/profile";
 
@@ -183,23 +161,21 @@ const ProfileCard = ({ info }) => {
             </Follow>
           </FollowContainer>
         </InformationContainer>
-        <TabsContainer>
-          <Tab>트윗</Tab>
-          <Tab>트윗 및 답글</Tab>
-          <Tab>마음에 들어요</Tab>
-        </TabsContainer>
-        // 여기에 탭 목록들
-        {/* {info &&
-          info.Posts.map(post =>
-            // <PostingCard
-            //   id={post.id}
-            //   userId={post.userId}
-            //   nickname={post.nickname}
-            //   createdAt={post.createdAt}
-            //   imageUrl={post.imageUrl}
-            //   content={post.content}
-            // ></PostingCard>
-          )} */}
+        <Tabs></Tabs>
+        <UserPostsContainer>
+          {userPosts &&
+            userPosts.map(post => (
+              <PostingCard
+                id={post.id}
+                userId={post.userId}
+                nickname={post.User.nickname}
+                createdAt={post.createdAt}
+                images={post.Images}
+                content={post.content}
+                Likers={post.Likers}
+              ></PostingCard>
+            ))}
+        </UserPostsContainer>
       </Container>
     )
   );

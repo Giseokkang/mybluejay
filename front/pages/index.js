@@ -79,6 +79,8 @@ const Home = () => {
                     nickname={post.User.nickname}
                     content={post.content}
                     createdAt={post.createdAt}
+                    images={post.Images}
+                    Likers={post.Likers}
                   ></PostingCard>
                 ))}
             </PostingBox>

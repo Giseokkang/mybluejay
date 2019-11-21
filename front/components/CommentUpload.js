@@ -2,6 +2,8 @@ import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import Textarea from "react-textarea-autosize";
 import useUser from "../hooks/useUser";
+import usePost from "../hooks/usePost";
+import { useRouter } from "next/router";
 
 const Container = styled.div`
   width: 100%;
@@ -42,6 +44,9 @@ const LimitCharacters = styled.span`
   bottom: 45px;
   right: 15px;
   color: ${props => props.color};
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
 `;
 
 const SubmitButton = styled.button`
@@ -54,7 +59,7 @@ const SubmitButton = styled.button`
   width: 70px;
   height: 30px;
   border-radius: 8px;
-  bottom: 5px;
+  bottom: 10px;
   right: 5px;
   cursor: pointer;
   opacity: ${props => (props.isAvailableUpload ? 1 : 0.6)};
@@ -69,6 +74,11 @@ const CommentUpload = () => {
   const [description, setDescription] = useState("");
   const [isAvailableUpload, setIsAvailableUpload] = useState(false);
   const { user } = useUser();
+  const { onAddComment } = usePost();
+  const router = useRouter();
+  const {
+    query: { id: postId }
+  } = router;
 
   const onSubmit = useCallback(
     e => {
@@ -80,7 +90,7 @@ const CommentUpload = () => {
       if (!description || !description.trim()) {
         return alert("댓글을 작성해주세요.");
       }
-      onAddPost({ description });
+      onAddComment(parseInt(postId), description);
       setDescription("");
     },
     [description]
@@ -103,7 +113,7 @@ const CommentUpload = () => {
 
   return (
     <Container>
-      <FormContainer>
+      <FormContainer onSubmit={onSubmit}>
         <UploadInput
           placeholder={`${
             user.isLoggedin ? "댓글을 남겨주세요." : "로그인 후 사용해주세요."
@@ -111,7 +121,11 @@ const CommentUpload = () => {
           disabled={user.isLoggedin ? false : true}
           onChange={onChangeDescription}
           value={description}
-        />
+        ></UploadInput>
+
+        <SubmitButton isAvailableUpload={isAvailableUpload} type="submit">
+          제출
+        </SubmitButton>
       </FormContainer>
     </Container>
   );

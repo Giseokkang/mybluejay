@@ -34,6 +34,8 @@ const MenuBox = styled.div``;
 const ContentBox = styled.div`
   border-right: 1px solid #e6ecf0;
   border-left: 1px solid #e6ecf0;
+  height: calc(100vh - 77px);
+  overflow: scroll;
 `;
 
 const FollowBox = styled.div``;

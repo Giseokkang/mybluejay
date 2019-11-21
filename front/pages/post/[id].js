@@ -8,6 +8,7 @@ import PostingCard from "../../components/PostingCard";
 import { BORDER_COLOR } from "../../utils/colors";
 import Comment from "../../components/Comment";
 import CommentUpload from "../../components/CommentUpload";
+import useUser from "../../hooks/useUser";
 
 const commentDummy = {
   id: 0,
@@ -58,17 +59,23 @@ const FollowBox = styled.div``;
 const PostDetail = () => {
   const router = useRouter();
   const { id } = router.query;
+  const { user } = useUser();
 
   const {
     onLoadPostDetail,
-    post: { post }
+    onLoadComments,
+    post: { post },
+    post: { comments }
   } = usePost();
 
   const { isOnPopUp } = usePopUp();
 
   useEffect(() => {
     onLoadPostDetail(id);
+    onLoadComments(id);
   }, []);
+
+  console.log(comments, "comment");
 
   return (
     <>
@@ -85,11 +92,17 @@ const PostDetail = () => {
                 nickname={post.User.nickname}
                 content={post.content}
                 createdAt={post.createdAt}
+                images={post.Images}
+                Likers={post.Likers}
               ></PostingCard>
             )}
             <CommentBox>
-              <CommentUpload />
-              <Comment />
+              {user && user.isLoggedin && <CommentUpload />}
+              {comments &&
+                comments.length > 0 &&
+                comments.map(comment => (
+                  <Comment info={comment} key={comment.id} />
+                ))}
             </CommentBox>
           </ContentBox>
           <FollowBox />

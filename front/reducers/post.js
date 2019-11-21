@@ -38,9 +38,13 @@ const LIKE_POST_REQUEST = "post/LIKE_POST_REQUEST";
 const LIKE_POST_SUCCESS = "post/LIKE_POST_SUCCESS";
 const LIKE_POST_FAILURE = "post/LIKE_POST_FAILURE";
 
-const CANCEL_LIKE_REQUEST = "post/ADD_POST_REQUEST";
-const CANCEL_LIKE_SUCCESS = "post/ADD_POST_SUCCESS";
-const CANCEL_LIKE_FAILURE = "post/ADD_POST_FAILURE";
+const UNLIKE_POST_REQUEST = "post/UNLIKE_POST_REQUEST";
+const UNLIKE_POST_SUCCESS = "post/UNLIKE_POST_SUCCESS";
+const UNLIKE_POST_FAILURE = "post/UNLIKE_POST_FAILURE";
+
+const LOAD_COMMENTS_REQUEST = "post/LOAD_COMMENTS_REQUEST";
+const LOAD_COMMENTS_SUCCESS = "post/LOAD_COMMENTS_SUCCESS";
+const LOAD_COMMENTS_FAILURE = "post/LOAD_COMMENTS_FAILURE";
 
 const ADD_COMMENT_REQUEST = "post/ADD_COMMENT_REQUEST";
 const ADD_COMMENT_SUCCESS = "post/ADD_COMMENT_SUCCESS";
@@ -49,6 +53,10 @@ const ADD_COMMENT_FAILURE = "post/ADD_COMMENT_FAILURE";
 const DELETE_COMMENT_REQUEST = "post/DELETE_COMMENT_REQUEST";
 const DELETE_COMMENT_SUCCESS = "post/DELETE_COMMENT_SUCCESS";
 const DELETE_COMMENT_FAILURE = "post/DELETE_COMMENT_FAILURE";
+
+const EDIT_COMMENT_REQUEST = "post/EDIT_COMMENT_REQUEST";
+const EDIT_COMMENT_SUCCESS = "post/EDIT_COMMENT_SUCCESS";
+const EDIT_COMMENT_FAILURE = "post/EDIT_COMMENT_FAILURE";
 
 // ActionCreator
 
@@ -112,9 +120,9 @@ export const loadUserPostsRequest = id => ({
   type: LOAD_USER_POSTS_REQUEST,
   payload: id
 });
-export const loadUserPostsSuccess = content => ({
+export const loadUserPostsSuccess = posts => ({
   type: LOAD_USER_POSTS_SUCCESS,
-  payload: content
+  payload: posts
 });
 export const loadUserPostsFailure = e => ({
   type: LOAD_USER_POSTS_FAILURE,
@@ -134,32 +142,84 @@ export const loadHashtagPostsFailure = e => ({
   payload: e
 });
 
-export const uploadImageRequest = () => ({ type: UPLOAD_IMAGE_REQUEST });
-export const uploadImageSuccess = () => ({ type: UPLOAD_IMAGE_SUCCESS });
+export const uploadImageRequest = images => ({
+  type: UPLOAD_IMAGE_REQUEST,
+  payload: images
+});
+export const uploadImageSuccess = images => ({
+  type: UPLOAD_IMAGE_SUCCESS,
+  payload: images
+});
 export const uploadImageFailure = () => ({ type: UPLOAD_IMAGE_FAILURE });
 
-export const deleteImage = () => ({ type: DELETE_IMAGE });
+export const deleteImage = index => ({ type: DELETE_IMAGE, payload: index });
 
-export const likePostRequest = () => ({ type: LIKE_POST_REQUEST });
-export const likePostSuccess = () => ({ type: LIKE_POST_SUCCESS });
-export const likePostFailure = () => ({ type: LIKE_POST_FAILURE });
+export const likePostRequest = postId => ({
+  type: LIKE_POST_REQUEST,
+  payload: postId
+});
+export const likePostSuccess = data => ({
+  type: LIKE_POST_SUCCESS,
+  payload: data
+});
+export const likePostFailure = e => ({ type: LIKE_POST_FAILURE, payload: e });
 
-export const cancelLikeRequest = () => ({ type: CANCEL_LIKE_REQUEST });
-export const cancelLikeSuccess = () => ({ type: CANCEL_LIKE_SUCCESS });
-export const cancelLikeFailure = () => ({ type: CANCEL_LIKE_FAILURE });
+export const unlikePostRequest = postId => ({
+  type: UNLIKE_POST_REQUEST,
+  payload: postId
+});
+export const unlikePostSuccess = data => ({
+  type: UNLIKE_POST_SUCCESS,
+  payload: data
+});
+export const unlikePostFailure = e => ({ type: UNLIKE_POST_FAILURE, e });
 
-export const addCommentRequest = () => ({ type: ADD_COMMENT_REQUEST });
-export const addCommentSuccess = () => ({ type: ADD_COMMENT_SUCCESS });
-export const addCommentFailure = () => ({ type: ADD_COMMENT_FAILURE });
+export const loadCommentsRequest = postId => ({
+  type: LOAD_COMMENTS_REQUEST,
+  payload: postId
+});
+export const loadCommentsSuccess = comments => ({
+  type: LOAD_COMMENTS_SUCCESS,
+  payload: comments
+});
+export const loadCommentsFailure = e => ({
+  type: LOAD_COMMENTS_FAILURE,
+  payload: e
+});
 
-export const deleteCommentRequest = () => ({ type: DELETE_COMMENT_REQUEST });
+export const addCommentRequest = (postId, comment) => ({
+  type: ADD_COMMENT_REQUEST,
+  payload: { postId, comment }
+});
+export const addCommentSuccess = comment => ({
+  type: ADD_COMMENT_SUCCESS,
+  payload: comment
+});
+export const addCommentFailure = e => ({
+  type: ADD_COMMENT_FAILURE,
+  payload: e
+});
+
+export const deleteCommentRequest = id => ({
+  type: DELETE_COMMENT_REQUEST,
+  payload: id
+});
 export const deleteCommentSuccess = () => ({ type: DELETE_COMMENT_SUCCESS });
-export const deleteCommentFailure = () => ({ type: DELETE_COMMENT_FAILURE });
+export const deleteCommentFailure = e => ({
+  type: DELETE_COMMENT_FAILURE,
+  payload: e
+});
+
+export const editCommentRequest = () => ({ type: EDIT_COMMENT_REQUEST });
+export const editCommentSuccess = () => ({ type: EDIT_COMMENT_SUCCESS });
+export const editCommentFailure = () => ({ type: EDIT_COMMENT_FAILURE });
 
 // InitialState
 
 const initialState = {
-  isUploading: false
+  isUploading: false,
+  imagePaths: [],
+  mainPosts: []
 };
 
 // Reducer
@@ -183,7 +243,7 @@ const post = (state = initialState, action) => {
     case LOAD_USER_POSTS_REQUEST:
       return { ...state };
     case LOAD_USER_POSTS_SUCCESS:
-      return { ...state };
+      return { ...state, userPosts: action.payload };
     case LOAD_USER_POSTS_FAILURE:
       return { ...state, errorMessage: action.payload };
 
@@ -197,17 +257,20 @@ const post = (state = initialState, action) => {
     case UPLOAD_IMAGE_REQUEST:
       return { ...state };
     case UPLOAD_IMAGE_SUCCESS:
-      return { ...state };
+      return { ...state, imagePaths: [...state.imagePaths, ...action.payload] };
     case UPLOAD_IMAGE_FAILURE:
       return { ...state, errorMessage: action.payload };
 
     case DELETE_IMAGE:
-      return { ...state };
+      return {
+        ...state,
+        imagePaths: state.imagePaths.filter((v, i) => i !== action.payload)
+      };
 
     case ADD_POST_REQUEST:
       return { ...state, isUploading: true };
     case ADD_POST_SUCCESS:
-      return { ...state, isUploading: false };
+      return { ...state, isUploading: false, imagePaths: [] };
     case ADD_POST_FAILURE:
       return { ...state, errorMessage: action.payload };
 
@@ -230,22 +293,58 @@ const post = (state = initialState, action) => {
 
     case LIKE_POST_REQUEST:
       return { ...state };
-    case LIKE_POST_SUCCESS:
-      return { ...state };
+    case LIKE_POST_SUCCESS: {
+      const postIndex = state.mainPosts.findIndex(
+        v => v.id === action.payload.postId
+      );
+      const post = state.mainPosts[postIndex];
+      const Likers = [{ id: action.payload.userId }, ...post.Likers];
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = { ...post, Likers };
+      return {
+        ...state,
+        mainPosts,
+        post: { ...state.post, Likers }
+      };
+    }
     case LIKE_POST_FAILURE:
       return { ...state, errorMessage: action.payload };
+    case UNLIKE_POST_REQUEST:
+      return { ...state };
+    case UNLIKE_POST_SUCCESS: {
+      const postIndex = state.mainPosts.findIndex(
+        post => post.id === action.payload.postId
+      );
+      const post = state.mainPosts[postIndex];
+      const Likers = post.Likers.filter(
+        liker => liker.id !== action.payload.userId
+      );
 
-    case CANCEL_LIKE_REQUEST:
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = {
+        ...state.mainPosts[postIndex],
+        Likers
+      };
+
+      return { ...state, mainPosts, post: { ...state.post, Likers } };
+    }
+    case UNLIKE_POST_FAILURE:
+      return { ...state, errorMessage: action.payload };
+
+    case LOAD_COMMENTS_REQUEST:
       return { ...state };
-    case CANCEL_LIKE_SUCCESS:
-      return { ...state };
-    case CANCEL_LIKE_FAILURE:
+    case LOAD_COMMENTS_SUCCESS:
+      return { ...state, comments: action.payload };
+    case LOAD_COMMENTS_FAILURE:
       return { ...state, errorMessage: action.payload };
 
     case ADD_COMMENT_REQUEST:
       return { ...state };
     case ADD_COMMENT_SUCCESS:
-      return { ...state };
+      return {
+        ...state,
+        comments: [...state.comments, action.payload]
+      };
     case ADD_COMMENT_FAILURE:
       return { ...state, errorMessage: action.payload };
 
@@ -254,6 +353,13 @@ const post = (state = initialState, action) => {
     case DELETE_COMMENT_SUCCESS:
       return { ...state };
     case DELETE_COMMENT_FAILURE:
+      return { ...state, errorMessage: action.payload };
+
+    case EDIT_COMMENT_REQUEST:
+      return { ...state };
+    case EDIT_COMMENT_SUCCESS:
+      return { ...state };
+    case EDIT_COMMENT_FAILURE:
       return { ...state, errorMessage: action.payload };
 
     default:
