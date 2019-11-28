@@ -6,7 +6,6 @@ import {
   postEditPost,
   postDeletePost,
   getPosts,
-  getUserPosts,
   postUploadImages,
   postLikePost,
   postUnLikePost
@@ -16,7 +15,6 @@ import { onlyPrivate, imageUpload } from "../middlewares";
 const postRouter = express.Router();
 
 postRouter.get(routes.getPosts, getPosts);
-postRouter.get(routes.getUserPosts(), getUserPosts);
 
 postRouter.post(
   routes.uploadPost,
@@ -24,6 +22,7 @@ postRouter.post(
   imageUpload.none(),
   postUploadPost
 );
+
 postRouter.post(
   routes.uploadImages,
   onlyPrivate,

@@ -13,7 +13,14 @@ export const getComments = async (req, res, next) => {
       include: [
         {
           model: db.User,
-          attributes: ["id", "nickname"]
+          attributes: ["id", "nickname"],
+          include: [
+            {
+              model: db.Avatar,
+              as: "Avatar",
+              attributes: ["profile_src"]
+            }
+          ]
         }
       ],
       order: [["createdAt", "ASC"]]
@@ -63,7 +70,14 @@ export const postUploadComment = async (req, res, next) => {
       include: [
         {
           model: db.User,
-          attributes: ["id", "nickname"]
+          attributes: ["id", "nickname"],
+          include: [
+            {
+              model: db.Avatar,
+              as: "Avatar",
+              attributes: ["background_src", "profile_src"]
+            }
+          ]
         }
       ]
     });

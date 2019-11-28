@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       // 테이블명은 users
       nickname: {
-        type: DataTypes.STRING(20), // 20글자 이하
+        type: DataTypes.STRING(12), // 20글자 이하
         allowNull: false, // 필수
         unique: true // 고유한 값
       },
@@ -27,6 +27,8 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = db => {
     db.User.hasMany(db.Post, { as: "Posts" });
     db.User.hasMany(db.Comment);
+    db.User.hasOne(db.Avatar);
+
     db.User.belongsToMany(db.Post, { through: "Like", as: "Liked" });
     db.User.belongsToMany(db.User, {
       through: "Follow",

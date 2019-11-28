@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
@@ -9,6 +9,8 @@ import { useRouter } from "next/router";
 import PostingCard from "./PostingCard";
 import Tabs from "./Tabs";
 import usePost from "../hooks/usePost";
+import { getFullDay } from "../utils/function";
+import useSetting from "../hooks/useSetting";
 
 const Container = styled.div`
   display: flex;
@@ -54,6 +56,10 @@ const ProfileBackground = styled.div`
   position: relative;
   height: 200px;
   background-color: gray;
+
+  background-image: url(${props => props.backgroundSrc});
+  background-size: cover;
+  background-position: center center;
 `;
 
 const ProfileImage = styled.div`
@@ -65,6 +71,9 @@ const ProfileImage = styled.div`
   background-color: skyblue;
   bottom: -70px;
   left: 20px;
+  background-image: url(${props => props.profileSrc});
+  background-size: cover;
+  background-position: center center;
 
   cursor: pointer;
 `;
@@ -78,17 +87,19 @@ const EditContainer = styled.div`
   color: white;
 `;
 
-const EditBtn = styled.div`
+const Btn = styled.div`
   width: 120px;
   height: 30px;
   padding: 10px;
-  background-color: skyblue;
+  background-color: ${props => props.backgroundColor};
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 10px;
   opacity: 0.8;
   cursor: pointer;
+
+  transition: all 0.1s linear;
 
   &:hover {
     opacity: 1;
@@ -120,15 +131,23 @@ const Follow = styled.span`
   margin-right: 10px;
 `;
 
-const UserPostsContainer = styled.div``;
-
 const ProfileCard = ({ info }) => {
-  const { pathname } = useRouter();
+  const {
+    pathname,
+    query: { id }
+  } = useRouter();
+  const { user, onFollowUserRequest, onUnfollowUserRequest } = useUser();
   const {
     post: { userPosts }
   } = usePost();
+  const { others } = useOthers();
+  const { turnOnSetting } = useSetting();
 
-  const isMine = pathname === "/profile";
+  const onClickOnSetting = useCallback(() => {
+    turnOnSetting();
+  }, []);
+
+  const isMine = pathname === "/profile" || id === user.myInformation.nickname;
 
   return (
     info && (
@@ -143,39 +162,62 @@ const ProfileCard = ({ info }) => {
           </Link>
           <Name>{info.nickname}</Name>
         </StickyContainer>
-        <ProfileBackground>
-          <ProfileImage></ProfileImage>
+        <ProfileBackground
+          backgroundSrc={
+            info.Avatar.background_src
+              ? `http://localhost:8000/${info.Avatar.background_src}`
+              : null
+          }
+        >
+          <ProfileImage
+            profileSrc={
+              info.Avatar.profile_src
+                ? `http://localhost:8000/${info.Avatar.profile_src}`
+                : null
+            }
+          ></ProfileImage>
         </ProfileBackground>
-        <EditContainer>{isMine && <EditBtn>프로필수정</EditBtn>}</EditContainer>
+        <EditContainer>
+          {user.isLoggedin ? (
+            isMine ? (
+              <Btn backgroundColor={SKYBLUE} onClick={onClickOnSetting}>
+                프로필수정
+              </Btn>
+            ) : user.myInformation.Followings &&
+              user.myInformation.Followings.find(
+                v => v.id === others.information.id
+              ) ? (
+              <Btn
+                backgroundColor="#ff4757"
+                onClick={() => {
+                  onUnfollowUserRequest(decodeURIComponent(id));
+                }}
+              >
+                언팔로우
+              </Btn>
+            ) : (
+              <Btn
+                backgroundColor={SKYBLUE}
+                onClick={() => {
+                  onFollowUserRequest(decodeURIComponent(id));
+                }}
+              >
+                팔로우
+              </Btn>
+            )
+          ) : null}
+        </EditContainer>
         <InformationContainer>
           <Name>{info.nickname}</Name>
-          <SignUpDate>가입일 :{info.createdAt}</SignUpDate>
+          <SignUpDate>가입일 :{getFullDay(info.createdAt)}</SignUpDate>
           <FollowContainer>
             <Follow>
-              {info.following}
-              팔로잉
+              팔로잉 {info.Followings ? info.Followings.length : 0}
             </Follow>
-            <Follow>
-              {info.follower}
-              팔로워
-            </Follow>
+            <Follow>팔로워 {info.Followers ? info.Followers.length : 0}</Follow>
           </FollowContainer>
         </InformationContainer>
         <Tabs></Tabs>
-        <UserPostsContainer>
-          {userPosts &&
-            userPosts.map(post => (
-              <PostingCard
-                id={post.id}
-                userId={post.userId}
-                nickname={post.User.nickname}
-                createdAt={post.createdAt}
-                images={post.Images}
-                content={post.content}
-                Likers={post.Likers}
-              ></PostingCard>
-            ))}
-        </UserPostsContainer>
       </Container>
     )
   );

@@ -6,17 +6,22 @@ const Container = styled.div`
   width: 45px;
   height: 45px;
   border-radius: 50px;
-  background-image: ${props =>
-    props.ProfileImageUrl ? url(props.ProfileImageUrl) : null};
+  background-image: url(${props => props.profileSrc});
   background-color: gray;
+  background-size: cover;
+  background-position: center center;
 `;
 
-const ProfilePicture = ({ ProfileImageUrl }) => {
-  return <Container ProfileImageUrl={ProfileImageUrl}></Container>;
+const ProfilePicture = ({ profileSrc }) => {
+  return (
+    <Container
+      profileSrc={profileSrc ? `http://localhost:8000/${profileSrc}` : null}
+    ></Container>
+  );
 };
 
 ProfilePicture.propTypes = {
-  BgUrl: PropTypes.string
+  profileSrc: PropTypes.string
 };
 
 export default ProfilePicture;

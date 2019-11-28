@@ -9,7 +9,24 @@ export const getHashtagPosts = async (req, res, next) => {
           where: { name: decodeURIComponent(req.params.id) }
         },
         {
-          model: db.User
+          model: db.User,
+          attributes: ["id", "nickname"],
+          include: [
+            {
+              model: db.Avatar,
+              as: "Avatar",
+              attributes: ["background_src", "profile_src"]
+            }
+          ]
+        },
+        {
+          model: db.User,
+          as: "Likers",
+          attributes: ["id"]
+        },
+        {
+          model: db.Comment,
+          attributes: ["id"]
         }
       ],
       order: [["createdAt", "DESC"]]

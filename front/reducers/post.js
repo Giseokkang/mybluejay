@@ -12,6 +12,14 @@ const LOAD_USER_POSTS_REQUEST = "post/LOAD_USER_POSTS_REQUEST";
 const LOAD_USER_POSTS_SUCCESS = "post/LOAD_USER_POSTS_SUCCESS";
 const LOAD_USER_POSTS_FAILURE = "post/LOAD_USER_POSTS_FAILURE";
 
+const LOAD_USER_COMMENTS_REQUEST = "post/LOAD_USER_COMMENTS_REQUEST";
+const LOAD_USER_COMMENTS_SUCCESS = "post/LOAD_USER_COMMENTS_SUCCESS";
+const LOAD_USER_COMMENTS_FAILURE = "post/LOAD_USER_COMMENTS_FAILURE";
+
+const LOAD_USER_LIKED_POSTS_REQUEST = "post/LOAD_USER_LIKED_POSTS_REQUEST";
+const LOAD_USER_LIKED_POSTS_SUCCESS = "post/LOAD_USER_LIKED_POSTS_SUCCESS";
+const LOAD_USER_LIKED_POSTS_FAILURE = "post/LOAD_USER_LIKED_POSTS_FAILURE";
+
 const LOAD_HASHTAG_POSTS_REQUEST = "post/LOAD_HASHTAG_POSTS_REQUEST";
 const LOAD_HASHTAG_POSTS_SUCCESS = "post/LOAD_HASHTAG_POSTS_SUCCESS";
 const LOAD_HASHTAG_POSTS_FAILURE = "post/LOAD_HASHTAG_POSTS_FAILURE";
@@ -128,6 +136,30 @@ export const loadUserPostsFailure = e => ({
   type: LOAD_USER_POSTS_FAILURE,
   payload: e
 });
+export const loadUserCommentsRequest = nickname => ({
+  type: LOAD_USER_COMMENTS_REQUEST,
+  payload: nickname
+});
+export const loadUserCommentsSuccess = comments => ({
+  type: LOAD_USER_COMMENTS_SUCCESS,
+  payload: comments
+});
+export const loadUserCommentsFailure = e => ({
+  type: LOAD_USER_COMMENTS_FAILURE,
+  payload: e
+});
+export const loadUserLikedPostsRequest = nickname => ({
+  type: LOAD_USER_LIKED_POSTS_REQUEST,
+  payload: nickname
+});
+export const loadUserLikedPostsSuccess = likedPosts => ({
+  type: LOAD_USER_LIKED_POSTS_SUCCESS,
+  payload: likedPosts
+});
+export const loadUserLikedPostsFailure = e => ({
+  type: LOAD_USER_LIKED_POSTS_FAILURE,
+  payload: e
+});
 
 export const loadHashtagPostsRequest = id => ({
   type: LOAD_HASHTAG_POSTS_REQUEST,
@@ -219,7 +251,8 @@ export const editCommentFailure = () => ({ type: EDIT_COMMENT_FAILURE });
 const initialState = {
   isUploading: false,
   imagePaths: [],
-  mainPosts: []
+  mainPosts: [],
+  isLoading: false
 };
 
 // Reducer
@@ -227,11 +260,11 @@ const initialState = {
 const post = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_MAIN_POSTS_REQUEST:
-      return { ...state };
+      return { ...state, isLoading: true };
     case LOAD_MAIN_POSTS_SUCCESS:
-      return { ...state, mainPosts: action.payload };
+      return { ...state, mainPosts: action.payload, isLoading: false };
     case LOAD_MAIN_POSTS_FAILURE:
-      return { ...state, errorMessage: action.payload };
+      return { ...state, errorMessage: action.payload, isLoading: false };
 
     case LOAD_POST_REQUEST:
       return { ...state };
@@ -241,11 +274,36 @@ const post = (state = initialState, action) => {
       return { ...state, errorMessage: action.payload };
 
     case LOAD_USER_POSTS_REQUEST:
-      return { ...state };
+      return { ...state, isLoading: true };
     case LOAD_USER_POSTS_SUCCESS:
-      return { ...state, userPosts: action.payload };
+      return { ...state, userPosts: action.payload, isLoading: false };
     case LOAD_USER_POSTS_FAILURE:
-      return { ...state, errorMessage: action.payload };
+      return { ...state, errorMessage: action.payload, isLoading: false };
+
+    case LOAD_USER_COMMENTS_REQUEST:
+      return { ...state, isLoading: true, errorMessage: "" };
+    case LOAD_USER_COMMENTS_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        userComments: action.payload,
+        userPosts: null,
+        errorMessage: ""
+      };
+    case LOAD_USER_COMMENTS_FAILURE:
+      return { ...state, isLoading: false, errorMessage: action.payload };
+
+    case LOAD_USER_LIKED_POSTS_REQUEST:
+      return { ...state, isLoading: true, errorMessage: "" };
+    case LOAD_USER_LIKED_POSTS_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        userPosts: action.payload,
+        errorMessage: ""
+      };
+    case LOAD_USER_LIKED_POSTS_FAILURE:
+      return { ...state, isLoading: false, errorMessage: action.payload };
 
     case LOAD_HASHTAG_POSTS_REQUEST:
       return { ...state };

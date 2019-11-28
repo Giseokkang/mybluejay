@@ -75,15 +75,7 @@ const Hashtag = () => {
               {mainPosts &&
                 mainPosts.length > 0 &&
                 mainPosts.map(post => (
-                  <PostingCard
-                    key={post.id}
-                    id={post.id}
-                    userId={post.UserId}
-                    nickname={post.User.nickname}
-                    content={post.content}
-                    createdAt={post.createdAt}
-                    Likers={post.Likers}
-                  ></PostingCard>
+                  <PostingCard key={post.id} post={post}></PostingCard>
                 ))}
             </PostingBox>
           </ContentBox>

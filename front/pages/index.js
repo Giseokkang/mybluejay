@@ -7,6 +7,7 @@ import usePost from "../hooks/usePost";
 import usePopUp from "../hooks/usePopUp";
 import PopUp from "../components/PopUp";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const fadeIn = keyframes`
   from{
@@ -43,6 +44,10 @@ const ContentBox = styled.div`
 const PostingBox = styled.div`
   overflow: scroll;
   height: calc(100vh - 247px);
+  -ms-overflow-style: none; // IE에서 스크롤바 감춤
+  &::-webkit-scrollbar {
+    display: none !important; // 윈도우 크롬 등
+  }
 `;
 
 const FollowBox = styled.div``;
@@ -72,16 +77,7 @@ const Home = () => {
               {mainPosts &&
                 mainPosts.length > 0 &&
                 mainPosts.map(post => (
-                  <PostingCard
-                    key={post.id}
-                    id={post.id}
-                    userId={post.UserId}
-                    nickname={post.User.nickname}
-                    content={post.content}
-                    createdAt={post.createdAt}
-                    images={post.Images}
-                    Likers={post.Likers}
-                  ></PostingCard>
+                  <PostingCard key={post.id} post={post}></PostingCard>
                 ))}
             </PostingBox>
           </ContentBox>

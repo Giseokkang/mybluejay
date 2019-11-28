@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import ProfilePicture from "./ProfilePicture";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaTrashAlt, FaRegCommentDots } from "react-icons/fa";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 import Link from "next/link";
 import usePost from "../hooks/usePost";
@@ -10,26 +10,16 @@ import PopUp from "../components/PopUp";
 import useUser from "../hooks/useUser";
 import Slider from "react-slick";
 import ImageZoom from "./ImageZoom";
-
-// const dummy = {
-//   user: {
-//     id: 1,
-//     name: "강기석"
-//   },
-//   post: {
-//     description: "첫 개시글 !",
-//     imageUrl:
-//       "https://image.tmdb.org/t/p/original/btpvGjqLBHgRnobKGlzbBD4jzmf.jpg",
-//     createAt: "2018.06.07"
-//   }
-// };
+import { useRouter } from "next/router";
+import { getFullDay } from "../utils/function";
 
 const Container = styled.div`
   width: 100%;
   max-height: 700px;
   border-bottom: 10px solid #e6ecf0;
   padding: 10px;
-  cursor: pointer;
+
+  cursor: ${props => (props.isPointerOn ? "pointer" : null)};
 
   &:hover {
     background-color: #f4f8fa;
@@ -109,11 +99,16 @@ const Description = styled.span`
   overflow: auto;
   min-height: 20px;
   margin-top: 20px;
+  -ms-overflow-style: none; // IE에서 스크롤바 감춤
+  &::-webkit-scrollbar {
+    display: none !important; // 윈도우 크롬 등
+  }
 `;
 
 const ALink = styled.a`
   color: #0984e3;
-  opacity: 0.9;
+  opacity: 0.8;
+  cursor: pointer;
   &:hover {
     opacity: 1;
   }
@@ -121,32 +116,41 @@ const ALink = styled.a`
 
 const UnderSideContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 10px;
 `;
 
+const ItemContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const LikeAmount = styled.div`
+  font-size: 16px;
+  opacity: 0.8;
+`;
+
+const CommentAmount = styled.div`
+  font-size: 16px;
+  opacity: 0.8;
+`;
+
 const IconsContainer = styled.div`
-  color: red;
+  color: ${props => props.color};
   opacity: 0.7;
-  padding: 10px;
+  padding: 7px;
   border-radius: 50%;
   font-size: 16px;
   transition: all 0.1s linear;
+  cursor: pointer;
   &:hover {
-    background-color: pink;
+    background-color: ${props => props.backgroundColor};
     opacity: 1;
   }
 `;
 
-const PostingCard = ({
-  id,
-  userId,
-  nickname,
-  createdAt,
-  images,
-  content,
-  Likers
-}) => {
+const PostingCard = ({ post }) => {
   const {
     onDeletePost,
     onLikePost,
@@ -155,6 +159,7 @@ const PostingCard = ({
   } = usePost();
   const { isOnPopUp, turnOnPopUp, turnOffPopUp } = usePopUp();
   const { user } = useUser();
+  const { pathname } = useRouter();
 
   const [isZoom, setIsZoom] = useState(false);
 
@@ -168,39 +173,37 @@ const PostingCard = ({
     lazyLoad: false
   };
   return (
-    id,
-    userId,
-    nickname,
-    createdAt,
-    content,
-    Likers && (
+    post && (
       <>
-        <Link href="/post/[id]" as={`/post/${id}`} key={id}>
-          <Container>
+        <Link href="/post/[id]" as={`/post/${post.id}`} key={post.id}>
+          <Container isPointerOn={!pathname.includes("post")}>
             <PictureContainer>
-              <Link href="/profile/[id]" as={`/profile/${nickname}`}>
+              <Link href="/profile/[id]" as={`/profile/${post.User.nickname}`}>
                 <a>
-                  <ProfilePicture />
+                  <ProfilePicture profileSrc={post.User.Avatar.profile_src} />
                 </a>
               </Link>
             </PictureContainer>
             <UpsideContainer>
               <PostingInfomationContainer>
                 <div>
-                  <Link href="/profile/[id]" as={`/profile/${nickname}`}>
+                  <Link
+                    href="/profile/[id]"
+                    as={`/profile/${post.User.nickname}`}
+                  >
                     <a>
-                      <Nickname>{nickname}</Nickname>
+                      <Nickname>{post.User.nickname}</Nickname>
                     </a>
                   </Link>
-                  <Time>{createdAt}</Time>
+                  <Time>{getFullDay(post.createdAt)}</Time>
                 </div>
                 {user.myInformation.id &&
-                  userId &&
-                  user.myInformation.id === userId && (
+                  post.UserId &&
+                  user.myInformation.id === post.UserId && (
                     <DeleteBtn
                       onClick={e => {
                         e.stopPropagation();
-                        turnOnPopUp(id);
+                        turnOnPopUp(post.id);
                       }}
                     >
                       <FaTrashAlt />
@@ -209,13 +212,13 @@ const PostingCard = ({
               </PostingInfomationContainer>
             </UpsideContainer>
             <ContentContainer>
-              {images && images.length > 0 && (
+              {post.Images && post.Images.length > 0 && (
                 <>
                   <Slider
                     {...settings}
                     style={{ maxWidth: "400px", width: "85%" }}
                   >
-                    {images.map(image => (
+                    {post.Images.map(image => (
                       <div key={image.src}>
                         <Image
                           imageUrl={`http://localhost:8000/${image.src}`}
@@ -240,7 +243,7 @@ const PostingCard = ({
               )}
 
               <Description>
-                {content.split(/(#[^\s]+)/g).map(v => {
+                {post.content.split(/(#[^\s]+)/g).map(v => {
                   if (v.match(/(#[^\s]+)/g)) {
                     return (
                       <Link
@@ -259,26 +262,44 @@ const PostingCard = ({
             </ContentContainer>
 
             <UnderSideContainer>
-              {user &&
-              user.isLoggedin &&
-              Likers.find(liker => liker.id === user.myInformation.id) ? (
-                <IconsContainer
-                  onClick={e => {
-                    e.stopPropagation();
-                    onUnlikePost(id);
-                  }}
-                >
-                  <IoIosHeart />
-                </IconsContainer>
-              ) : (
-                <IconsContainer
-                  onClick={e => {
-                    e.stopPropagation();
-                    onLikePost(id);
-                  }}
-                >
-                  <IoIosHeartEmpty />
-                </IconsContainer>
+              <ItemContainer>
+                {user &&
+                user.isLoggedin &&
+                post.Likers.find(
+                  liker => liker.id === user.myInformation.id
+                ) ? (
+                  <IconsContainer
+                    color="red"
+                    backgroundColor="pink"
+                    onClick={e => {
+                      e.stopPropagation();
+
+                      onUnlikePost(post.id);
+                    }}
+                  >
+                    <IoIosHeart />
+                  </IconsContainer>
+                ) : (
+                  <IconsContainer
+                    color="red"
+                    onClick={e => {
+                      e.stopPropagation();
+                      onLikePost(post.id);
+                    }}
+                  >
+                    <IoIosHeartEmpty />
+                  </IconsContainer>
+                )}
+                <LikeAmount>{post.Likers.length}</LikeAmount>
+              </ItemContainer>
+
+              {post.Comments && (
+                <ItemContainer>
+                  <IconsContainer color="#3498db" backgroundColor="#74b9ff">
+                    <FaRegCommentDots />
+                  </IconsContainer>
+                  <CommentAmount>{post.Comments.length}</CommentAmount>
+                </ItemContainer>
               )}
             </UnderSideContainer>
           </Container>

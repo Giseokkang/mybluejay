@@ -208,7 +208,13 @@ const UploadForm = () => {
       </TitleContainer>
       <FormContainer onSubmit={onSubmit} encType="multipart/form-data">
         <FormUpSideContainer>
-          <ProfilePicture />
+          <ProfilePicture
+            profileSrc={
+              user.isLoggedin && user.myInformation.Avatar.profile_src
+                ? user.myInformation.Avatar.profile_src
+                : null
+            }
+          />
           <UploadInput
             placeholder={`${
               user.isLoggedin

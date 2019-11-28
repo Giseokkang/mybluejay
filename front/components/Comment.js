@@ -3,6 +3,8 @@ import styled, { keyframes } from "styled-components";
 import ProfilePicture from "./ProfilePicture";
 import Link from "next/link";
 import { FaTrashAlt, FaRegHeart } from "react-icons/fa";
+import { getFullDay } from "../utils/function";
+import { useRouter } from "next/router";
 
 const fadeIn = keyframes`
   from{
@@ -19,6 +21,7 @@ const Container = styled.div`
   border-bottom: 5px solid #e6ecf0;
   padding: 10px;
   animation: ${fadeIn} 0.5s ease-in-out;
+  cursor: ${props => (props.isCursorOn ? "pointer" : null)};
   &:hover {
     background-color: #f4f8fa;
   }
@@ -126,13 +129,15 @@ const IconsContainer = styled.div`
 `;
 const Comment = ({ info }) => {
   const { User, content, createdAt, id } = info;
+  const router = useRouter();
+  const { pathname } = router;
   return (
     <>
-      <Container>
+      <Container isCursorOn={pathname.includes("/profile")}>
         <PictureContainer>
           <Link href="/profile/[id]" as={`/profile/${User.nickname}`}>
             <a>
-              <ProfilePicture />
+              <ProfilePicture profileSrc={info.User.Avatar.profile_src} />
             </a>
           </Link>
         </PictureContainer>
@@ -144,7 +149,7 @@ const Comment = ({ info }) => {
                   <Nickname>{User.nickname}</Nickname>
                 </a>
               </Link>
-              <Time>{createdAt}</Time>
+              <Time>{getFullDay(createdAt)}</Time>
             </div>
             {/* {user.myInformation.id &&
               userId &&
@@ -181,9 +186,9 @@ const Comment = ({ info }) => {
         </ContentContainer>
 
         <UnderSideContainer>
-          <IconsContainer>
+          {/* <IconsContainer>
             <FaRegHeart />
-          </IconsContainer>
+          </IconsContainer> */}
         </UnderSideContainer>
       </Container>
     </>

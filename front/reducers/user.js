@@ -24,6 +24,22 @@ const UNFOLLOW_USER_REQUEST = "user/UNFOLLOW_USER_REQUEST";
 const UNFOLLOW_USER_SUCCESS = "user/UNFOLLOW_USER_SUCCESS";
 const UNFOLLOW_USER_FAILURE = "user/UNFOLLOW_USER_FAILURE";
 
+const UPLOAD_BACKGROUND_IMAGE_REQUEST = "user/UPLOAD_BACKGROUND_IMAGE_REQUEST";
+const UPLOAD_BACKGROUND_IMAGE_SUCCESS = "user/UPLOAD_BACKGROUND_IMAGE_SUCCESS";
+const UPLOAD_BACKGROUND_IMAGE_FAILURE = "user/UPLOAD_BACKGROUND_IMAGE_FAILURE";
+
+const DELETE_BACKGROUND_IMAGE_REQUEST = "user/DELETE_BACKGROUND_IMAGE_REQUEST";
+
+const UPLOAD_PROFILE_IMAGE_REQUEST = "user/UPLOAD_PROFILE_IMAGE_REQUEST";
+const UPLOAD_PROFILE_IMAGE_SUCCESS = "user/UPLOAD_PROFILE_IMAGE_SUCCESS";
+const UPLOAD_PROFILE_IMAGE_FAILURE = "user/UPLOAD_PROFILE_IMAGE_FAILURE";
+
+const DELETE_PROFILE_IMAGE_REQUEST = "user/DELETE_PROFILE_IMAGE_REQUEST";
+
+const EDIT_USER_REQUEST = "user/EDIT_USER_REQUEST";
+const EDIT_USER_SUCCESS = "user/EDIT_USER_SUCCESS";
+const EDIT_USER_FAILURE = "user/EDIT_USER_FAILURE";
+
 const ADD_POST_TO_ME = "ADD_POST_TO_ME";
 
 // ActionCreator
@@ -57,13 +73,80 @@ export const loadFollowRequest = () => ({ type: LOAD_FOLLOW_REQUEST });
 export const loadFollowSuccess = () => ({ type: LOAD_FOLLOW_SUCCESS });
 export const loadFollowFailure = () => ({ type: LOAD_FOLLOW_FAILURE });
 
-export const followUserRequest = () => ({ type: FOLLOW_USER_REQUEST });
-export const followUserSuccess = () => ({ type: FOLLOW_USER_SUCCESS });
-export const followUserFailure = () => ({ type: FOLLOW_USER_FAILURE });
+export const followUserRequest = nickname => ({
+  type: FOLLOW_USER_REQUEST,
+  payload: nickname
+});
+export const followUserSuccess = userId => ({
+  type: FOLLOW_USER_SUCCESS,
+  payload: userId
+});
+export const followUserFailure = e => ({
+  type: FOLLOW_USER_FAILURE,
+  payload: e
+});
 
-export const unFollowUserRequest = () => ({ type: UNFOLLOW_USER_REQUEST });
-export const unFollowUserSuccess = () => ({ type: UNFOLLOW_USER_SUCCESS });
-export const unFollowUserFailure = () => ({ type: UNFOLLOW_USER_FAILURE });
+export const unfollowUserRequest = nickname => ({
+  type: UNFOLLOW_USER_REQUEST,
+  payload: nickname
+});
+export const unfollowUserSuccess = userId => ({
+  type: UNFOLLOW_USER_SUCCESS,
+  payload: userId
+});
+export const unfollowUserFailure = e => ({
+  type: UNFOLLOW_USER_FAILURE,
+  payload: e
+});
+
+export const uploadBackgroundImageRequest = path => ({
+  type: UPLOAD_BACKGROUND_IMAGE_REQUEST,
+  payload: path
+});
+
+export const uploadBackgroundImageSuccess = path => ({
+  type: UPLOAD_BACKGROUND_IMAGE_SUCCESS,
+  payload: path
+});
+export const uploadBackgroundImageFailure = e => ({
+  type: UPLOAD_BACKGROUND_IMAGE_FAILURE,
+  payload: e
+});
+
+export const deleteBackgroundImageRequest = () => ({
+  type: DELETE_BACKGROUND_IMAGE_REQUEST
+});
+
+export const uploadProfileImageRequest = path => ({
+  type: UPLOAD_PROFILE_IMAGE_REQUEST,
+  payload: path
+});
+
+export const uploadProfileImageSuccess = path => ({
+  type: UPLOAD_PROFILE_IMAGE_SUCCESS,
+  payload: path
+});
+export const uploadProfileImageFailure = e => ({
+  type: UPLOAD_PROFILE_IMAGE_FAILURE,
+  payload: e
+});
+
+export const deleteProfileImageRequest = () => ({
+  type: DELETE_PROFILE_IMAGE_REQUEST
+});
+
+export const editUserRequest = formData => ({
+  type: EDIT_USER_REQUEST,
+  payload: formData
+});
+export const editUserSuccess = formData => ({
+  type: EDIT_USER_SUCCESS,
+  payload: formData
+});
+export const editUserFailure = e => ({
+  type: EDIT_USER_FAILURE,
+  payload: e
+});
 
 export const addPostToMe = post => ({ type: ADD_POST_TO_ME, payload: post });
 
@@ -74,10 +157,12 @@ const initialState = {
   isLoggingOut: false, // 로그 아웃 중
   isLoggingIn: false, // 로그인 중
   loginErrorReason: "", // 로그인 실패 에러
+  errorMessage: "",
   myInformation: {}, // 내 정보
   followingList: [], // 팔로잉 목록
   followerList: [], // 팔로워 목록
-  peopleInformation: null // 다른 회원 정보
+  peopleInformation: null, // 다른 회원 정보,
+  isEditting: false
 };
 
 // reducer
@@ -134,6 +219,111 @@ const user = (state = initialState, action) => {
         isLoggingIn: false,
         myInformation: {}
       };
+    case FOLLOW_USER_REQUEST:
+      return {
+        ...state,
+        errorMessage: ""
+      };
+    case FOLLOW_USER_SUCCESS:
+      return {
+        ...state,
+        myInformation: {
+          ...state.myInformation,
+          Followings: [
+            { id: action.payload },
+            ...state.myInformation.Followings
+          ]
+        }
+        // followerList: [{ id: action.payload }, ...state.followingList],
+        // errorMessage: ""
+      };
+    case FOLLOW_USER_FAILURE:
+      return {
+        ...state,
+        errorMessage: action.payload
+      };
+    case UNFOLLOW_USER_REQUEST:
+      return {
+        ...state
+      };
+    case UNFOLLOW_USER_SUCCESS:
+      return {
+        ...state,
+        myInformation: {
+          ...state.myInformation,
+          Followings: state.myInformation.Followings.filter(
+            following => following.id !== action.payload
+          )
+        },
+        errorMessage: ""
+      };
+    case UNFOLLOW_USER_FAILURE:
+      return {
+        ...state,
+        errorMessage: action.payload
+      };
+
+    case UPLOAD_BACKGROUND_IMAGE_REQUEST:
+      return { ...state };
+
+    case UPLOAD_BACKGROUND_IMAGE_SUCCESS:
+      return {
+        ...state,
+        myInformation: {
+          ...state.myInformation,
+          backgroundImage: action.payload
+        }
+      };
+
+    case UPLOAD_BACKGROUND_IMAGE_FAILURE:
+      return { ...state, errorMessage: action.payload };
+
+    case DELETE_BACKGROUND_IMAGE_REQUEST:
+      return {
+        ...state,
+        myInformation: {
+          ...state.myInformation,
+          backgroundImage: null,
+          Avatar: { ...state.myInformation.Avatar, background_src: null }
+        }
+      };
+
+    case UPLOAD_PROFILE_IMAGE_REQUEST:
+      return { ...state };
+
+    case UPLOAD_PROFILE_IMAGE_SUCCESS:
+      return {
+        ...state,
+        myInformation: {
+          ...state.myInformation,
+          profileImage: action.payload
+        }
+      };
+
+    case UPLOAD_PROFILE_IMAGE_FAILURE:
+      return { ...state, errorMessage: action.payload };
+
+    case DELETE_PROFILE_IMAGE_REQUEST:
+      return {
+        ...state,
+        myInformation: {
+          ...state.myInformation,
+          profileImage: null,
+          Avatar: { ...state.myInformation.Avatar, profile_src: null }
+        }
+      };
+
+    case EDIT_USER_REQUEST:
+      return { ...state, isEditting: true };
+
+    case EDIT_USER_SUCCESS:
+      return {
+        ...state,
+        isEditting: false
+      };
+
+    case EDIT_USER_FAILURE:
+      return { ...state, errorMessage: action.payload };
     default:
       return state;
   }

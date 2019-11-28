@@ -41,7 +41,13 @@ import {
   likePostRequest,
   unlikePostRequest,
   unlikePostFailure,
-  unlikePostSuccess
+  unlikePostSuccess,
+  loadUserCommentsSuccess,
+  loadUserCommentsFailure,
+  loadUserCommentsRequest,
+  loadUserLikedPostsSuccess,
+  loadUserLikedPostsFailure,
+  loadUserLikedPostsRequest
 } from "../reducers/post";
 import axios from "axios";
 
@@ -133,7 +139,7 @@ function* watchLoadPost() {
 function loadUserPostsAPI(id) {
   // API 전송
   return axios.get(
-    `/api/post/${id}/posts`,
+    `/api/user/${id}/posts`,
     {},
     {
       withCredentials: true
@@ -153,6 +159,56 @@ function* loadUserPosts(action) {
 
 function* watchloadUserPosts() {
   yield takeLatest(loadUserPostsRequest().type, loadUserPosts);
+}
+
+function loadUserCommentsAPI(nickname) {
+  // API 전송
+  return axios.get(
+    `/api/user/${nickname}/comments`,
+    {},
+    {
+      withCredentials: true
+    }
+  );
+}
+
+function* loadUserComments(action) {
+  try {
+    const result = yield call(loadUserCommentsAPI, action.payload);
+    yield put(loadUserCommentsSuccess(result.data));
+  } catch (e) {
+    console.log(e);
+    yield put(loadUserCommentsFailure(e));
+  }
+}
+
+function* watchLoadUserComments() {
+  yield takeLatest(loadUserCommentsRequest().type, loadUserComments);
+}
+
+function loadUserLikedPostsAPI(nickname) {
+  // API 전송
+  return axios.get(
+    `/api/user/${nickname}/liked`,
+    {},
+    {
+      withCredentials: true
+    }
+  );
+}
+
+function* loadUserLikedPosts(action) {
+  try {
+    const result = yield call(loadUserLikedPostsAPI, action.payload);
+    yield put(loadUserLikedPostsSuccess(result.data));
+  } catch (e) {
+    console.log(e);
+    yield put(loadUserLikedPostsFailure(e));
+  }
+}
+
+function* watchLoadUserLikedPosts() {
+  yield takeLatest(loadUserLikedPostsRequest().type, loadUserLikedPosts);
 }
 
 function loadHashtagPostsAPI(tag) {
@@ -305,6 +361,8 @@ export default function* postsSaga() {
     fork(watchloadUserPosts),
     fork(watchUploadImage),
     fork(watchLikePost),
-    fork(watchUnlikePost)
+    fork(watchUnlikePost),
+    fork(watchLoadUserComments),
+    fork(watchLoadUserLikedPosts)
   ]);
 }

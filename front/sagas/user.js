@@ -19,9 +19,25 @@ import {
   logOutSuccess,
   loadUserRequest,
   loadUserFailure,
-  loadUserSuccess
+  loadUserSuccess,
+  followUserSuccess,
+  followUserFailure,
+  followUserRequest,
+  unfollowUserSuccess,
+  unfollowUserFailure,
+  unfollowUserRequest,
+  uploadBackgroundImageSuccess,
+  uploadBackgroundImageFailure,
+  uploadBackgroundImageRequest,
+  uploadProfileImageSuccess,
+  uploadProfileImageFailure,
+  uploadProfileImageRequest,
+  editUserSuccess,
+  editUserFailure,
+  editUserRequest
 } from "../reducers/user";
 import Router from "next/router";
+import { offSetting } from "../reducers/setting";
 
 function loginAPI(loginData) {
   return axios.post("api/user/login", loginData, {
@@ -88,6 +104,125 @@ function* watchLoadUser() {
   yield takeLatest(loadUserRequest().type, loadUser);
 }
 
+function followUserAPI(nickname) {
+  return axios.post(
+    `api/user/${nickname}/follow`,
+    {},
+    {
+      withCredentials: true
+    }
+  );
+}
+
+function* followUser(action) {
+  try {
+    const result = yield call(followUserAPI, action.payload);
+    yield put(followUserSuccess(result.data));
+  } catch (e) {
+    console.log(e);
+    yield put(followUserFailure(e));
+  }
+}
+
+function* watchFollowUser() {
+  yield takeLatest(followUserRequest().type, followUser);
+}
+
+function unfollowUserAPI(nickname) {
+  return axios.post(
+    `api/user/${nickname}/unfollow`,
+    {},
+    {
+      withCredentials: true
+    }
+  );
+}
+
+function* unfollowUser(action) {
+  try {
+    const result = yield call(unfollowUserAPI, action.payload);
+    yield put(unfollowUserSuccess(result.data));
+  } catch (e) {
+    console.log(e);
+    yield put(unfollowUserFailure(e));
+  }
+}
+
+function* watchUnFollowUser() {
+  yield takeLatest(unfollowUserRequest().type, unfollowUser);
+}
+
+function uploadBackgroundImageAPI(formData) {
+  return axios.post(`api/user/upload/background`, formData, {
+    withCredentials: true
+  });
+}
+
+function* uploadBackgroundImage(action) {
+  try {
+    const result = yield call(uploadBackgroundImageAPI, action.payload);
+    yield put(uploadBackgroundImageSuccess(result.data));
+  } catch (e) {
+    console.log(e);
+    yield put(uploadBackgroundImageFailure(e));
+  }
+}
+
+function* watchUploadBackgroundImage() {
+  yield takeLatest(uploadBackgroundImageRequest().type, uploadBackgroundImage);
+}
+
+function uploadProfileImageAPI(formData) {
+  return axios.post(`api/user/upload/avatar`, formData, {
+    withCredentials: true
+  });
+}
+
+function* uploadProfileImage(action) {
+  try {
+    const result = yield call(uploadProfileImageAPI, action.payload);
+    yield put(uploadProfileImageSuccess(result.data));
+  } catch (e) {
+    console.log(e);
+    yield put(uploadProfileImageFailure(e));
+  }
+}
+
+function* watchUploadProfileImage() {
+  yield takeLatest(uploadProfileImageRequest().type, uploadProfileImage);
+}
+
+function editUserAPI(data) {
+  return axios.post(`api/user/edit`, data, {
+    withCredentials: true
+  });
+}
+
+function* editUser(action) {
+  try {
+    const result = yield call(editUserAPI, action.payload);
+    yield put(editUserSuccess());
+    yield put(offSetting());
+    yield put(loadUserRequest());
+  } catch (e) {
+    console.log(e);
+    yield put(editUserFailure(e));
+  }
+}
+
+function* watchEditUser() {
+  yield takeLatest(editUserRequest().type, editUser);
+}
+
 export default function* userSaga() {
-  yield all([fork(watchLogin), fork(watchLogOut), fork(watchLoadUser)]);
+  yield all([
+    fork(watchLogin),
+    fork(watchLogOut),
+    fork(watchLoadUser),
+    fork(watchFollowUser),
+    fork(watchUnFollowUser),
+    fork(watchUploadBackgroundImage),
+    fork(watchUploadProfileImage),
+    fork(watchEditUser)
+  ]);
 }

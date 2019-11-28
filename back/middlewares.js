@@ -1,7 +1,6 @@
 import multer from "multer";
 // import multerS3 from "multer-s3";
 // import aws from "aws-sdk";
-import routes from "./routes";
 import path from "path";
 
 // const s3 = new aws.S3({
@@ -20,7 +19,7 @@ import path from "path";
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, "uploads");
+    cb(null, "upload/postImages");
   },
   filename: function(req, file, cb) {
     const ext = path.extname(file.originalname);
@@ -31,6 +30,38 @@ const storage = multer.diskStorage({
 
 export const imageUpload = multer({
   storage: storage,
+  limits: { fileSize: 20 * 1024 * 1024 }
+});
+
+const backgroundStorage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, "upload/backgrounds");
+  },
+  filename: function(req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const basename = path.basename(file.originalname, ext); // 제로초.png, ext===.png, basename===제로초
+    cb(null, basename + Date.now() + ext);
+  }
+});
+
+export const backgroundImageUpload = multer({
+  storage: backgroundStorage,
+  limits: { fileSize: 20 * 1024 * 1024 }
+});
+
+const avatarStorage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, "upload/avatars");
+  },
+  filename: function(req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const basename = path.basename(file.originalname, ext); // 제로초.png, ext===.png, basename===제로초
+    cb(null, basename + Date.now() + ext);
+  }
+});
+
+export const avatarUpload = multer({
+  storage: avatarStorage,
   limits: { fileSize: 20 * 1024 * 1024 }
 });
 

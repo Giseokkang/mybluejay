@@ -1,6 +1,7 @@
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import expressSession from "express-session";
 import cors from "cors";
@@ -22,7 +23,8 @@ passportConfig();
 
 app.use(helmet());
 app.use(morgan("dev"));
-app.use("/", express.static("uploads"));
+app.use("/upload", express.static("upload"));
+
 app.use(
   cors({
     origin: true,
@@ -30,8 +32,8 @@ app.use(
   })
 );
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(

@@ -6,7 +6,14 @@ export const getPosts = async (req, res, next) => {
       include: [
         {
           model: db.User,
-          attributes: ["id", "nickname"]
+          attributes: ["id", "nickname"],
+          include: [
+            {
+              model: db.Avatar,
+              as: "Avatar",
+              attributes: ["profile_src"]
+            }
+          ]
         },
         {
           model: db.Image,
@@ -15,6 +22,10 @@ export const getPosts = async (req, res, next) => {
         {
           model: db.User,
           as: "Likers",
+          attributes: ["id"]
+        },
+        {
+          model: db.Comment,
           attributes: ["id"]
         }
       ],
@@ -34,7 +45,14 @@ export const getPostDetail = async (req, res, next) => {
       include: [
         {
           model: db.User,
-          attributes: ["id", "nickname"]
+          attributes: ["id", "nickname"],
+          include: [
+            {
+              model: db.Avatar,
+              as: "Avatar",
+              attributes: ["profile_src"]
+            }
+          ]
         },
         {
           model: db.Image,
@@ -48,44 +66,6 @@ export const getPostDetail = async (req, res, next) => {
       ]
     });
     res.json(post);
-  } catch (e) {
-    console.error(e);
-    next(e);
-  }
-};
-
-export const getUserPosts = async (req, res, next) => {
-  try {
-    const userId = await db.User.findOne({
-      where: { nickname: req.params.id }
-    });
-
-    if (!userId) {
-      res.status(404).send("유저를 찾을 수 없습니다.");
-    }
-    const posts = await db.Post.findAll({
-      where: { UserId: userId.id },
-      include: [
-        {
-          model: db.User,
-          attributes: ["id", "nickname"]
-        },
-        {
-          model: db.Image,
-          attributes: ["id", "src"]
-        },
-        {
-          model: db.User,
-          as: "Likers",
-          attributes: ["id"]
-        }
-      ],
-      order: [["createdAt", "DESC"]]
-    });
-    if (!posts) {
-      res.status(404).send("게시물을 찾을 수 없습니다.");
-    }
-    res.json(posts);
   } catch (e) {
     console.error(e);
     next(e);
@@ -131,7 +111,7 @@ export const postUploadPost = async (req, res, next) => {
 };
 
 export const postUploadImages = (req, res) => {
-  res.json(req.files.map(v => v.filename));
+  res.json(req.files.map(v => v.path));
 };
 
 export const postEditPost = (req, res) => {

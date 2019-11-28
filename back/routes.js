@@ -4,7 +4,15 @@ const USER = "/api/user";
 const USER_DETAIL = "/:id";
 const USER_LOGIN = "/login";
 const USER_LOGOUT = "/logout";
+const GET_USER_POSTS = "/:id/posts";
+const GET_USER_COMMENTS = "/:id/comments";
+const GET_USER_LIKED_POSTS = "/:id/liked";
 const FOLLOW = "/:id/follow";
+const UNFOLLOW = "/:id/unfollow";
+
+const UPLOAD_BACKGROUND_IMAGE = "/upload/background";
+const UPLOAD_AVATAR = "/upload/avatar";
+const EDIT_USER = "/edit";
 
 const SIGN_UP = "/signup";
 const WITHDRAW = "/withdraw";
@@ -13,7 +21,6 @@ const WITHDRAW = "/withdraw";
 
 const POST = "/api/post";
 const GET_POSTS = "/posts";
-const GET_USER_POSTS = "/:id/posts";
 const UPLOAD_POST = "/upload";
 const POST_DETAIL = "/:id";
 const EDIT_POST = "/:id/edit";
@@ -54,16 +61,39 @@ const routes = {
     }
     return FOLLOW;
   },
+  unfollow: id => {
+    if (id) {
+      return `/user/${id}/unfollow`;
+    }
+    return UNFOLLOW;
+  },
+  getUserPosts: id => {
+    if (id) {
+      return `/user/${id}/posts`;
+    }
+    return GET_USER_POSTS;
+  },
+  getUserComments: id => {
+    if (id) {
+      return `/user/${id}/comments`;
+    }
+    return GET_USER_COMMENTS;
+  },
+  getUserLikedPosts: id => {
+    if (id) {
+      return `/user/${id}/liked`;
+    }
+    return GET_USER_LIKED_POSTS;
+  },
+  uploadBackgroundImage: UPLOAD_BACKGROUND_IMAGE,
+  uploadAvatar: UPLOAD_AVATAR,
+  editUser: EDIT_USER,
+
   userSignUp: SIGN_UP,
   userWithdraw: WITHDRAW,
 
   post: POST,
-  getUserPosts: id => {
-    if (id) {
-      return `/post/${id}/posts`;
-    }
-    return GET_USER_POSTS;
-  },
+
   getPosts: GET_POSTS,
   uploadPost: UPLOAD_POST,
   uploadImages: UPLOAD_IMAGES,

@@ -10,13 +10,6 @@ import Comment from "../../components/Comment";
 import CommentUpload from "../../components/CommentUpload";
 import useUser from "../../hooks/useUser";
 
-const commentDummy = {
-  id: 0,
-  nickname: "닉네임",
-  content: "더미댓글",
-  createdAt: "2018년"
-};
-
 const fadeIn = keyframes`
   from{
     opacity:0;
@@ -75,8 +68,6 @@ const PostDetail = () => {
     onLoadComments(id);
   }, []);
 
-  console.log(comments, "comment");
-
   return (
     <>
       {isOnPopUp && <PopUp></PopUp>}
@@ -84,18 +75,7 @@ const PostDetail = () => {
         <GridContainer>
           <MenuBox />
           <ContentBox>
-            {post && (
-              <PostingCard
-                key={post.id}
-                id={post.id}
-                userId={post.UserId}
-                nickname={post.User.nickname}
-                content={post.content}
-                createdAt={post.createdAt}
-                images={post.Images}
-                Likers={post.Likers}
-              ></PostingCard>
-            )}
+            {post && <PostingCard post={post}></PostingCard>}
             <CommentBox>
               {user && user.isLoggedin && <CommentUpload />}
               {comments &&

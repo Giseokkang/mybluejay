@@ -26,6 +26,11 @@ export default () => {
             model: db.User,
             as: "Followers",
             attributes: ["id"]
+          },
+          {
+            model: db.Avatar,
+            as: "Avatar",
+            attributes: ["background_src", "profile_src"]
           }
         ]
       });
