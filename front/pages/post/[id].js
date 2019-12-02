@@ -21,7 +21,7 @@ const fadeIn = keyframes`
 
 const Container = styled.div`
   width: 100%;
-  height: calc(100vh - 77px);
+  min-height: calc(100vh - 55px);
   display: flex;
   justify-content: center;
   animation: ${fadeIn} 0.5s ease-in-out;
@@ -40,6 +40,7 @@ const MenuBox = styled.div``;
 const ContentBox = styled.div`
   border-right: 1px solid ${BORDER_COLOR};
   border-left: 1px solid ${BORDER_COLOR};
+  background-color: white;
 `;
 
 const CommentBox = styled.div`

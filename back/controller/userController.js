@@ -345,8 +345,8 @@ export const editUser = async (req, res, next) => {
     }).then(function(result) {
       if (result) {
         return result.update({
-          background_src: req.body.background,
-          profile_src: req.body.profileImage
+          background_src: req.body.background ? req.body.background : null,
+          profile_src: req.body.profileImage ? req.body.profileImage : null
         });
       }
       return db.Avatar.create({

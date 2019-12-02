@@ -2,7 +2,16 @@ import db from "../models";
 
 export const getPosts = async (req, res, next) => {
   try {
+    let where = {};
+    if (parseInt(req.query.lastId, 10)) {
+      where = {
+        id: {
+          [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10)
+        }
+      };
+    }
     const posts = await db.Post.findAll({
+      where,
       include: [
         {
           model: db.User,
@@ -29,7 +38,8 @@ export const getPosts = async (req, res, next) => {
           attributes: ["id"]
         }
       ],
-      order: [["createdAt", "DESC"]]
+      order: [["createdAt", "DESC"]],
+      limit: parseInt(req.query.limit, 10)
     });
     res.json(posts);
   } catch (e) {
@@ -103,7 +113,37 @@ export const postUploadPost = async (req, res, next) => {
       }
     }
 
-    res.send("success");
+    const createdPost = await db.Post.findOne({
+      where: { id: newPost.id },
+      include: [
+        {
+          model: db.User,
+          attributes: ["id", "nickname"],
+          include: [
+            {
+              model: db.Avatar,
+              as: "Avatar",
+              attributes: ["profile_src"]
+            }
+          ]
+        },
+        {
+          model: db.Image,
+          attributes: ["id", "src"]
+        },
+        {
+          model: db.User,
+          as: "Likers",
+          attributes: ["id"]
+        },
+        {
+          model: db.Comment,
+          attributes: ["id"]
+        }
+      ]
+    });
+
+    res.json(createdPost);
   } catch (e) {
     console.error(e);
     next(e);

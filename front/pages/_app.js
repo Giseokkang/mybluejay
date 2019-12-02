@@ -2,6 +2,7 @@ import React from "react";
 import { applyMiddleware, compose, createStore } from "redux";
 import { Provider } from "react-redux";
 import withRedux from "next-redux-wrapper";
+import withReduxSaga from "next-redux-saga";
 import Head from "next/head";
 import AppLayout from "../components/AppLayout";
 import GlobalStyles from "../utils/GlobalStyles";
@@ -10,8 +11,10 @@ import createSagaMiddleware from "redux-saga";
 
 import rootReducer from "../reducers";
 import rootSaga from "../sagas";
+import { loadUserRequest } from "../reducers/user";
+import axios from "axios";
 
-const NodeBird = ({ Component, store }) => {
+const NodeBird = ({ Component, store, pageProps }) => {
   return (
     <Provider store={store}>
       <Head>
@@ -29,7 +32,7 @@ const NodeBird = ({ Component, store }) => {
         />
       </Head>
       <AppLayout>
-        <Component />
+        <Component {...pageProps} />
       </AppLayout>
       <GlobalStyles />
     </Provider>
@@ -37,7 +40,31 @@ const NodeBird = ({ Component, store }) => {
 };
 
 NodeBird.propTypes = {
-  Component: PropTypes.elementType
+  Component: PropTypes.elementType,
+  store: PropTypes.object.isRequired,
+  pageProps: PropTypes.object.isRequired
+};
+
+NodeBird.getInitialProps = async context => {
+  const { ctx, Component } = context;
+  let pageProps = {};
+  const state = ctx.store.getState();
+  if (ctx.isServer) {
+    const cookie = ctx.req.headers.cookie;
+    if (ctx.isServer && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+    }
+  }
+
+  if (!state.user.myInformation.id) {
+    ctx.store.dispatch({
+      type: loadUserRequest().type
+    });
+  }
+  if (Component.getInitialProps) {
+    pageProps = await Component.getInitialProps(ctx);
+  }
+  return { pageProps };
 };
 
 const configureStore = (initialState, options) => {
@@ -55,8 +82,8 @@ const configureStore = (initialState, options) => {
             : f => f
         );
   const store = createStore(rootReducer, initialState, enhancer);
-  sagaMiddleware.run(rootSaga);
+  store.sagaTask = sagaMiddleware.run(rootSaga);
   return store;
 };
 
-export default withRedux(configureStore)(NodeBird);
+export default withRedux(configureStore)(withReduxSaga(NodeBird));

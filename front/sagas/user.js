@@ -37,7 +37,6 @@ import {
   editUserRequest
 } from "../reducers/user";
 import Router from "next/router";
-import { offSetting } from "../reducers/setting";
 
 function loginAPI(loginData) {
   return axios.post("api/user/login", loginData, {
@@ -201,8 +200,7 @@ function editUserAPI(data) {
 function* editUser(action) {
   try {
     const result = yield call(editUserAPI, action.payload);
-    yield put(editUserSuccess());
-    yield put(offSetting());
+    yield put(editUserSuccess(result.data));
     yield put(loadUserRequest());
   } catch (e) {
     console.log(e);

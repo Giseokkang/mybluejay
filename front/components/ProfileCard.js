@@ -10,7 +10,6 @@ import PostingCard from "./PostingCard";
 import Tabs from "./Tabs";
 import usePost from "../hooks/usePost";
 import { getFullDay } from "../utils/function";
-import useSetting from "../hooks/useSetting";
 
 const Container = styled.div`
   display: flex;
@@ -27,7 +26,9 @@ const StickyContainer = styled.div`
   align-items: center;
   z-index: 9;
   background-color: white;
-  border-bottom: 2px solid ${BORDER_COLOR};
+  /* border-bottom: 2px solid ${BORDER_COLOR}; */
+  border-bottom: 1px solid rgba(var(--b6a, 219, 219, 219), 1);
+
 `;
 
 const BackIconContainer = styled.div`
@@ -141,7 +142,7 @@ const ProfileCard = ({ info }) => {
     post: { userPosts }
   } = usePost();
   const { others } = useOthers();
-  const { turnOnSetting } = useSetting();
+  const { turnOnSetting } = useUser();
 
   const onClickOnSetting = useCallback(() => {
     turnOnSetting();
@@ -164,14 +165,14 @@ const ProfileCard = ({ info }) => {
         </StickyContainer>
         <ProfileBackground
           backgroundSrc={
-            info.Avatar.background_src
+            info.Avatar && info.Avatar.background_src
               ? `http://localhost:8000/${info.Avatar.background_src}`
               : null
           }
         >
           <ProfileImage
             profileSrc={
-              info.Avatar.profile_src
+              info.Avatar && info.Avatar.profile_src
                 ? `http://localhost:8000/${info.Avatar.profile_src}`
                 : null
             }

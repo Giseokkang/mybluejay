@@ -5,7 +5,6 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import useUser from "../hooks/useUser";
 import { MdClear } from "react-icons/md";
 import { useRouter } from "next/router";
-import useSetting from "../hooks/useSetting";
 
 const Container = styled.div`
   width: 100vw;
@@ -180,13 +179,12 @@ const Setting = () => {
     onUploadProfileImageRequest,
     onEditUserRequest,
     onDeleteBackgroundImageRequest,
-    onDeleteProfileImageRequest
+    onDeleteProfileImageRequest,
+    turnOffSetting
   } = useUser();
 
   const backgroundImageInput = useRef();
   const profileImageInput = useRef();
-
-  const { turnOffSetting } = useSetting();
 
   const [nickname, setNickname] = useState(myInformation.nickname);
   const [isAvailableSet, setIsAvailableSet] = useState(true);
@@ -281,9 +279,7 @@ const Setting = () => {
         <ProfileBackground
           onClick={onClickBackgroundImageUpload}
           src={
-            myInformation.Avatar.background_src
-              ? `http://localhost:8000/${myInformation.Avatar.background_src}`
-              : myInformation.backgroundImage
+            myInformation.backgroundImage
               ? `http://localhost:8000/${myInformation.backgroundImage}`
               : null
           }
@@ -304,9 +300,7 @@ const Setting = () => {
         <ProfileImage
           onClick={onClickProfileImageUpload}
           src={
-            myInformation.Avatar.profile_src
-              ? `http://localhost:8000/${myInformation.Avatar.profile_src}`
-              : myInformation.profileImage
+            myInformation.profileImage
               ? `http://localhost:8000/${myInformation.profileImage}`
               : null
           }

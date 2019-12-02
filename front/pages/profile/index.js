@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import useUser from "../../hooks/useUser";
 import useOthers from "../../hooks/useOthers";
 import Setting from "../../components/Setting";
-import useSetting from "../../hooks/useSetting";
+import UnloggedIn from "../../components/unLoggedIn";
 
 const fadeIn = keyframes`
   from{
@@ -18,10 +18,11 @@ const fadeIn = keyframes`
 
 const Container = styled.div`
   width: 100%;
-  height: calc(100vh - 77px);
+  min-height: calc(100vh - 55px);
   display: flex;
   justify-content: center;
   animation: ${fadeIn} 0.5s ease-in-out;
+  opacity: ${props => (props.isOnPopUp ? 0.2 : 1)};
 `;
 
 const GridContainer = styled.div`
@@ -36,12 +37,14 @@ const MenuBox = styled.div``;
 const ContentBox = styled.div`
   border-right: 1px solid #e6ecf0;
   border-left: 1px solid #e6ecf0;
-  height: calc(100vh - 77px);
+  background-color: white;
+
+  /* height: calc(100vh - 77px);
   overflow: scroll;
   -ms-overflow-style: none; // IE에서 스크롤바 감춤
   &::-webkit-scrollbar {
     display: none !important; // 윈도우 크롬 등
-  }
+  } */
 `;
 
 const FollowBox = styled.div``;
@@ -53,14 +56,15 @@ const Profile = () => {
   } = useRouter();
   const { user } = useUser();
   const { others, onLoadOtherRequest } = useOthers();
-
-  const { isSettingOn } = useSetting();
+  const {
+    user: { isSettingOn }
+  } = useUser();
 
   const isMine = pathname === "/profile";
 
   useEffect(() => {
     if (id) {
-      onLoadOtherRequest(decodeURIComponent(id));
+      onLoadOtherRequest(encodeURIComponent(id));
     }
   }, []);
 
@@ -75,7 +79,7 @@ const Profile = () => {
               user.isLoggedin ? (
                 <ProfileCard info={user.myInformation} />
               ) : (
-                <span>로그인 후 이용해주세요.</span>
+                <UnloggedIn></UnloggedIn>
               )
             ) : (
               <ProfileCard info={others.information} />

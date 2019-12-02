@@ -79,6 +79,8 @@ const DeleteBtn = styled.div`
 
 const Image = styled.div`
   max-width: 400px;
+  width: 100%;
+
   height: 500px;
   background-image: url(${props => props.imageUrl});
   background-size: cover;
@@ -89,8 +91,11 @@ const Image = styled.div`
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 50px;
-  margin-top: 10px;
+  /* margin-left: 50px;
+  margin-top: 10px; */
+
+  justify-content: center;
+  align-items: center;
 `;
 
 const Description = styled.span`
@@ -180,7 +185,11 @@ const PostingCard = ({ post }) => {
             <PictureContainer>
               <Link href="/profile/[id]" as={`/profile/${post.User.nickname}`}>
                 <a>
-                  <ProfilePicture profileSrc={post.User.Avatar.profile_src} />
+                  <ProfilePicture
+                    profileSrc={
+                      post.User.Avatar && post.User.Avatar.profile_src
+                    }
+                  />
                 </a>
               </Link>
             </PictureContainer>
@@ -212,27 +221,40 @@ const PostingCard = ({ post }) => {
               </PostingInfomationContainer>
             </UpsideContainer>
             <ContentContainer>
-              {post.Images && post.Images.length > 0 && (
+              {post.Images && post.Images.length > 1 && (
                 <>
-                  <Slider
-                    {...settings}
-                    style={{ maxWidth: "400px", width: "85%" }}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%"
+                    }}
                   >
-                    {post.Images.map(image => (
-                      <div key={image.src}>
-                        <Image
-                          imageUrl={`http://localhost:8000/${image.src}`}
-                          // src={`http://localhost:8000/${image.src}`}
-                          alt="image"
-                          key={image.src}
-                          // onClick={e => {
-                          //   e.stopPropagation();
-                          //   setIsZoom(true);
-                          // }}
-                        />
-                      </div>
-                    ))}
-                  </Slider>
+                    <Slider
+                      {...settings}
+                      style={{
+                        maxWidth: "400px",
+                        width: "100%"
+                      }}
+                    >
+                      {post.Images.map(image => (
+                        <div key={image.src}>
+                          <Image
+                            imageUrl={`http://localhost:8000/${image.src}`}
+                            // src={`http://localhost:8000/${image.src}`}
+                            alt="image"
+                            key={image.src}
+                            // onClick={e => {
+                            //   e.stopPropagation();
+                            //   setIsZoom(true);
+                            // }}
+                          />
+                        </div>
+                      ))}
+                    </Slider>
+                  </div>
+
                   {/* {isZoom && (
                     <ImageZoom
                       images={images}
@@ -240,6 +262,22 @@ const PostingCard = ({ post }) => {
                     ></ImageZoom>
                   )} */}
                 </>
+              )}
+              {post.Images && post.Images.length === 1 && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%"
+                  }}
+                >
+                  <Image
+                    imageUrl={`http://localhost:8000/${post.Images[0].src}`}
+                    alt="image"
+                    key={post.Images[0].src}
+                  />
+                </div>
               )}
 
               <Description>
@@ -273,7 +311,6 @@ const PostingCard = ({ post }) => {
                     backgroundColor="pink"
                     onClick={e => {
                       e.stopPropagation();
-
                       onUnlikePost(post.id);
                     }}
                   >
@@ -282,6 +319,7 @@ const PostingCard = ({ post }) => {
                 ) : (
                   <IconsContainer
                     color="red"
+                    backgroundColor="pink"
                     onClick={e => {
                       e.stopPropagation();
                       onLikePost(post.id);

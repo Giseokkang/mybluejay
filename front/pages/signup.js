@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import LoginForm from "../components/LoginForm";
 import SignUpForm from "../components/signUpForm";
+import useUser from "../hooks/useUser";
+import Router from "next/router";
 
 const fadeIn = keyframes`
   from{
@@ -14,7 +16,7 @@ const fadeIn = keyframes`
 
 const Container = styled.div`
   width: 100%;
-  height: calc(100vh - 77px);
+  height: calc(100vh - 55px);
   background: #74ebd5; /* fallback for old browsers */
   background: -webkit-linear-gradient(
     to left,
@@ -33,11 +35,23 @@ const Container = styled.div`
 `;
 
 const signup = () => {
+  const {
+    user: { isLoggedin }
+  } = useUser();
+
+  useEffect(() => {
+    if (isLoggedin) {
+      Router.push("/");
+    }
+  }, []);
+
   return (
     <>
-      <Container>
-        <SignUpForm></SignUpForm>
-      </Container>
+      {isLoggedin ? null : (
+        <Container>
+          <SignUpForm></SignUpForm>
+        </Container>
+      )}
     </>
   );
 };

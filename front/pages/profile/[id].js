@@ -6,23 +6,14 @@ import Profile from "../profile";
 import useUser from "../../hooks/useUser";
 
 const ProfileDetail = () => {
-  const router = useRouter();
-  const {
-    query: { id }
-  } = router;
-  const {
-    user: {
-      myInformation: { nickname }
-    }
-  } = useUser();
-
-  useEffect(() => {
-    if (id === nickname) {
-      Router.push("/profile");
-    }
-  }, []);
-
   return <Profile></Profile>;
+};
+
+ProfileDetail.getInitialProps = async context => {
+  const state = context.store.getState();
+  if (context.query.id === state.user.myInformation.nickname) {
+    Router.push("/profile");
+  }
 };
 
 export default ProfileDetail;

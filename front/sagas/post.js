@@ -6,7 +6,8 @@ import {
   fork,
   call,
   delay,
-  all
+  all,
+  throttle
 } from "redux-saga/effects";
 import {
   addPostRequest,
@@ -58,9 +59,8 @@ function addPostAPI(addPostData) {
 
 function* addPost(action) {
   try {
-    yield call(addPostAPI, action.payload);
-    yield put(addPostSuccess());
-    yield put(loadMainPostsRequest());
+    const result = yield call(addPostAPI, action.payload);
+    yield put(addPostSuccess(result.data));
   } catch (e) {
     console.log(e);
     yield put(addPostFailure(e));
@@ -92,14 +92,14 @@ function* watchUploadImage() {
   yield takeLatest(uploadImageRequest().type, uploadImage);
 }
 
-function loadMainPostsAPI() {
+function loadMainPostsAPI(lastId = 0, limit = 10) {
   // API 전송
-  return axios.get("/api/post/posts");
+  return axios.get(`/api/post/posts?lastId=${lastId}&limit=${limit}`);
 }
 
-function* loadMainPosts() {
+function* loadMainPosts(action) {
   try {
-    const result = yield call(loadMainPostsAPI);
+    const result = yield call(loadMainPostsAPI, action.payload);
     yield put(loadMainPostsSuccess(result.data));
   } catch (e) {
     console.log(e);
@@ -108,7 +108,7 @@ function* loadMainPosts() {
 }
 
 function* watchLoadMainPosts() {
-  yield takeLatest(loadMainPostsRequest().type, loadMainPosts);
+  yield throttle(2000, loadMainPostsRequest().type, loadMainPosts);
 }
 
 function loadPostAPI(id) {
@@ -211,9 +211,9 @@ function* watchLoadUserLikedPosts() {
   yield takeLatest(loadUserLikedPostsRequest().type, loadUserLikedPosts);
 }
 
-function loadHashtagPostsAPI(tag) {
+function loadHashtagPostsAPI({ tag, lastId = 0 }, limit = 10) {
   // API 전송
-  return axios.get(`/api/hashtag/${tag}`);
+  return axios.get(`/api/hashtag/${tag}?lastId=${lastId}&limit=${limit}`);
 }
 
 function* loadHashtagPosts(action) {

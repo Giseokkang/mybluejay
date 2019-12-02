@@ -7,6 +7,8 @@ import useUser from "../hooks/useUser";
 import PostingCard from "../components/PostingCard";
 import Comment from "./Comment";
 import Link from "next/link";
+import EmptyPosts from "./EmptyPosts";
+import Loader from "react-loader-spinner";
 
 const TabsContainer = styled.div`
   display: flex;
@@ -14,7 +16,7 @@ const TabsContainer = styled.div`
   height: 55px;
   margin-top: 20px;
   position: sticky;
-  top: 54px;
+  top: 55px;
   z-index: 9;
   background-color: white;
 `;
@@ -48,7 +50,8 @@ const Tabs = () => {
   const {
     onLoadUserPosts,
     onLoadUserComments,
-    onLoadUserLikedPosts
+    onLoadUserLikedPosts,
+    post: { isLoading }
   } = usePost();
   const {
     user: {
@@ -118,23 +121,36 @@ const Tabs = () => {
         </Tab>
       </TabsContainer>
       <UserPostsContainer>
-        {userPosts && userPosts.length > 0
-          ? userPosts.map(post => (
-              <PostingCard post={post} key={post.id}></PostingCard>
-            ))
-          : userComments && userComments.length > 0
-          ? userComments.map(comment => (
-              <Link
-                href="/post/[id]"
-                as={`/post/${comment.PostId}`}
-                key={comment.id}
-              >
-                <div>
-                  <Comment info={comment} />
-                </div>
-              </Link>
-            ))
-          : null}
+        {isLoading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "30px"
+            }}
+          >
+            <Loader type="Oval" color={SKYBLUE} height={80} width={80} />
+          </div>
+        ) : userPosts && userPosts.length > 0 ? (
+          userPosts.map(post => (
+            <PostingCard post={post} key={post.id}></PostingCard>
+          ))
+        ) : userComments && userComments.length > 0 ? (
+          userComments.map(comment => (
+            <Link
+              href="/post/[id]"
+              as={`/post/${comment.PostId}`}
+              key={comment.id}
+            >
+              <div>
+                <Comment info={comment} />
+              </div>
+            </Link>
+          ))
+        ) : (
+          userPosts && <EmptyPosts>게시글이 존재하지 않습니다.</EmptyPosts>
+        )}
       </UserPostsContainer>
     </>
   );

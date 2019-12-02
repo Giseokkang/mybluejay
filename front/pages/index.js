@@ -8,6 +8,8 @@ import usePopUp from "../hooks/usePopUp";
 import PopUp from "../components/PopUp";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { loadMainPostsRequest } from "../reducers/post";
+import ContentBox from "../components/ContentBox";
 
 const fadeIn = keyframes`
   from{
@@ -20,7 +22,7 @@ const fadeIn = keyframes`
 
 const Container = styled.div`
   width: 100%;
-  height: calc(100vh - 77px);
+  min-height: calc(100vh - 55px);
   display: flex;
   justify-content: center;
   animation: ${fadeIn} 0.5s ease-in-out;
@@ -36,20 +38,6 @@ const GridContainer = styled.div`
 
 const MenuBox = styled.div``;
 
-const ContentBox = styled.div`
-  border-right: 1px solid ${BORDER_COLOR};
-  border-left: 1px solid ${BORDER_COLOR};
-`;
-
-const PostingBox = styled.div`
-  overflow: scroll;
-  height: calc(100vh - 247px);
-  -ms-overflow-style: none; // IE에서 스크롤바 감춤
-  &::-webkit-scrollbar {
-    display: none !important; // 윈도우 크롬 등
-  }
-`;
-
 const FollowBox = styled.div``;
 
 const Home = () => {
@@ -61,31 +49,25 @@ const Home = () => {
   const { isOnPopUp } = usePopUp();
   const router = useRouter();
 
-  useEffect(() => {
-    onLoadPosts();
-  }, []);
-
   return (
     <>
       {isOnPopUp && <PopUp></PopUp>}
+
       <Container isOnPopUp={isOnPopUp}>
         <GridContainer>
-          <MenuBox />
-          <ContentBox>
-            <UploadForm></UploadForm>
-            <PostingBox>
-              {mainPosts &&
-                mainPosts.length > 0 &&
-                mainPosts.map(post => (
-                  <PostingCard key={post.id} post={post}></PostingCard>
-                ))}
-            </PostingBox>
-          </ContentBox>
+          <MenuBox></MenuBox>
+          <ContentBox />
           <FollowBox />
         </GridContainer>
       </Container>
     </>
   );
+};
+
+Home.getInitialProps = async context => {
+  context.store.dispatch({
+    type: loadMainPostsRequest().type
+  });
 };
 
 export default Home;

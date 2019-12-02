@@ -11,7 +11,9 @@ import {
   uploadProfileImageRequest,
   editUserRequest,
   deleteBackgroundImageRequest,
-  deleteProfileImageRequest
+  deleteProfileImageRequest,
+  onSetting,
+  offSetting
 } from "../reducers/user";
 
 const useUser = () => {
@@ -62,6 +64,9 @@ const useUser = () => {
     [dispatch]
   );
 
+  const turnOnSetting = useCallback(() => dispatch(onSetting()), [dispatch]);
+  const turnOffSetting = useCallback(() => dispatch(offSetting()), [dispatch]);
+
   return {
     user,
     onLogInRequest,
@@ -73,7 +78,9 @@ const useUser = () => {
     onUploadProfileImageRequest,
     onEditUserRequest,
     onDeleteBackgroundImageRequest,
-    onDeleteProfileImageRequest
+    onDeleteProfileImageRequest,
+    turnOnSetting,
+    turnOffSetting
   };
 };
 

@@ -23,8 +23,8 @@ const usePost = () => {
 
   const dispatch = useDispatch();
 
-  const onLoadPosts = useCallback(() =>
-    dispatch(loadMainPostsRequest(), [dispatch])
+  const onLoadPosts = useCallback(lastId =>
+    dispatch(loadMainPostsRequest(lastId), [dispatch])
   );
 
   const onLoadPostDetail = useCallback(id =>
@@ -54,8 +54,8 @@ const usePost = () => {
     dispatch
   ]);
 
-  const onLoadHashtagPosts = useCallback(tag =>
-    dispatch(loadHashtagPostsRequest(tag), [dispatch])
+  const onLoadHashtagPosts = useCallback((tag, lastId) =>
+    dispatch(loadHashtagPostsRequest(tag, lastId), [dispatch])
   );
 
   const onLoadComments = useCallback(postId =>

@@ -104,7 +104,10 @@ export const updatePostFailure = e => ({
   payload: e
 });
 
-export const loadMainPostsRequest = () => ({ type: LOAD_MAIN_POSTS_REQUEST });
+export const loadMainPostsRequest = lastId => ({
+  type: LOAD_MAIN_POSTS_REQUEST,
+  payload: lastId
+});
 export const loadMainPostsSuccess = posts => ({
   type: LOAD_MAIN_POSTS_SUCCESS,
   payload: posts
@@ -161,9 +164,9 @@ export const loadUserLikedPostsFailure = e => ({
   payload: e
 });
 
-export const loadHashtagPostsRequest = id => ({
+export const loadHashtagPostsRequest = (tag, lastId) => ({
   type: LOAD_HASHTAG_POSTS_REQUEST,
-  payload: id
+  payload: { tag, lastId }
 });
 export const loadHashtagPostsSuccess = posts => ({
   type: LOAD_HASHTAG_POSTS_SUCCESS,
@@ -260,9 +263,19 @@ const initialState = {
 const post = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_MAIN_POSTS_REQUEST:
-      return { ...state, isLoading: true };
+      return {
+        ...state,
+        isLoading: true,
+        hasMorePosts: action.payload ? state.hasMorePosts : true,
+        mainPosts: action.payload ? [...state.mainPosts] : []
+      };
     case LOAD_MAIN_POSTS_SUCCESS:
-      return { ...state, mainPosts: action.payload, isLoading: false };
+      return {
+        ...state,
+        mainPosts: [...state.mainPosts, ...action.payload],
+        isLoading: false,
+        hasMorePosts: action.payload.length === 10
+      };
     case LOAD_MAIN_POSTS_FAILURE:
       return { ...state, errorMessage: action.payload, isLoading: false };
 
@@ -306,9 +319,19 @@ const post = (state = initialState, action) => {
       return { ...state, isLoading: false, errorMessage: action.payload };
 
     case LOAD_HASHTAG_POSTS_REQUEST:
-      return { ...state };
+      return {
+        ...state,
+        mainPosts: action.payload ? [...state.mainPosts] : [],
+        isLoading: true,
+        hasMorePosts: action.payload.lastId ? state.hasMorePosts : true
+      };
     case LOAD_HASHTAG_POSTS_SUCCESS:
-      return { ...state, mainPosts: action.payload };
+      return {
+        ...state,
+        mainPosts: [...state.mainPosts, ...action.payload],
+        isLoading: false,
+        hasMorePosts: action.payload.length === 10
+      };
     case LOAD_HASHTAG_POSTS_FAILURE:
       return { ...state, errorMessage: action.payload };
 
@@ -328,7 +351,12 @@ const post = (state = initialState, action) => {
     case ADD_POST_REQUEST:
       return { ...state, isUploading: true };
     case ADD_POST_SUCCESS:
-      return { ...state, isUploading: false, imagePaths: [] };
+      return {
+        ...state,
+        isUploading: false,
+        imagePaths: [],
+        mainPosts: [{ ...action.payload }, ...state.mainPosts]
+      };
     case ADD_POST_FAILURE:
       return { ...state, errorMessage: action.payload };
 
@@ -355,14 +383,15 @@ const post = (state = initialState, action) => {
       const postIndex = state.mainPosts.findIndex(
         v => v.id === action.payload.postId
       );
-      const post = state.mainPosts[postIndex];
-      const Likers = [{ id: action.payload.userId }, ...post.Likers];
+      const mainPost = state.mainPosts[postIndex];
+      const Likers = [{ id: action.payload.userId }, ...mainPost.Likers];
       const mainPosts = [...state.mainPosts];
-      mainPosts[postIndex] = { ...post, Likers };
+      mainPosts[postIndex] = { ...mainPost, Likers };
       return {
         ...state,
         mainPosts,
         post: { ...state.post, Likers }
+        // userPost: { ...state.userPosts, Likers }
       };
     }
     case LIKE_POST_FAILURE:

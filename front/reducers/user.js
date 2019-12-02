@@ -42,6 +42,9 @@ const EDIT_USER_FAILURE = "user/EDIT_USER_FAILURE";
 
 const ADD_POST_TO_ME = "ADD_POST_TO_ME";
 
+const ON_SETTING = "/setting/ON_SETTING";
+const OFF_SETTING = "/setting/OFF_SETTING";
+
 // ActionCreator
 
 export const logInRequest = data => ({
@@ -150,6 +153,9 @@ export const editUserFailure = e => ({
 
 export const addPostToMe = post => ({ type: ADD_POST_TO_ME, payload: post });
 
+export const onSetting = () => ({ type: ON_SETTING });
+export const offSetting = () => ({ type: OFF_SETTING });
+
 // initialState
 
 const initialState = {
@@ -162,7 +168,8 @@ const initialState = {
   followingList: [], // 팔로잉 목록
   followerList: [], // 팔로워 목록
   peopleInformation: null, // 다른 회원 정보,
-  isEditting: false
+  isEditting: false,
+  isSettingOn: false // 에디터 활성화
 };
 
 // reducer
@@ -176,7 +183,9 @@ const user = (state = initialState, action) => {
         ...state,
         isLoggedin: true,
         isLoggingIn: false,
-        myInformation: { ...action.payload },
+        myInformation: {
+          ...action.payload
+        },
         loginErrorReason: ""
       };
     case LOG_IN_FAILURE:
@@ -209,7 +218,9 @@ const user = (state = initialState, action) => {
         ...state,
         isLoggedin: true,
         isLoggingIn: false,
-        myInformation: { ...action.payload },
+        myInformation: {
+          ...action.payload
+        },
         loginErrorReason: ""
       };
     case LOAD_USER_FAILURE:
@@ -283,8 +294,7 @@ const user = (state = initialState, action) => {
         ...state,
         myInformation: {
           ...state.myInformation,
-          backgroundImage: null,
-          Avatar: { ...state.myInformation.Avatar, background_src: null }
+          backgroundImage: null
         }
       };
 
@@ -308,8 +318,7 @@ const user = (state = initialState, action) => {
         ...state,
         myInformation: {
           ...state.myInformation,
-          profileImage: null,
-          Avatar: { ...state.myInformation.Avatar, profile_src: null }
+          profileImage: null
         }
       };
 
@@ -319,11 +328,33 @@ const user = (state = initialState, action) => {
     case EDIT_USER_SUCCESS:
       return {
         ...state,
-        isEditting: false
+        isEditting: false,
+        myInformation: {
+          ...state.myInformation
+        },
+        isSettingOn: false
       };
 
     case EDIT_USER_FAILURE:
       return { ...state, errorMessage: action.payload };
+
+    case ON_SETTING:
+      return {
+        ...state,
+        isSettingOn: true,
+        myInformation: {
+          ...state.myInformation,
+          backgroundImage: state.myInformation.Avatar.background_src
+            ? state.myInformation.Avatar.background_src
+            : null,
+          profileImage: state.myInformation.Avatar.profile_src
+            ? state.myInformation.Avatar.profile_src
+            : null
+        }
+      };
+
+    case OFF_SETTING:
+      return { ...state, isSettingOn: false };
     default:
       return state;
   }

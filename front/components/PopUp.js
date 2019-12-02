@@ -14,7 +14,7 @@ const transform = keyframes`
 
 const Container = styled.div`
   width: 100%;
-  height: calc(100vh - 77px);
+  height: calc(100vh - 55px);
   display: flex;
   justify-content: center;
   position: absolute;

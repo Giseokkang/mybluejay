@@ -2,7 +2,16 @@ import db from "../models";
 
 export const getHashtagPosts = async (req, res, next) => {
   try {
+    let where = {};
+    if (parseInt(req.query.lastId, 10)) {
+      where = {
+        id: {
+          [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10)
+        }
+      };
+    }
     const posts = await db.Post.findAll({
+      where,
       include: [
         {
           model: db.Hashtag,
@@ -20,6 +29,10 @@ export const getHashtagPosts = async (req, res, next) => {
           ]
         },
         {
+          model: db.Image,
+          attributes: ["id", "src"]
+        },
+        {
           model: db.User,
           as: "Likers",
           attributes: ["id"]
@@ -29,7 +42,8 @@ export const getHashtagPosts = async (req, res, next) => {
           attributes: ["id"]
         }
       ],
-      order: [["createdAt", "DESC"]]
+      order: [["createdAt", "DESC"]],
+      limit: parseInt(req.query.limit)
     });
     res.json(posts);
   } catch (e) {

@@ -11,8 +11,9 @@ import router from "next/router";
 
 const Container = styled.div`
   width: 100%;
-  height: 77px;
+  height: 55px;
   position: sticky;
+  top: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -20,6 +21,8 @@ const Container = styled.div`
   transition: height 0.2s ease-in-out;
   opacity: ${props => (props.isOnPopUp ? 0.2 : 1)};
   pointer-events: ${props => (props.isOnPopUp ? "none" : null)};
+  background-color: white;
+  z-index: 5;
 `;
 
 const ItemsContainer = styled.div`
@@ -106,12 +109,6 @@ const AppLayout = ({ children }) => {
   const { isOnPopUp } = usePopUp();
 
   const [term, setTerm] = useState("");
-
-  useEffect(() => {
-    if (!user.myInformation.id) {
-      onLoadUserRequest();
-    }
-  }, []);
 
   const searchOnSubmit = useCallback(e => {
     e.preventDefault();

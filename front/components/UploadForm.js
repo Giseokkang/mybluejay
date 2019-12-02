@@ -6,6 +6,7 @@ import { FaPlus } from "react-icons/fa";
 import usePost from "../hooks/usePost";
 import useUser from "../hooks/useUser";
 import { IoMdRemove } from "react-icons/io";
+import Loader from "react-loader-spinner";
 
 const Container = styled.div`
   width: 100%;
@@ -142,7 +143,8 @@ const UploadForm = () => {
     onAddPost,
     onUploadImage,
     onDeleteImage,
-    post: { imagePaths }
+    post: { imagePaths },
+    post
   } = usePost();
   const { user } = useUser();
   const imageInput = useRef();
@@ -210,7 +212,9 @@ const UploadForm = () => {
         <FormUpSideContainer>
           <ProfilePicture
             profileSrc={
-              user.isLoggedin && user.myInformation.Avatar.profile_src
+              user.isLoggedin &&
+              user.myInformation.Avatar &&
+              user.myInformation.Avatar.profile_src
                 ? user.myInformation.Avatar.profile_src
                 : null
             }
@@ -239,7 +243,24 @@ const UploadForm = () => {
             <FaPlus />
           </IconContainer>
           <SubmitButton isAvailableUpload={isAvailableUpload} type="submit">
-            업로드
+            {post.isUploading ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Loader
+                  type="Oval"
+                  color="#00BFFF"
+                  height={18}
+                  width={18}
+                ></Loader>
+              </div>
+            ) : (
+              "업로드"
+            )}
           </SubmitButton>
         </FormUpSideContainer>
         {imagePaths && imagePaths.length > 0 && (

@@ -5,7 +5,6 @@ import post from "./post";
 import members from "./members";
 import popUp from "./popUp";
 import others from "./others";
-import setting from "./setting";
 
 axios.defaults.baseURL = "http://localhost:8000/";
 
@@ -14,8 +13,7 @@ const rootReducer = combineReducers({
   post,
   members,
   popUp,
-  others,
-  setting
+  others
 });
 
 export default rootReducer;
