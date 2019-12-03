@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useRouter } from "next/router";
+import React from "react";
 import styled, { keyframes } from "styled-components";
 import usePost from "../../hooks/usePost";
 import usePopUp from "../../hooks/usePopUp";
@@ -9,6 +8,7 @@ import { BORDER_COLOR } from "../../utils/colors";
 import Comment from "../../components/Comment";
 import CommentUpload from "../../components/CommentUpload";
 import useUser from "../../hooks/useUser";
+import { loadPostRequest, loadCommentsRequest } from "../../reducers/post";
 
 const fadeIn = keyframes`
   from{
@@ -51,23 +51,14 @@ const CommentBox = styled.div`
 const FollowBox = styled.div``;
 
 const PostDetail = () => {
-  const router = useRouter();
-  const { id } = router.query;
   const { user } = useUser();
 
   const {
-    onLoadPostDetail,
-    onLoadComments,
     post: { post },
     post: { comments }
   } = usePost();
 
   const { isOnPopUp } = usePopUp();
-
-  useEffect(() => {
-    onLoadPostDetail(id);
-    onLoadComments(id);
-  }, []);
 
   return (
     <>
@@ -91,6 +82,22 @@ const PostDetail = () => {
       </Container>
     </>
   );
+};
+
+PostDetail.getInitialProps = async context => {
+  const {
+    query: { id }
+  } = context;
+  if (id) {
+    context.store.dispatch({
+      type: loadPostRequest().type,
+      payload: encodeURIComponent(id)
+    });
+    context.store.dispatch({
+      type: loadCommentsRequest().type,
+      payload: encodeURIComponent(id)
+    });
+  }
 };
 
 export default PostDetail;

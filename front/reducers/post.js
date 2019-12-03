@@ -1,3 +1,4 @@
+import produce from "immer";
 // Action
 
 const LOAD_MAIN_POSTS_REQUEST = "post/LOAD_MAIN_POSTS_REQUEST";
@@ -261,197 +262,294 @@ const initialState = {
 // Reducer
 
 const post = (state = initialState, action) => {
-  switch (action.type) {
-    case LOAD_MAIN_POSTS_REQUEST:
-      return {
-        ...state,
-        isLoading: true,
-        hasMorePosts: action.payload ? state.hasMorePosts : true,
-        mainPosts: action.payload ? [...state.mainPosts] : []
-      };
-    case LOAD_MAIN_POSTS_SUCCESS:
-      return {
-        ...state,
-        mainPosts: [...state.mainPosts, ...action.payload],
-        isLoading: false,
-        hasMorePosts: action.payload.length === 10
-      };
-    case LOAD_MAIN_POSTS_FAILURE:
-      return { ...state, errorMessage: action.payload, isLoading: false };
+  return produce(state, draft => {
+    switch (action.type) {
+      case LOAD_MAIN_POSTS_REQUEST: {
+        draft.isLoading = true;
+        draft.hasMorePosts = action.payload ? state.hasMorePosts : true;
+        draft.mainPosts = action.payload ? [...state.mainPosts] : [];
+        break;
+      }
+      case LOAD_MAIN_POSTS_SUCCESS: {
+        action.payload.forEach(v => draft.mainPosts.push(v));
+        draft.isLoading = false;
+        draft.hasMorePosts = action.payload.length === 10;
+        break;
+      }
 
-    case LOAD_POST_REQUEST:
-      return { ...state };
-    case LOAD_POST_SUCCESS:
-      return { ...state, post: action.payload };
-    case LOAD_POST_FAILURE:
-      return { ...state, errorMessage: action.payload };
+      case LOAD_MAIN_POSTS_FAILURE: {
+        draft.errorMessage = action.payload;
+        draft.isLoading = false;
+        break;
+      }
 
-    case LOAD_USER_POSTS_REQUEST:
-      return { ...state, isLoading: true };
-    case LOAD_USER_POSTS_SUCCESS:
-      return { ...state, userPosts: action.payload, isLoading: false };
-    case LOAD_USER_POSTS_FAILURE:
-      return { ...state, errorMessage: action.payload, isLoading: false };
+      case LOAD_POST_REQUEST: {
+        break;
+      }
+      case LOAD_POST_SUCCESS: {
+        draft.post = action.payload;
+        break;
+      }
+      case LOAD_POST_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
 
-    case LOAD_USER_COMMENTS_REQUEST:
-      return { ...state, isLoading: true, errorMessage: "" };
-    case LOAD_USER_COMMENTS_SUCCESS:
-      return {
-        ...state,
-        isLoading: false,
-        userComments: action.payload,
-        userPosts: null,
-        errorMessage: ""
-      };
-    case LOAD_USER_COMMENTS_FAILURE:
-      return { ...state, isLoading: false, errorMessage: action.payload };
+      case LOAD_USER_POSTS_REQUEST: {
+        draft.isLoading = true;
+        break;
+      }
+      case LOAD_USER_POSTS_SUCCESS: {
+        draft.userPosts = action.payload;
+        draft.isLoading = false;
+        break;
+      }
+      case LOAD_USER_POSTS_FAILURE: {
+        draft.errorMessage = action.payload;
+        draft.isLoading = false;
+        break;
+      }
 
-    case LOAD_USER_LIKED_POSTS_REQUEST:
-      return { ...state, isLoading: true, errorMessage: "" };
-    case LOAD_USER_LIKED_POSTS_SUCCESS:
-      return {
-        ...state,
-        isLoading: false,
-        userPosts: action.payload,
-        errorMessage: ""
-      };
-    case LOAD_USER_LIKED_POSTS_FAILURE:
-      return { ...state, isLoading: false, errorMessage: action.payload };
+      case LOAD_USER_COMMENTS_REQUEST: {
+        draft.isLoading = true;
+        draft.errorMessage = "";
+        break;
+      }
+      case LOAD_USER_COMMENTS_SUCCESS: {
+        draft.isLoading = false;
+        draft.userComments = action.payload;
+        draft.userPosts = null;
+        draft.errorMessage = "";
+        break;
+      }
 
-    case LOAD_HASHTAG_POSTS_REQUEST:
-      return {
-        ...state,
-        mainPosts: action.payload ? [...state.mainPosts] : [],
-        isLoading: true,
-        hasMorePosts: action.payload.lastId ? state.hasMorePosts : true
-      };
-    case LOAD_HASHTAG_POSTS_SUCCESS:
-      return {
-        ...state,
-        mainPosts: [...state.mainPosts, ...action.payload],
-        isLoading: false,
-        hasMorePosts: action.payload.length === 10
-      };
-    case LOAD_HASHTAG_POSTS_FAILURE:
-      return { ...state, errorMessage: action.payload };
+      case LOAD_USER_COMMENTS_FAILURE: {
+        draft.isLoading = false;
+        draft.errorMessage = action.payload;
+        break;
+      }
 
-    case UPLOAD_IMAGE_REQUEST:
-      return { ...state };
-    case UPLOAD_IMAGE_SUCCESS:
-      return { ...state, imagePaths: [...state.imagePaths, ...action.payload] };
-    case UPLOAD_IMAGE_FAILURE:
-      return { ...state, errorMessage: action.payload };
+      case LOAD_USER_LIKED_POSTS_REQUEST: {
+        draft.isLoading = true;
+        draft.errorMessage = "";
+        break;
+      }
+      case LOAD_USER_LIKED_POSTS_SUCCESS: {
+        draft.isLoading = false;
+        draft.userPosts = action.payload;
+        draft.errorMessage = "";
+        break;
+      }
 
-    case DELETE_IMAGE:
-      return {
-        ...state,
-        imagePaths: state.imagePaths.filter((v, i) => i !== action.payload)
-      };
+      case LOAD_USER_LIKED_POSTS_FAILURE: {
+        draft.isLoading = false;
+        draft.errorMessage = action.payload;
+        break;
+      }
 
-    case ADD_POST_REQUEST:
-      return { ...state, isUploading: true };
-    case ADD_POST_SUCCESS:
-      return {
-        ...state,
-        isUploading: false,
-        imagePaths: [],
-        mainPosts: [{ ...action.payload }, ...state.mainPosts]
-      };
-    case ADD_POST_FAILURE:
-      return { ...state, errorMessage: action.payload };
+      case LOAD_HASHTAG_POSTS_REQUEST: {
+        draft.mainPosts = action.payload ? draft.mainPosts : [];
+        draft.isLoading = true;
+        draft.hasMorePosts = action.payload.lastId ? draft.hasMorePosts : true;
+        break;
+      }
 
-    case DELETE_POST_REQUEST:
-      return { ...state };
-    case DELETE_POST_SUCCESS:
-      return {
-        ...state,
-        mainPosts: state.mainPosts.filter(post => post.id != action.payload)
-      };
-    case DELETE_POST_FAILURE:
-      return { ...state, errorMessage: action.payload };
+      case LOAD_HASHTAG_POSTS_SUCCESS: {
+        action.payload.forEach(v => draft.mainPosts.push(v));
+        draft.isLoading = false;
+        draft.hasMorePosts = action.payload.length === 10;
+        break;
+      }
 
-    case UPDATE_POST_REQUEST:
-      return { ...state };
-    case UPDATE_POST_SUCCESS:
-      return { ...state };
-    case UPDATE_POST_FAILURE:
-      return { ...state, errorMessage: action.payload };
+      case LOAD_HASHTAG_POSTS_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
 
-    case LIKE_POST_REQUEST:
-      return { ...state };
-    case LIKE_POST_SUCCESS: {
-      const postIndex = state.mainPosts.findIndex(
-        v => v.id === action.payload.postId
-      );
-      const mainPost = state.mainPosts[postIndex];
-      const Likers = [{ id: action.payload.userId }, ...mainPost.Likers];
-      const mainPosts = [...state.mainPosts];
-      mainPosts[postIndex] = { ...mainPost, Likers };
-      return {
-        ...state,
-        mainPosts,
-        post: { ...state.post, Likers }
-        // userPost: { ...state.userPosts, Likers }
-      };
+      case UPLOAD_IMAGE_REQUEST: {
+        break;
+      }
+      case UPLOAD_IMAGE_SUCCESS: {
+        action.payload.forEach(v => draft.imagePaths.push(v));
+        break;
+      }
+
+      case UPLOAD_IMAGE_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+
+      case DELETE_IMAGE: {
+        const index = draft.imagePaths.findIndex(
+          (v, i) => i === action.payload
+        );
+        draft.imagePaths.splice(index, 1);
+        break;
+      }
+
+      case ADD_POST_REQUEST: {
+        draft.isUploading = true;
+        break;
+      }
+      case ADD_POST_SUCCESS: {
+        draft.isUploading = false;
+        draft.imagePaths = [];
+        draft.mainPosts.unshift(action.payload);
+        break;
+      }
+
+      case ADD_POST_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+
+      case DELETE_POST_REQUEST: {
+        break;
+      }
+      case DELETE_POST_SUCCESS: {
+        const index = draft.mainPosts.findIndex(v => v.id === action.payload);
+        draft.mainPosts.splice(index, 1);
+        break;
+      }
+
+      case DELETE_POST_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+
+      case UPDATE_POST_REQUEST: {
+        break;
+      }
+      case UPDATE_POST_SUCCESS: {
+        break;
+      }
+      case UPDATE_POST_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+
+      case LIKE_POST_REQUEST: {
+        break;
+      }
+      case LIKE_POST_SUCCESS: {
+        if (draft.mainPosts && draft.mainPosts.length > 0) {
+          const postIndex = draft.mainPosts.findIndex(
+            v => v.id === action.payload.postId
+          );
+          draft.mainPosts[postIndex].Likers.unshift({
+            id: action.payload.userId
+          });
+        }
+
+        if (draft.post && draft.post.id) {
+          draft.post.Likers.unshift({ id: action.payload.userId });
+        }
+        if (draft.userPosts && draft.userPosts.length > 0) {
+          const userPostIndex = draft.userPosts.findIndex(
+            v => v.id === action.payload.postId
+          );
+
+          draft.userPosts[userPostIndex].Likers.unshift({
+            id: action.payload.userId
+          });
+        }
+        break;
+      }
+
+      case LIKE_POST_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+      case UNLIKE_POST_REQUEST: {
+        break;
+      }
+      case UNLIKE_POST_SUCCESS: {
+        if (draft.mainPosts && draft.mainPosts.length > 0) {
+          const mainPostIndex = draft.mainPosts.findIndex(
+            v => v.id === action.payload.postId
+          );
+          const likerIndex = draft.mainPosts[mainPostIndex].Likers.findIndex(
+            v => v.id === action.payload.userId
+          );
+          draft.mainPosts[mainPostIndex].Likers.splice(likerIndex, 1);
+        }
+
+        if (draft.post && draft.post.id) {
+          const postIndex = draft.post.Likers.findIndex(
+            v => v.id === action.payload.userId
+          );
+          draft.post.Likers.splice(postIndex, 1);
+        }
+        if (draft.userPosts && draft.userPosts.length > 0) {
+          const userPostIndex = draft.userPosts.findIndex(
+            v => v.id === action.payload.postId
+          );
+          const userPostLikerIndex = draft.userPosts[
+            userPostIndex
+          ].Likers.findIndex(v => v.id === action.payload.userId);
+
+          draft.userPosts[userPostIndex].Likers.splice(userPostLikerIndex, 1);
+        }
+        break;
+      }
+
+      case UNLIKE_POST_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+
+      case LOAD_COMMENTS_REQUEST: {
+        break;
+      }
+      case LOAD_COMMENTS_SUCCESS: {
+        draft.comments = action.payload;
+        break;
+      }
+      case LOAD_COMMENTS_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+
+      case ADD_COMMENT_REQUEST: {
+        break;
+      }
+      case ADD_COMMENT_SUCCESS: {
+        draft.comments.push(action.payload);
+        break;
+      }
+
+      case ADD_COMMENT_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+
+      case DELETE_COMMENT_REQUEST: {
+        break;
+      }
+      case DELETE_COMMENT_SUCCESS: {
+        break;
+      }
+      case DELETE_COMMENT_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+
+      case EDIT_COMMENT_REQUEST: {
+        break;
+      }
+      case EDIT_COMMENT_SUCCESS: {
+        break;
+      }
+      case EDIT_COMMENT_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+
+      default: {
+        break;
+      }
     }
-    case LIKE_POST_FAILURE:
-      return { ...state, errorMessage: action.payload };
-    case UNLIKE_POST_REQUEST:
-      return { ...state };
-    case UNLIKE_POST_SUCCESS: {
-      const postIndex = state.mainPosts.findIndex(
-        post => post.id === action.payload.postId
-      );
-      const post = state.mainPosts[postIndex];
-      const Likers = post.Likers.filter(
-        liker => liker.id !== action.payload.userId
-      );
-
-      const mainPosts = [...state.mainPosts];
-      mainPosts[postIndex] = {
-        ...state.mainPosts[postIndex],
-        Likers
-      };
-
-      return { ...state, mainPosts, post: { ...state.post, Likers } };
-    }
-    case UNLIKE_POST_FAILURE:
-      return { ...state, errorMessage: action.payload };
-
-    case LOAD_COMMENTS_REQUEST:
-      return { ...state };
-    case LOAD_COMMENTS_SUCCESS:
-      return { ...state, comments: action.payload };
-    case LOAD_COMMENTS_FAILURE:
-      return { ...state, errorMessage: action.payload };
-
-    case ADD_COMMENT_REQUEST:
-      return { ...state };
-    case ADD_COMMENT_SUCCESS:
-      return {
-        ...state,
-        comments: [...state.comments, action.payload]
-      };
-    case ADD_COMMENT_FAILURE:
-      return { ...state, errorMessage: action.payload };
-
-    case DELETE_COMMENT_REQUEST:
-      return { ...state };
-    case DELETE_COMMENT_SUCCESS:
-      return { ...state };
-    case DELETE_COMMENT_FAILURE:
-      return { ...state, errorMessage: action.payload };
-
-    case EDIT_COMMENT_REQUEST:
-      return { ...state };
-    case EDIT_COMMENT_SUCCESS:
-      return { ...state };
-    case EDIT_COMMENT_FAILURE:
-      return { ...state, errorMessage: action.payload };
-
-    default:
-      return state;
-  }
+  });
 };
 
 // Export

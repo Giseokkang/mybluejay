@@ -1,3 +1,4 @@
+import produce from "immer";
 // Actions
 
 const ON_POP_UP = "popup/ON_POP_UP";
@@ -18,14 +19,23 @@ const initialState = {
 // Reducer
 
 const popUp = (state = initialState, action) => {
-  switch (action.type) {
-    case ON_POP_UP:
-      return { ...state, isOnPopUp: true, id: action.payload };
-    case OFF_POP_UP:
-      return { ...state, isOnPopUp: false, id: null };
-    default:
-      return state;
-  }
+  return produce(state, draft => {
+    switch (action.type) {
+      case ON_POP_UP: {
+        draft.isOnPopUp = true;
+        draft.isOnPopUp = action.payload;
+        break;
+      }
+      case OFF_POP_UP: {
+        draft.isOnPopUp = false;
+        draft.id = null;
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  });
 };
 
 // Export

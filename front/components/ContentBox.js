@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import styled from "styled-components";
 import UploadForm from "./UploadForm";
 import usePost from "../hooks/usePost";
@@ -26,6 +26,7 @@ const ContentBox = () => {
     post: { mainPosts, hasMorePosts, isLoading },
     onLoadPosts
   } = usePost();
+  const countRef = useRef([]);
 
   const onScroll = useCallback(() => {
     if (
@@ -33,7 +34,12 @@ const ContentBox = () => {
       document.documentElement.scrollHeight - 300
     ) {
       if (mainPosts.length > 0 && hasMorePosts) {
-        onLoadPosts(mainPosts[mainPosts.length - 1].id);
+        const lastId = mainPosts[mainPosts.length - 1].id;
+
+        if (!countRef.current.includes(lastId)) {
+          onLoadPosts(lastId);
+        }
+        countRef.current.push(lastId);
       }
     }
   }, [mainPosts.length, hasMorePosts]);

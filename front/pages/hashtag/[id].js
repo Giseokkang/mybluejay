@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import usePost from "../../hooks/usePost";
 import usePopUp from "../../hooks/usePopUp";
@@ -51,6 +51,7 @@ const PostingBox = styled.div`
 const FollowBox = styled.div``;
 
 const Hashtag = () => {
+  const countRef = useRef([]);
   const {
     post: { mainPosts, hasMorePosts, isLoading },
     onLoadHashtagPosts
@@ -68,7 +69,11 @@ const Hashtag = () => {
       document.documentElement.scrollHeight - 300
     ) {
       if (hasMorePosts) {
-        onLoadHashtagPosts(id, mainPosts[mainPosts.length - 1].id);
+        const lastId = mainPosts[mainPosts.length - 1].id;
+        if (!countRef.current.includes(lastId)) {
+          onLoadHashtagPosts(id, lastId);
+        }
+        countRef.current.push(lastId);
       }
     }
   }, [mainPosts.length, hasMorePosts]);

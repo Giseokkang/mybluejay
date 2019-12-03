@@ -79,7 +79,7 @@ const SearchForm = styled.form`
   outline: none;
   opacity: 0.7;
   transition: all 0.2s ease-in-out;
-  margin-right: 30px;
+  margin-right: 140px;
   &:hover {
     opacity: 1;
   }

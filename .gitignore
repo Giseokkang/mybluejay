@@ -35,6 +35,7 @@ build/Release
 # Dependency directories
 /front/node_modules/
 /back/node_modules/
+/back/upload
 
 jspm_packages/
 
@@ -67,3 +68,4 @@ typings/
 .next
 
 .DS_Store
+

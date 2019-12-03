@@ -1,3 +1,5 @@
+import produce from "immer";
+
 // Action
 
 const LOAD_OTHER_REQUEST = "others/LOAD_OTHER_REQUEST";
@@ -29,16 +31,25 @@ const initialState = {
 // Reducer
 
 const others = (state = initialState, action) => {
-  switch (action.type) {
-    case LOAD_OTHER_REQUEST:
-      return state;
-    case LOAD_OTHER_SUCCESS:
-      return { ...state, information: action.payload };
-    case LOAD_OTHER_FAILURE:
-      return { ...state, errorMessage: action.payload };
-    default:
-      return state;
-  }
+  return produce(state, draft => {
+    switch (action.type) {
+      case LOAD_OTHER_REQUEST: {
+        break;
+      }
+      case LOAD_OTHER_SUCCESS: {
+        draft.information = action.payload;
+        break;
+      }
+      case LOAD_OTHER_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+
+      default: {
+        break;
+      }
+    }
+  });
 };
 
 // export

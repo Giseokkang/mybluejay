@@ -1,3 +1,4 @@
+import produce from "immer";
 // Action
 
 const LOG_IN_REQUEST = "user/LOG_IN_REQUEST";
@@ -175,189 +176,172 @@ const initialState = {
 // reducer
 
 const user = (state = initialState, action) => {
-  switch (action.type) {
-    case LOG_IN_REQUEST:
-      return { ...state, isLoggingIn: true, loginErrorReason: "" };
-    case LOG_IN_SUCCESS:
-      return {
-        ...state,
-        isLoggedin: true,
-        isLoggingIn: false,
-        myInformation: {
-          ...action.payload
-        },
-        loginErrorReason: ""
-      };
-    case LOG_IN_FAILURE:
-      return {
-        ...state,
-        loginErrorReason: action.payload,
-        isLoggingIn: false,
-        myInformation: {}
-      };
+  return produce(state, draft => {
+    switch (action.type) {
+      case LOG_IN_REQUEST: {
+        draft.isLoggingIn = true;
+        draft.loginErrorReason = "";
+        break;
+      }
+      case LOG_IN_SUCCESS: {
+        draft.isLoggedin = true;
+        draft.isLoggingIn = false;
+        draft.myInformation = action.payload;
+        draft.loginErrorReason = "";
+        break;
+      }
 
-    case LOG_OUT_REQUEST:
-      return { ...state, isLoggingOut: true };
-    case LOG_OUT_SUCCESS:
-      return {
-        ...state,
-        isLoggedin: false,
-        myInformation: {},
-        isLoggingOut: false
-      };
-    case LOG_OUT_FAILURE:
-      return {
-        ...state,
-        loginErrorReason: action.payload,
-        isLoggingOut: false
-      };
-    case LOAD_USER_REQUEST:
-      return { ...state, isLoggingIn: true, loginErrorReason: "" };
-    case LOAD_USER_SUCCESS:
-      return {
-        ...state,
-        isLoggedin: true,
-        isLoggingIn: false,
-        myInformation: {
-          ...action.payload
-        },
-        loginErrorReason: ""
-      };
-    case LOAD_USER_FAILURE:
-      return {
-        ...state,
-        loginErrorReason: action.payload,
-        isLoggingIn: false,
-        myInformation: {}
-      };
-    case FOLLOW_USER_REQUEST:
-      return {
-        ...state,
-        errorMessage: ""
-      };
-    case FOLLOW_USER_SUCCESS:
-      return {
-        ...state,
-        myInformation: {
-          ...state.myInformation,
-          Followings: [
-            { id: action.payload },
-            ...state.myInformation.Followings
-          ]
-        }
-        // followerList: [{ id: action.payload }, ...state.followingList],
-        // errorMessage: ""
-      };
-    case FOLLOW_USER_FAILURE:
-      return {
-        ...state,
-        errorMessage: action.payload
-      };
-    case UNFOLLOW_USER_REQUEST:
-      return {
-        ...state
-      };
-    case UNFOLLOW_USER_SUCCESS:
-      return {
-        ...state,
-        myInformation: {
-          ...state.myInformation,
-          Followings: state.myInformation.Followings.filter(
-            following => following.id !== action.payload
-          )
-        },
-        errorMessage: ""
-      };
-    case UNFOLLOW_USER_FAILURE:
-      return {
-        ...state,
-        errorMessage: action.payload
-      };
+      case LOG_IN_FAILURE: {
+        draft.loginErrorReason = action.payload;
+        draft.isLoggingIn = false;
+        draft.myInformation = {};
+        break;
+      }
 
-    case UPLOAD_BACKGROUND_IMAGE_REQUEST:
-      return { ...state };
+      case LOG_OUT_REQUEST: {
+        draft.isLoggingOut = true;
+        break;
+      }
+      case LOG_OUT_SUCCESS: {
+        draft.isLoggedin = false;
+        draft.myInformation = {};
+        draft.isLoggingOut = false;
+        break;
+      }
 
-    case UPLOAD_BACKGROUND_IMAGE_SUCCESS:
-      return {
-        ...state,
-        myInformation: {
-          ...state.myInformation,
-          backgroundImage: action.payload
-        }
-      };
+      case LOG_OUT_FAILURE: {
+        draft.loginErrorReason = action.payload;
+        draft.isLoggingOut = false;
+        break;
+      }
 
-    case UPLOAD_BACKGROUND_IMAGE_FAILURE:
-      return { ...state, errorMessage: action.payload };
+      case LOAD_USER_REQUEST: {
+        draft.isLoggingIn = true;
+        draft.loginErrorReason = "";
+        break;
+      }
+      case LOAD_USER_SUCCESS: {
+        draft.isLoggedin = true;
+        draft.isLoggingIn = false;
+        draft.myInformation = action.payload;
+        draft.loginErrorReason = "";
+        break;
+      }
 
-    case DELETE_BACKGROUND_IMAGE_REQUEST:
-      return {
-        ...state,
-        myInformation: {
-          ...state.myInformation,
-          backgroundImage: null
-        }
-      };
+      case LOAD_USER_FAILURE: {
+        draft.loginErrorReason = action.payload;
+        draft.isLoggingIn = false;
+        draft.myInformation = {};
+        break;
+      }
 
-    case UPLOAD_PROFILE_IMAGE_REQUEST:
-      return { ...state };
+      case FOLLOW_USER_REQUEST: {
+        draft.errorMessage = "";
+        break;
+      }
 
-    case UPLOAD_PROFILE_IMAGE_SUCCESS:
-      return {
-        ...state,
-        myInformation: {
-          ...state.myInformation,
-          profileImage: action.payload
-        }
-      };
+      case FOLLOW_USER_SUCCESS: {
+        draft.myInformation.Followings.unshift({ id: action.payload });
+        break;
+      }
 
-    case UPLOAD_PROFILE_IMAGE_FAILURE:
-      return { ...state, errorMessage: action.payload };
+      case FOLLOW_USER_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+      case UNFOLLOW_USER_REQUEST: {
+        break;
+      }
+      case UNFOLLOW_USER_SUCCESS: {
+        const index = draft.myInformation.Followings.findIndex(
+          v => v.id === action.data
+        );
+        draft.myInformation.Followings.splice(index, 1);
+        draft.errorMessage = "";
+        break;
+      }
 
-    case DELETE_PROFILE_IMAGE_REQUEST:
-      return {
-        ...state,
-        myInformation: {
-          ...state.myInformation,
-          profileImage: null
-        }
-      };
+      case UNFOLLOW_USER_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
 
-    case EDIT_USER_REQUEST:
-      return { ...state, isEditting: true };
+      case UPLOAD_BACKGROUND_IMAGE_REQUEST: {
+        break;
+      }
 
-    case EDIT_USER_SUCCESS:
-      return {
-        ...state,
-        isEditting: false,
-        myInformation: {
-          ...state.myInformation
-        },
-        isSettingOn: false
-      };
+      case UPLOAD_BACKGROUND_IMAGE_SUCCESS: {
+        draft.myInformation.backgroundImage = action.payload;
+        break;
+      }
 
-    case EDIT_USER_FAILURE:
-      return { ...state, errorMessage: action.payload };
+      case UPLOAD_BACKGROUND_IMAGE_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
 
-    case ON_SETTING:
-      return {
-        ...state,
-        isSettingOn: true,
-        myInformation: {
-          ...state.myInformation,
-          backgroundImage: state.myInformation.Avatar.background_src
-            ? state.myInformation.Avatar.background_src
-            : null,
-          profileImage: state.myInformation.Avatar.profile_src
-            ? state.myInformation.Avatar.profile_src
-            : null
-        }
-      };
+      case DELETE_BACKGROUND_IMAGE_REQUEST: {
+        draft.myInformation.backgroundImage = null;
+        break;
+      }
 
-    case OFF_SETTING:
-      return { ...state, isSettingOn: false };
-    default:
-      return state;
-  }
+      case UPLOAD_PROFILE_IMAGE_REQUEST: {
+        break;
+      }
+
+      case UPLOAD_PROFILE_IMAGE_SUCCESS: {
+        draft.myInformation.profileImage = action.payload;
+        break;
+      }
+
+      case UPLOAD_PROFILE_IMAGE_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+
+      case DELETE_PROFILE_IMAGE_REQUEST: {
+        draft.profileImage = null;
+        break;
+      }
+
+      case EDIT_USER_REQUEST: {
+        draft.isEditting = true;
+        break;
+      }
+
+      case EDIT_USER_SUCCESS: {
+        draft.isEditting = false;
+        draft.isSettingOn = false;
+        break;
+      }
+
+      case EDIT_USER_FAILURE: {
+        draft.errorMessage = action.payload;
+        break;
+      }
+
+      case ON_SETTING: {
+        draft.isSettingOn = true;
+        draft.myInformation.backgroundImage = state.myInformation.Avatar
+          .background_src
+          ? state.myInformation.Avatar.background_src
+          : null;
+        draft.myInformation.profileImage = state.myInformation.Avatar
+          .profile_src
+          ? state.myInformation.Avatar.profile_src
+          : null;
+        break;
+      }
+
+      case OFF_SETTING: {
+        draft.isSettingOn = false;
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  });
 };
 
 export default user;

@@ -1,3 +1,4 @@
+import produce from "immer";
 // Action
 
 const SIGN_UP_REQUEST = "members/SIGN_UP_REQUEST";
