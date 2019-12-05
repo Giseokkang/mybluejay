@@ -3,9 +3,10 @@ import styled, { keyframes } from "styled-components";
 import ProfileCard from "../../components/ProfileCard";
 import { useRouter } from "next/router";
 import useUser from "../../hooks/useUser";
-import useOthers from "../../hooks/useOthers";
 import Setting from "../../components/Setting";
 import UnloggedIn from "../../components/unLoggedIn";
+import usePopUp from "../../hooks/usePopUp";
+import PopUp from "../../components/PopUp";
 
 const fadeIn = keyframes`
   from{
@@ -22,7 +23,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   animation: ${fadeIn} 0.5s ease-in-out;
-  opacity: ${props => (props.isOnPopUp ? 0.2 : 1)};
+  opacity: ${props => (props.isOnPopUp || props.isSettingOn ? 0.2 : 1)};
 `;
 
 const GridContainer = styled.div`
@@ -54,8 +55,9 @@ const Profile = () => {
     pathname,
     query: { id }
   } = useRouter();
-  const { user } = useUser();
-  const { others, onLoadOtherRequest } = useOthers();
+  const { user, onLoadOtherRequest } = useUser();
+  const { isOnPopUp } = usePopUp();
+
   const {
     user: { isSettingOn }
   } = useUser();
@@ -71,7 +73,8 @@ const Profile = () => {
   return (
     <>
       {isSettingOn && <Setting></Setting>}
-      <Container>
+      {isOnPopUp && <PopUp></PopUp>}
+      <Container isOnPopUp={isOnPopUp} isSettingOn={isSettingOn}>
         <GridContainer>
           <MenuBox />
           <ContentBox>
@@ -82,7 +85,7 @@ const Profile = () => {
                 <UnloggedIn></UnloggedIn>
               )
             ) : (
-              <ProfileCard info={others.information} />
+              <ProfileCard info={user.peopleInformation} />
             )}
           </ContentBox>
           <FollowBox />

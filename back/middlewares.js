@@ -19,7 +19,7 @@ import path from "path";
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, "upload/postImages");
+    cb(null, "uploads/postImages");
   },
   filename: function(req, file, cb) {
     const ext = path.extname(file.originalname);
@@ -35,7 +35,7 @@ export const imageUpload = multer({
 
 const backgroundStorage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, "upload/backgrounds");
+    cb(null, "uploads/backgrounds");
   },
   filename: function(req, file, cb) {
     const ext = path.extname(file.originalname);
@@ -51,7 +51,7 @@ export const backgroundImageUpload = multer({
 
 const avatarStorage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, "upload/avatars");
+    cb(null, "uploads/avatars");
   },
   filename: function(req, file, cb) {
     const ext = path.extname(file.originalname);

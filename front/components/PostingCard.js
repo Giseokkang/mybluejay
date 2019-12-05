@@ -6,7 +6,6 @@ import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
 import Link from "next/link";
 import usePost from "../hooks/usePost";
 import usePopUp from "../hooks/usePopUp";
-import PopUp from "../components/PopUp";
 import useUser from "../hooks/useUser";
 import Slider from "react-slick";
 import ImageZoom from "./ImageZoom";
@@ -187,7 +186,9 @@ const PostingCard = ({ post }) => {
                 <a>
                   <ProfilePicture
                     profileSrc={
-                      post.User.Avatar && post.User.Avatar.profile_src
+                      post.User.Avatar &&
+                      post.User.Avatar.profile_src &&
+                      post.User.Avatar.profile_src
                     }
                   />
                 </a>
@@ -212,7 +213,7 @@ const PostingCard = ({ post }) => {
                     <DeleteBtn
                       onClick={e => {
                         e.stopPropagation();
-                        turnOnPopUp(post.id);
+                        turnOnPopUp({ postId: post.id });
                       }}
                     >
                       <FaTrashAlt />

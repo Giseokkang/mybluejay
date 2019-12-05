@@ -265,8 +265,14 @@ const Setting = () => {
   }, []);
 
   return (
-    <Container>
-      <EditorContainer encType="multipart/form-data" onSubmit={onSumbit}>
+    <Container onClick={turnOffSetting}>
+      <EditorContainer
+        encType="multipart/form-data"
+        onSubmit={onSumbit}
+        onClick={e => {
+          e.stopPropagation();
+        }}
+      >
         <TitleContainer>
           <BackIcon onClick={onClickOffSetting}>
             <IoMdArrowRoundBack />
@@ -279,7 +285,7 @@ const Setting = () => {
         <ProfileBackground
           onClick={onClickBackgroundImageUpload}
           src={
-            myInformation.backgroundImage
+            myInformation.backgroundImage && myInformation.backgroundImage
               ? `http://localhost:8000/${myInformation.backgroundImage}`
               : null
           }
@@ -300,7 +306,7 @@ const Setting = () => {
         <ProfileImage
           onClick={onClickProfileImageUpload}
           src={
-            myInformation.profileImage
+            myInformation.profileImage && myInformation.profileImage
               ? `http://localhost:8000/${myInformation.profileImage}`
               : null
           }

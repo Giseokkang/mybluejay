@@ -19,8 +19,9 @@ const Container = styled.div`
   align-items: center;
   border-bottom: 1px solid rgba(var(--b6a, 219, 219, 219), 1);
   transition: height 0.2s ease-in-out;
-  opacity: ${props => (props.isOnPopUp ? 0.2 : 1)};
-  pointer-events: ${props => (props.isOnPopUp ? "none" : null)};
+  opacity: ${props => (props.isOnPopUp || props.isSettingOn ? 0.2 : 1)};
+  pointer-events: ${props =>
+    props.isOnPopUp || props.isSettingOn ? "none" : null};
   background-color: white;
   z-index: 5;
 `;
@@ -124,7 +125,7 @@ const AppLayout = ({ children }) => {
 
   return (
     <>
-      <Container isOnPopUp={isOnPopUp}>
+      <Container isOnPopUp={isOnPopUp} isSettingOn={user.isSettingOn}>
         <ItemsContainer>
           <Link href="/">
             <LinkContainer>

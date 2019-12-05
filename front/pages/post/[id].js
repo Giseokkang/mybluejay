@@ -1,4 +1,5 @@
 import React from "react";
+import Helmet from "react-helmet";
 import styled, { keyframes } from "styled-components";
 import usePost from "../../hooks/usePost";
 import usePopUp from "../../hooks/usePopUp";
@@ -50,7 +51,7 @@ const CommentBox = styled.div`
 
 const FollowBox = styled.div``;
 
-const PostDetail = () => {
+const Post = () => {
   const { user } = useUser();
 
   const {
@@ -62,6 +63,30 @@ const PostDetail = () => {
 
   return (
     <>
+      <Helmet
+        title={`${post.User.nickname}님의 글`}
+        description={post.content}
+        meta={[
+          { name: "description", content: post.content },
+          {
+            name: "og:title",
+            content: `${post.User.nickname}님의 글`
+          },
+          {
+            name: "og:description",
+            content: post.content
+          },
+          {
+            name: "og:image",
+            content:
+              post.Images[0] && `http://localhost:8000/${post.Images[0].src}`
+          },
+          {
+            name: "og:url",
+            content: `http://localhost:3000/post/${post.id}`
+          }
+        ]}
+      />
       {isOnPopUp && <PopUp></PopUp>}
       <Container isOnPopUp={isOnPopUp}>
         <GridContainer>
@@ -84,7 +109,7 @@ const PostDetail = () => {
   );
 };
 
-PostDetail.getInitialProps = async context => {
+Post.getInitialProps = async context => {
   const {
     query: { id }
   } = context;
@@ -100,4 +125,4 @@ PostDetail.getInitialProps = async context => {
   }
 };
 
-export default PostDetail;
+export default Post;

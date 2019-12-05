@@ -2,9 +2,11 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import ProfilePicture from "./ProfilePicture";
 import Link from "next/link";
-import { FaTrashAlt, FaRegHeart } from "react-icons/fa";
+import { FaTimes, FaRegHeart } from "react-icons/fa";
 import { getFullDay } from "../utils/function";
 import { useRouter } from "next/router";
+import useUser from "../hooks/useUser";
+import usePopUp from "../hooks/usePopUp";
 
 const fadeIn = keyframes`
   from{
@@ -68,14 +70,8 @@ const DeleteBtn = styled.div`
   color: #e8537c;
   font-size: 15px;
   cursor: pointer;
-  padding: 10px;
   border-radius: 50%;
   margin-right: 10px;
-
-  transition: all 0.2s linear;
-  &:hover {
-    background-color: #e0effa;
-  }
 `;
 
 const Image = styled.div`
@@ -128,46 +124,54 @@ const IconsContainer = styled.div`
   }
 `;
 const Comment = ({ info }) => {
-  const { User, content, createdAt, id } = info;
+  const { user } = useUser();
+  const { turnOnPopUp } = usePopUp();
+  // const { User, content, createdAt, id } = info;
   const router = useRouter();
   const { pathname } = router;
   return (
     <>
       <Container isCursorOn={pathname.includes("/profile")}>
         <PictureContainer>
-          <Link href="/profile/[id]" as={`/profile/${User.nickname}`}>
+          <Link href="/profile/[id]" as={`/profile/${info.User.nickname}`}>
             <a>
-              <ProfilePicture profileSrc={info.User.Avatar.profile_src} />
+              <ProfilePicture
+                profileSrc={
+                  info.User.Avatar &&
+                  info.User.Avatar.profile_src &&
+                  info.User.Avatar.profile_src
+                }
+              />
             </a>
           </Link>
         </PictureContainer>
         <UpsideContainer>
           <PostingInfomationContainer>
             <div>
-              <Link href="/profile/[id]" as={`/profile/${User.nickname}`}>
+              <Link href="/profile/[id]" as={`/profile/${info.User.nickname}`}>
                 <a>
-                  <Nickname>{User.nickname}</Nickname>
+                  <Nickname>{info.User.nickname}</Nickname>
                 </a>
               </Link>
-              <Time>{getFullDay(createdAt)}</Time>
+              <Time>{getFullDay(info.createdAt)}</Time>
             </div>
-            {/* {user.myInformation.id &&
-              userId &&
-              user.myInformation.id === userId && (
+            {user.myInformation.id &&
+              info.UserId &&
+              user.myInformation.id === info.UserId && (
                 <DeleteBtn
                   onClick={e => {
                     e.stopPropagation();
-                    turnOnPopUp(id);
+                    turnOnPopUp({ commentId: info.id });
                   }}
                 >
-                  <FaTrashAlt />
+                  <FaTimes />
                 </DeleteBtn>
-              )} */}
+              )}
           </PostingInfomationContainer>
         </UpsideContainer>
         <ContentContainer>
           <Description>
-            {content.split(/(#[^\s]+)/g).map(v => {
+            {info.content.split(/(#[^\s]+)/g).map(v => {
               if (v.match(/(#[^\s]+)/g)) {
                 return (
                   <Link

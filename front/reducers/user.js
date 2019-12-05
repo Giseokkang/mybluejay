@@ -46,6 +46,10 @@ const ADD_POST_TO_ME = "ADD_POST_TO_ME";
 const ON_SETTING = "/setting/ON_SETTING";
 const OFF_SETTING = "/setting/OFF_SETTING";
 
+const LOAD_OTHER_REQUEST = "others/LOAD_OTHER_REQUEST";
+const LOAD_OTHER_SUCCESS = "others/LOAD_OTHER_SUCCESS";
+const LOAD_OTHER_FAILURE = "others/LOAD_OTHER_FAILURE";
+
 // ActionCreator
 
 export const logInRequest = data => ({
@@ -81,9 +85,9 @@ export const followUserRequest = nickname => ({
   type: FOLLOW_USER_REQUEST,
   payload: nickname
 });
-export const followUserSuccess = userId => ({
+export const followUserSuccess = data => ({
   type: FOLLOW_USER_SUCCESS,
-  payload: userId
+  payload: { followerId: data.followerId, followingId: data.followingId }
 });
 export const followUserFailure = e => ({
   type: FOLLOW_USER_FAILURE,
@@ -94,9 +98,9 @@ export const unfollowUserRequest = nickname => ({
   type: UNFOLLOW_USER_REQUEST,
   payload: nickname
 });
-export const unfollowUserSuccess = userId => ({
+export const unfollowUserSuccess = data => ({
   type: UNFOLLOW_USER_SUCCESS,
-  payload: userId
+  payload: { unfollowerId: data.followerId, unfollowingId: data.followingId }
 });
 export const unfollowUserFailure = e => ({
   type: UNFOLLOW_USER_FAILURE,
@@ -156,6 +160,19 @@ export const addPostToMe = post => ({ type: ADD_POST_TO_ME, payload: post });
 
 export const onSetting = () => ({ type: ON_SETTING });
 export const offSetting = () => ({ type: OFF_SETTING });
+
+export const loadOtherRequest = nickname => ({
+  type: LOAD_OTHER_REQUEST,
+  payload: nickname
+});
+export const loadOtherSuccess = other => ({
+  type: LOAD_OTHER_SUCCESS,
+  payload: other
+});
+export const loadOtherFailure = e => ({
+  type: LOAD_OTHER_FAILURE,
+  payload: e
+});
 
 // initialState
 
@@ -241,7 +258,12 @@ const user = (state = initialState, action) => {
       }
 
       case FOLLOW_USER_SUCCESS: {
-        draft.myInformation.Followings.unshift({ id: action.payload });
+        draft.myInformation.Followings.unshift({
+          id: action.payload.followingId
+        });
+        draft.peopleInformation.Followers.unshift({
+          id: action.payload.followerId
+        });
         break;
       }
 
@@ -253,11 +275,15 @@ const user = (state = initialState, action) => {
         break;
       }
       case UNFOLLOW_USER_SUCCESS: {
-        const index = draft.myInformation.Followings.findIndex(
-          v => v.id === action.data
+        const followingIndex = draft.myInformation.Followings.findIndex(
+          v => v.id === action.payload.unfollowerId
         );
-        draft.myInformation.Followings.splice(index, 1);
+        draft.myInformation.Followings.splice(followingIndex, 1);
         draft.errorMessage = "";
+        const followerIndex = draft.peopleInformation.Followers.findIndex(
+          v => v.id === action.payload.unfollowingId
+        );
+        draft.peopleInformation.Followers.splice(followerIndex, 1);
         break;
       }
 
@@ -322,19 +348,32 @@ const user = (state = initialState, action) => {
 
       case ON_SETTING: {
         draft.isSettingOn = true;
-        draft.myInformation.backgroundImage = state.myInformation.Avatar
-          .background_src
-          ? state.myInformation.Avatar.background_src
-          : null;
-        draft.myInformation.profileImage = state.myInformation.Avatar
-          .profile_src
-          ? state.myInformation.Avatar.profile_src
-          : null;
+        draft.myInformation.backgroundImage =
+          state.myInformation.Avatar &&
+          state.myInformation.Avatar.background_src
+            ? state.myInformation.Avatar.background_src
+            : null;
+        draft.myInformation.profileImage =
+          state.myInformation.Avatar && state.myInformation.Avatar.profile_src
+            ? state.myInformation.Avatar.profile_src
+            : null;
         break;
       }
 
       case OFF_SETTING: {
         draft.isSettingOn = false;
+        break;
+      }
+
+      case LOAD_OTHER_REQUEST: {
+        break;
+      }
+      case LOAD_OTHER_SUCCESS: {
+        draft.peopleInformation = action.payload;
+        break;
+      }
+      case LOAD_OTHER_FAILURE: {
+        draft.errorMessage = action.payload;
         break;
       }
       default: {

@@ -2,6 +2,7 @@ import styled, { keyframes } from "styled-components";
 import React from "react";
 import usePost from "../hooks/usePost";
 import usePopUp from "../hooks/usePopUp";
+import Router, { useRouter } from "next/router";
 
 const transform = keyframes`
   from{
@@ -17,7 +18,7 @@ const Container = styled.div`
   height: calc(100vh - 55px);
   display: flex;
   justify-content: center;
-  position: absolute;
+  position: fixed;
   z-index: 9;
 `;
 
@@ -69,20 +70,36 @@ const Button = styled.button`
 `;
 
 const PopUp = () => {
-  const { onDeletePost } = usePost();
+  const { onDeletePost, onDeleteComment } = usePost();
   const { isOnPopUp, id, turnOnPopUp, turnOffPopUp } = usePopUp();
+  const router = useRouter();
+  const { pathname } = router;
+  console.log(id);
 
   return (
-    <Container>
-      <PopUpContainer>
+    <Container onClick={turnOffPopUp}>
+      <PopUpContainer
+        onClick={e => {
+          e.stopPropagation();
+        }}
+      >
         <Title>정말로 진행하시겠습니까?</Title>
         <Description>삭제된 데이터는 복구되지 않습니다.</Description>
         <BtnContainer>
           <Button
             backgroundColor="#74b9ff"
             onClick={() => {
-              onDeletePost(id);
-              turnOffPopUp();
+              if (id.postId) {
+                onDeletePost(id.postId);
+                turnOffPopUp();
+                if (pathname.includes("post")) {
+                  Router.push("/");
+                }
+              }
+              if (id.commentId) {
+                onDeleteComment(id.commentId);
+                turnOffPopUp();
+              }
             }}
           >
             확인

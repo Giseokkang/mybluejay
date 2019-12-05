@@ -4,7 +4,6 @@ import { FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
 import { CHARACTER_COLOR, SKYBLUE, BORDER_COLOR } from "../utils/colors";
 import useUser from "../hooks/useUser";
-import useOthers from "../hooks/useOthers";
 import { useRouter } from "next/router";
 import PostingCard from "./PostingCard";
 import Tabs from "./Tabs";
@@ -141,8 +140,10 @@ const ProfileCard = ({ info }) => {
   const {
     post: { userPosts }
   } = usePost();
-  const { others } = useOthers();
-  const { turnOnSetting } = useUser();
+  const {
+    turnOnSetting,
+    user: { peopleInformation }
+  } = useUser();
 
   const onClickOnSetting = useCallback(() => {
     turnOnSetting();
@@ -165,14 +166,18 @@ const ProfileCard = ({ info }) => {
         </StickyContainer>
         <ProfileBackground
           backgroundSrc={
-            info.Avatar && info.Avatar.background_src
+            info.Avatar &&
+            info.Avatar.background_src &&
+            info.Avatar.background_src
               ? `http://localhost:8000/${info.Avatar.background_src}`
               : null
           }
         >
           <ProfileImage
             profileSrc={
-              info.Avatar && info.Avatar.profile_src
+              info.Avatar &&
+              info.Avatar.background_src &&
+              info.Avatar.background_src
                 ? `http://localhost:8000/${info.Avatar.profile_src}`
                 : null
             }
@@ -186,7 +191,7 @@ const ProfileCard = ({ info }) => {
               </Btn>
             ) : user.myInformation.Followings &&
               user.myInformation.Followings.find(
-                v => v.id === others.information.id
+                v => v.id === peopleInformation.id
               ) ? (
               <Btn
                 backgroundColor="#ff4757"

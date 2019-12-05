@@ -5,6 +5,7 @@ import usePost from "../hooks/usePost";
 import { BORDER_COLOR } from "../utils/colors";
 import PostingCard from "./PostingCard";
 import Loader from "react-loader-spinner";
+import usePopUp from "../hooks/usePopUp";
 
 const Container = styled.div`
   border-right: 1px solid ${BORDER_COLOR};
@@ -13,7 +14,7 @@ const Container = styled.div`
 `;
 
 const PostingBox = styled.div`
-  overflow: scroll;
+  /* overflow: ${props => (props.isOnPopUp ? "hidden" : "scroll")}; */
   /* height: calc(100vh - 247px);
   -ms-overflow-style: none; // IE에서 스크롤바 감춤
   &::-webkit-scrollbar {
@@ -27,6 +28,7 @@ const ContentBox = () => {
     onLoadPosts
   } = usePost();
   const countRef = useRef([]);
+  const { isOnPopUp } = usePopUp();
 
   const onScroll = useCallback(() => {
     if (
@@ -51,7 +53,7 @@ const ContentBox = () => {
     };
   }, [mainPosts.length, hasMorePosts]);
   return (
-    <Container>
+    <Container isOnPopUp={isOnPopUp}>
       <UploadForm></UploadForm>
       <PostingBox>
         {mainPosts &&

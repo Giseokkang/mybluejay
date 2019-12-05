@@ -15,7 +15,8 @@ import {
   deleteImage,
   unlikePostRequest,
   loadUserCommentsRequest,
-  loadUserLikedPostsRequest
+  loadUserLikedPostsRequest,
+  deleteCommentRequest
 } from "../reducers/post";
 
 const usePost = () => {
@@ -66,6 +67,10 @@ const usePost = () => {
     dispatch(addCommentRequest(postId, comment), [dispatch])
   );
 
+  const onDeleteComment = useCallback(commentId =>
+    dispatch(deleteCommentRequest(commentId), [dispatch])
+  );
+
   const onUploadImage = useCallback(images =>
     dispatch(uploadImageRequest(images), [dispatch])
   );
@@ -90,6 +95,7 @@ const usePost = () => {
     onLoadUserComments,
     onLoadUserLikedPosts,
     onAddPost,
+    onDeleteComment,
     onDeletePost,
     onUpdatePost,
     onLikePost,

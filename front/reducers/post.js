@@ -236,11 +236,14 @@ export const addCommentFailure = e => ({
   payload: e
 });
 
-export const deleteCommentRequest = id => ({
+export const deleteCommentRequest = commentId => ({
   type: DELETE_COMMENT_REQUEST,
-  payload: id
+  payload: commentId
 });
-export const deleteCommentSuccess = () => ({ type: DELETE_COMMENT_SUCCESS });
+export const deleteCommentSuccess = commentId => ({
+  type: DELETE_COMMENT_SUCCESS,
+  payload: commentId
+});
 export const deleteCommentFailure = e => ({
   type: DELETE_COMMENT_FAILURE,
   payload: e
@@ -296,6 +299,7 @@ const post = (state = initialState, action) => {
       }
 
       case LOAD_USER_POSTS_REQUEST: {
+        draft.userComments = [];
         draft.isLoading = true;
         break;
       }
@@ -311,6 +315,7 @@ const post = (state = initialState, action) => {
       }
 
       case LOAD_USER_COMMENTS_REQUEST: {
+        draft.userPosts = [];
         draft.isLoading = true;
         draft.errorMessage = "";
         break;
@@ -330,6 +335,7 @@ const post = (state = initialState, action) => {
       }
 
       case LOAD_USER_LIKED_POSTS_REQUEST: {
+        draft.userComments = [];
         draft.isLoading = true;
         draft.errorMessage = "";
         break;
@@ -348,7 +354,7 @@ const post = (state = initialState, action) => {
       }
 
       case LOAD_HASHTAG_POSTS_REQUEST: {
-        draft.mainPosts = action.payload ? draft.mainPosts : [];
+        draft.mainPosts = action.payload.lastId ? draft.mainPosts : [];
         draft.isLoading = true;
         draft.hasMorePosts = action.payload.lastId ? draft.hasMorePosts : true;
         break;
@@ -407,8 +413,16 @@ const post = (state = initialState, action) => {
         break;
       }
       case DELETE_POST_SUCCESS: {
-        const index = draft.mainPosts.findIndex(v => v.id === action.payload);
-        draft.mainPosts.splice(index, 1);
+        const mainPostindex = draft.mainPosts.findIndex(
+          v => v.id === action.payload
+        );
+        draft.mainPosts.splice(mainPostindex, 1);
+        if (draft.userPosts && draft.userPosts.length > 0) {
+          const userPostIndex = draft.userPosts.findIndex(
+            v => v.id === action.payload
+          );
+          draft.userPosts.splice(userPostIndex, 1);
+        }
         break;
       }
 
@@ -527,6 +541,10 @@ const post = (state = initialState, action) => {
         break;
       }
       case DELETE_COMMENT_SUCCESS: {
+        const commentIndex = draft.comments.findIndex(
+          v => v.id === action.payload
+        );
+        draft.comments.splice(commentIndex, 1);
         break;
       }
       case DELETE_COMMENT_FAILURE: {

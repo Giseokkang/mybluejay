@@ -23,7 +23,7 @@ passportConfig();
 
 app.use(helmet());
 app.use(morgan("dev"));
-app.use("/upload", express.static("upload"));
+app.use("/uploads", express.static("uploads"));
 
 app.use(
   cors({

@@ -68,7 +68,7 @@ const Hashtag = () => {
       window.scrollY + document.documentElement.clientHeight >
       document.documentElement.scrollHeight - 300
     ) {
-      if (hasMorePosts) {
+      if (mainPosts.length > 0 && hasMorePosts) {
         const lastId = mainPosts[mainPosts.length - 1].id;
         if (!countRef.current.includes(lastId)) {
           onLoadHashtagPosts(id, lastId);

@@ -48,7 +48,10 @@ import {
   loadUserCommentsRequest,
   loadUserLikedPostsSuccess,
   loadUserLikedPostsFailure,
-  loadUserLikedPostsRequest
+  loadUserLikedPostsRequest,
+  deleteCommentSuccess,
+  deleteCommentFailure,
+  deleteCommentRequest
 } from "../reducers/post";
 import axios from "axios";
 
@@ -295,6 +298,31 @@ function* watchaddComment() {
   yield takeLatest(addCommentRequest().type, addComment);
 }
 
+function deleteCommentAPI(commentId) {
+  // API 전송
+  return axios.post(
+    `/api/comment/${commentId}/delete`,
+    {},
+    {
+      withCredentials: true
+    }
+  );
+}
+
+function* deleteComment(action) {
+  try {
+    yield call(deleteCommentAPI, action.payload);
+    yield put(deleteCommentSuccess(action.payload));
+  } catch (e) {
+    console.log(e);
+    yield put(deleteCommentFailure(e));
+  }
+}
+
+function* watchDeleteComment() {
+  yield takeLatest(deleteCommentRequest().type, deleteComment);
+}
+
 function likePostAPI(postId) {
   // API 전송
   return axios.post(
@@ -363,6 +391,7 @@ export default function* postsSaga() {
     fork(watchLikePost),
     fork(watchUnlikePost),
     fork(watchLoadUserComments),
-    fork(watchLoadUserLikedPosts)
+    fork(watchLoadUserLikedPosts),
+    fork(watchDeleteComment)
   ]);
 }

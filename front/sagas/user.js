@@ -37,6 +37,11 @@ import {
   editUserRequest
 } from "../reducers/user";
 import Router from "next/router";
+import {
+  loadOtherSuccess,
+  loadOtherRequest,
+  loadOtherFailure
+} from "../reducers/user";
 
 function loginAPI(loginData) {
   return axios.post("api/user/login", loginData, {
@@ -212,6 +217,23 @@ function* watchEditUser() {
   yield takeLatest(editUserRequest().type, editUser);
 }
 
+function loadOtherAPI(nickname) {
+  return axios.get(`/api/user/${nickname}`);
+}
+
+function* loadOther(action) {
+  try {
+    const result = yield call(loadOtherAPI, action.payload);
+    yield put(loadOtherSuccess(result.data));
+  } catch (e) {
+    yield put(loadOtherFailure(e));
+  }
+}
+
+function* watchLoadOther() {
+  yield takeLatest(loadOtherRequest().type, loadOther);
+}
+
 export default function* userSaga() {
   yield all([
     fork(watchLogin),
@@ -221,6 +243,7 @@ export default function* userSaga() {
     fork(watchUnFollowUser),
     fork(watchUploadBackgroundImage),
     fork(watchUploadProfileImage),
-    fork(watchEditUser)
+    fork(watchEditUser),
+    fork(watchLoadOther)
   ]);
 }

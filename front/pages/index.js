@@ -27,6 +27,7 @@ const Container = styled.div`
   justify-content: center;
   animation: ${fadeIn} 0.5s ease-in-out;
   opacity: ${props => (props.isOnPopUp ? 0.2 : 1)};
+  overflow: ${props => (props.isOnPopUp ? "hidden" : "scroll")};
 `;
 
 const GridContainer = styled.div`
@@ -52,7 +53,6 @@ const Home = () => {
   return (
     <>
       {isOnPopUp && <PopUp></PopUp>}
-
       <Container isOnPopUp={isOnPopUp}>
         <GridContainer>
           <MenuBox></MenuBox>

@@ -23,7 +23,7 @@ const popUp = (state = initialState, action) => {
     switch (action.type) {
       case ON_POP_UP: {
         draft.isOnPopUp = true;
-        draft.isOnPopUp = action.payload;
+        draft.id = action.payload;
         break;
       }
       case OFF_POP_UP: {

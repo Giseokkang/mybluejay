@@ -145,7 +145,7 @@ export const postFollow = async (req, res, next) => {
       return res.status(404).send("해당 유저를 찾을 수 없습니다.");
     }
     await user.addFollower(req.user.id);
-    res.json(user.id);
+    res.json({ followerId: req.user.id, followingId: user.id });
   } catch (e) {
     console.error(e);
     next(e);
@@ -161,7 +161,7 @@ export const postUnfollow = async (req, res, next) => {
       return res.status(404).send("해당 유저를 찾을 수 없습니다.");
     }
     await user.removeFollower(req.user.id);
-    res.json(user.id);
+    res.json({ unfollowerId: req.user.id, unfollowingId: user.id });
   } catch (e) {
     console.error(e);
     next(e);

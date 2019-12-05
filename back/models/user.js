@@ -25,20 +25,29 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.associate = db => {
-    db.User.hasMany(db.Post, { as: "Posts" });
-    db.User.hasMany(db.Comment);
-    db.User.hasOne(db.Avatar);
+    db.User.hasMany(db.Post, { as: "Posts", onDelete: "cascade", hooks: true });
+    db.User.hasMany(db.Comment, { onDelete: "cascade", hooks: true });
+    db.User.hasOne(db.Avatar, { onDelete: "cascade", hooks: true });
 
-    db.User.belongsToMany(db.Post, { through: "Like", as: "Liked" });
+    db.User.belongsToMany(db.Post, {
+      through: "Like",
+      as: "Liked",
+      onDelete: "cascade",
+      hooks: true
+    });
     db.User.belongsToMany(db.User, {
       through: "Follow",
       as: "Followers",
-      foreignKey: "followingId"
+      foreignKey: "followingId",
+      onDelete: "cascade",
+      hooks: true
     });
     db.User.belongsToMany(db.User, {
       through: "Follow",
       as: "Followings",
-      foreignKey: "followerId"
+      foreignKey: "followerId",
+      onDelete: "cascade",
+      hooks: true
     });
   };
 
