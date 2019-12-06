@@ -14,7 +14,8 @@ import {
   getUserLikedPosts,
   uploadAvatar,
   uploadBackgroundImage,
-  editUser
+  editUser,
+  postLoadFollow
 } from "../controller/userController";
 import {
   onlyPrivate,
@@ -55,6 +56,7 @@ userRouter.get(routes.userDetail(), getUserDetail);
 
 userRouter.post(routes.follow(), onlyPrivate, postFollow);
 userRouter.post(routes.unfollow(), onlyPrivate, postUnfollow);
+userRouter.post(routes.getUserFollow(), postLoadFollow);
 
 userRouter.get(routes.getUserPosts(), getUserPosts);
 userRouter.get(routes.getUserComments(), getUserCommemnts);

@@ -159,9 +159,29 @@ export const postEditPost = (req, res) => {
 };
 export const postDeletePost = async (req, res, next) => {
   try {
+    const post = await db.Post.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: db.Image
+        },
+        {
+          model: db.Comment
+        }
+      ]
+    });
+
+    await db.Comment.destroy({
+      where: { PostId: post.id }
+    });
+
+    await db.Image.destroy({
+      where: { PostId: post.id }
+    });
     await db.Post.destroy({
       where: { id: req.params.id }
     });
+
     res.send("success");
   } catch (e) {
     console.error(e);

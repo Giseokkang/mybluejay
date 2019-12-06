@@ -9,8 +9,18 @@ module.exports = (sequelize, DataTypes) => {
         unique: true // 고유한 값
       },
       email: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(30),
         allowNull: false,
+        unique: true // 고유한 값
+      },
+      googleId: {
+        type: DataTypes.STRING(30),
+        allowNull: true,
+        unique: true // 고유한 값
+      },
+      facebookId: {
+        type: DataTypes.STRING(30),
+        allowNull: true,
         unique: true // 고유한 값
       },
       password: {

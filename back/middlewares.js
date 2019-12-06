@@ -65,16 +65,6 @@ export const avatarUpload = multer({
   limits: { fileSize: 20 * 1024 * 1024 }
 });
 
-// export const uploadVideo = multerVideo.single("videoFile");
-// export const uploadAvatar = multerAvatar.single("avatar");
-
-// export const localMiddleware = (req, res, next) => {
-//   res.locals.siteName = "WeTube";
-//   res.locals.routes = routes;
-//   res.locals.loggedUser = req.user || null;
-//   next();
-// };
-
 export const onlyPublic = (req, res, next) => {
   if (!req.isAuthenticated()) {
     next();

@@ -9,6 +9,7 @@ const GET_USER_COMMENTS = "/:id/comments";
 const GET_USER_LIKED_POSTS = "/:id/liked";
 const FOLLOW = "/:id/follow";
 const UNFOLLOW = "/:id/unfollow";
+const GET_USER_FOLLOW = "/:id/load/follow";
 
 const UPLOAD_BACKGROUND_IMAGE = "/upload/background";
 const UPLOAD_AVATAR = "/upload/avatar";
@@ -66,6 +67,12 @@ const routes = {
       return `/user/${id}/unfollow`;
     }
     return UNFOLLOW;
+  },
+  getUserFollow: id => {
+    if (id) {
+      return `/user/${id}/load/follow`;
+    }
+    return GET_USER_FOLLOW;
   },
   getUserPosts: id => {
     if (id) {

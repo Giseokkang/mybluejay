@@ -125,7 +125,8 @@ export const postUserSignUp = async (req, res) => {
       email: req.body.email,
       password: hashedPassword
     });
-    return res.json(newUser);
+
+    return res.json({ email: req.body.email, password: req.body.password });
   } catch (e) {
     console.log(e);
     return res.status(403).send(e);
@@ -162,6 +163,48 @@ export const postUnfollow = async (req, res, next) => {
     }
     await user.removeFollower(req.user.id);
     res.json({ unfollowerId: req.user.id, unfollowingId: user.id });
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+};
+
+export const postLoadFollow = async (req, res, next) => {
+  try {
+    const user = await db.User.findOne({
+      where: { nickname: decodeURIComponent(req.params.id) },
+      attributes: ["id"],
+      include: [
+        {
+          model: db.User,
+          as: "Followings",
+          attributes: ["id", "nickname"],
+          include: [
+            {
+              model: db.Avatar,
+              as: "Avatar",
+              attributes: ["background_src", "profile_src"]
+            }
+          ]
+        },
+        {
+          model: db.User,
+          as: "Followers",
+          attributes: ["id", "nickname"],
+          include: [
+            {
+              model: db.Avatar,
+              as: "Avatar",
+              attributes: ["background_src", "profile_src"]
+            }
+          ]
+        }
+      ]
+    });
+    if (!user) {
+      return res.status(404).send("유저를 찾을 수 없습니다.");
+    }
+    res.json(user);
   } catch (e) {
     console.error(e);
     next(e);
