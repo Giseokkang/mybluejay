@@ -4,7 +4,8 @@
   "description": "Server for Node-Bird",
   "main": "index.js",
   "scripts": {
-    "dev:server": "nodemon --exec babel-node init.js --delay 2 "
+    "dev:server": "nodemon --exec babel-node init.js --delay 2 ",
+    "start": "pm2 start index.js"
   },
   "author": "Giseok",
   "license": "MIT",
