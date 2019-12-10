@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",

@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import expressSession from "express-session";
 import cors from "cors";
 import dotenv from "dotenv";
+import hpp from "hpp";
 import db from "./models";
 import passport from "passport";
 import passportConfig from "./passport";
@@ -23,7 +24,10 @@ passportConfig();
 
 app.use(helmet());
 app.use(morgan("dev"));
+app.use("/", express.static("favicon"));
 app.use("/uploads", express.static("uploads"));
+
+app.use(hpp());
 
 app.use(
   cors({

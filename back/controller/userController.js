@@ -120,7 +120,7 @@ export const postUserSignUp = async (req, res) => {
       return res.status(400).send("이미 존재하는 닉네임입니다.");
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
-    const newUser = await db.User.create({
+    await db.User.create({
       nickname: req.body.nickname,
       email: req.body.email,
       password: hashedPassword
