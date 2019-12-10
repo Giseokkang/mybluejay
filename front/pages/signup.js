@@ -4,15 +4,7 @@ import LoginForm from "../components/LoginForm";
 import SignUpForm from "../components/signUpForm";
 import useUser from "../hooks/useUser";
 import Router from "next/router";
-
-const fadeIn = keyframes`
-  from{
-    opacity:0;
-  }
-  to {
-    opacity:1;
-  }
-  `;
+import { fadeIn } from "../utils/animations";
 
 const Container = styled.div`
   width: 100%;

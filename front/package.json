@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "next",
-    "start": "NODE_ENV=production next start",
-    "build": "BUNDLE_ANALYZE=both next build"
+    "build": "BUNDLE_ANALYZE=both next build",
+    "prestart":"npm run build",
+    "start": "NODE_ENV=production next start"
   },
   "author": "Giseok",
   "license": "MIT",

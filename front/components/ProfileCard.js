@@ -1,14 +1,14 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
 import { CHARACTER_COLOR, SKYBLUE, BORDER_COLOR } from "../utils/colors";
 import useUser from "../hooks/useUser";
 import { useRouter } from "next/router";
-import PostingCard from "./PostingCard";
 import Tabs from "./Tabs";
 import usePost from "../hooks/usePost";
 import { getFullDay } from "../utils/function";
+import ImageZoom from "./ImageZoom";
 
 const Container = styled.div`
   display: flex;
@@ -60,6 +60,7 @@ const ProfileBackground = styled.div`
   background-image: url(${props => props.backgroundSrc});
   background-size: cover;
   background-position: center center;
+  cursor: pointer;
 `;
 
 const ProfileImage = styled.div`
@@ -129,102 +130,134 @@ const FollowContainer = styled.div`
 
 const Follow = styled.span`
   margin-right: 10px;
+  cursor: pointer;
 `;
 
 const ProfileCard = ({ info }) => {
+  const [isZoom, setIsZoom] = useState(false);
+  const [imageUrl, setImageUrl] = useState();
+
   const {
     pathname,
     query: { id }
   } = useRouter();
-  const { user, onFollowUserRequest, onUnfollowUserRequest } = useUser();
   const {
-    post: { userPosts }
-  } = usePost();
-  const {
+    user,
+    onFollowUserRequest,
+    onUnfollowUserRequest,
     turnOnSetting,
-    user: { peopleInformation }
+    user: { peopleInformation },
+    onLoadFollowRequest
   } = useUser();
 
   const onClickOnSetting = useCallback(() => {
     turnOnSetting();
   }, []);
 
+  const onClickFollowList = useCallback(() => {
+    if (id) {
+      onLoadFollowRequest(encodeURIComponent(id));
+    } else {
+      onLoadFollowRequest(encodeURIComponent(user.myInformation.nickname));
+    }
+  }, []);
+
   const isMine = pathname === "/profile" || id === user.myInformation.nickname;
 
   return (
     info && (
-      <Container>
-        <StickyContainer>
-          <Link href="/">
-            <a>
-              <BackIconContainer>
-                <FaArrowLeft />
-              </BackIconContainer>
-            </a>
-          </Link>
-          <Name>{info.nickname}</Name>
-        </StickyContainer>
-        <ProfileBackground
-          backgroundSrc={
-            info.Avatar &&
-            info.Avatar.background_src &&
-            info.Avatar.background_src
-              ? `http://localhost:8000/${info.Avatar.background_src}`
-              : null
-          }
-        >
-          <ProfileImage
-            profileSrc={
+      <>
+        {isZoom && (
+          <ImageZoom imageUrl={imageUrl} setIsZoom={setIsZoom}></ImageZoom>
+        )}
+        <Container>
+          <StickyContainer>
+            <Link href="/">
+              <a>
+                <BackIconContainer>
+                  <FaArrowLeft />
+                </BackIconContainer>
+              </a>
+            </Link>
+            <Name>{info.nickname}</Name>
+          </StickyContainer>
+          <ProfileBackground
+            backgroundSrc={
               info.Avatar &&
               info.Avatar.background_src &&
               info.Avatar.background_src
-                ? `http://localhost:8000/${info.Avatar.profile_src}`
+                ? `http://localhost:8000/${info.Avatar.background_src}`
                 : null
             }
-          ></ProfileImage>
-        </ProfileBackground>
-        <EditContainer>
-          {user.isLoggedin ? (
-            isMine ? (
-              <Btn backgroundColor={SKYBLUE} onClick={onClickOnSetting}>
-                프로필수정
-              </Btn>
-            ) : user.myInformation.Followings &&
-              user.myInformation.Followings.find(
-                v => v.id === peopleInformation.id
-              ) ? (
-              <Btn
-                backgroundColor="#ff4757"
-                onClick={() => {
-                  onUnfollowUserRequest(decodeURIComponent(id));
-                }}
-              >
-                언팔로우
-              </Btn>
-            ) : (
-              <Btn
-                backgroundColor={SKYBLUE}
-                onClick={() => {
-                  onFollowUserRequest(decodeURIComponent(id));
-                }}
-              >
-                팔로우
-              </Btn>
-            )
-          ) : null}
-        </EditContainer>
-        <InformationContainer>
-          <Name>{info.nickname}</Name>
-          <SignUpDate>가입일 :{getFullDay(info.createdAt)}</SignUpDate>
-          <FollowContainer>
-            <Follow>
-              팔로잉 {info.Followings ? info.Followings.length : 0}
-            </Follow>
-            <Follow>팔로워 {info.Followers ? info.Followers.length : 0}</Follow>
-          </FollowContainer>
-        </InformationContainer>
-        <Tabs></Tabs>
-      </Container>
+            onClick={() => {
+              if (info.Avatar.background_src) {
+                setImageUrl(info.Avatar.background_src);
+                setIsZoom(true);
+              }
+            }}
+          >
+            <ProfileImage
+              profileSrc={
+                info.Avatar &&
+                info.Avatar.profile_src &&
+                info.Avatar.profile_src
+                  ? `http://localhost:8000/${info.Avatar.profile_src}`
+                  : null
+              }
+              onClick={e => {
+                e.stopPropagation();
+                if (info.Avatar.profile_src) {
+                  setImageUrl(info.Avatar.profile_src);
+                  setIsZoom(true);
+                }
+              }}
+            ></ProfileImage>
+          </ProfileBackground>
+          <EditContainer>
+            {user.isLoggedin ? (
+              isMine ? (
+                <Btn backgroundColor={SKYBLUE} onClick={onClickOnSetting}>
+                  프로필수정
+                </Btn>
+              ) : user.myInformation.Followings &&
+                user.myInformation.Followings.find(
+                  v => v.id === peopleInformation.id
+                ) ? (
+                <Btn
+                  backgroundColor="#ff4757"
+                  onClick={() => {
+                    onUnfollowUserRequest(decodeURIComponent(id));
+                  }}
+                >
+                  언팔로우
+                </Btn>
+              ) : (
+                <Btn
+                  backgroundColor={SKYBLUE}
+                  onClick={() => {
+                    onFollowUserRequest(decodeURIComponent(id));
+                  }}
+                >
+                  팔로우
+                </Btn>
+              )
+            ) : null}
+          </EditContainer>
+          <InformationContainer>
+            <Name>{info.nickname}</Name>
+            <SignUpDate>가입일 :{getFullDay(info.createdAt)}</SignUpDate>
+            <FollowContainer>
+              <Follow onClick={onClickFollowList}>
+                팔로잉 {info.Followings ? info.Followings.length : 0}
+              </Follow>
+              <Follow onClick={onClickFollowList}>
+                팔로워 {info.Followers ? info.Followers.length : 0}
+              </Follow>
+            </FollowContainer>
+          </InformationContainer>
+          <Tabs></Tabs>
+        </Container>
+      </>
     )
   );
 };

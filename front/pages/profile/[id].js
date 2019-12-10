@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
-import { useRouter } from "next/router";
+import React from "react";
+
 import Router from "next/router";
 import Profile from "../profile";
-import useUser from "../../hooks/useUser";
 
 const ProfileDetail = () => {
   return <Profile></Profile>;

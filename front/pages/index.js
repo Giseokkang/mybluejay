@@ -1,24 +1,13 @@
-import React, { useEffect } from "react";
-import styled, { keyframes } from "styled-components";
-import UploadForm from "../components/UploadForm";
-import PostingCard from "../components/PostingCard";
-import { BORDER_COLOR } from "../utils/colors";
+import React from "react";
+import styled from "styled-components";
 import usePost from "../hooks/usePost";
 import usePopUp from "../hooks/usePopUp";
 import PopUp from "../components/PopUp";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { loadMainPostsRequest } from "../reducers/post";
 import ContentBox from "../components/ContentBox";
-
-const fadeIn = keyframes`
-  from{
-    opacity:0;
-  }
-  to {
-    opacity:1;
-  }
-  `;
+import device from "../utils/device";
+import { fadeIn } from "../utils/animations";
 
 const Container = styled.div`
   width: 100%;
@@ -35,6 +24,24 @@ const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
   grid-gap: 20px;
+
+  @media ${device.laptop} {
+    grid-template-columns: 1fr 2.5fr 1fr;
+    grid-gap: 0;
+    width: 100%;
+  }
+
+  @media ${device.tablet} {
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-gap: 0;
+    width: 100%;
+  }
+
+  @media ${device.mobileL} {
+    grid-template-columns: 0 1fr 0%;
+    width: 100%;
+    display: flex;
+  }
 `;
 
 const MenuBox = styled.div``;
@@ -42,13 +49,7 @@ const MenuBox = styled.div``;
 const FollowBox = styled.div``;
 
 const Home = () => {
-  const {
-    onLoadPosts,
-    post: { mainPosts }
-  } = usePost();
-
   const { isOnPopUp } = usePopUp();
-  const router = useRouter();
 
   return (
     <>

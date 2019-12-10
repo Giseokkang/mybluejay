@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { SKYBLUE } from "../utils/colors";
 import Link from "next/link";
 
 const Container = styled.div`

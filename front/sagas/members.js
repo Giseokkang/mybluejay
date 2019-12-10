@@ -16,7 +16,7 @@ import {
   signUpFailure,
   withdrawFailure
 } from "../reducers/members";
-import { logInSuccess } from "../reducers/user";
+import { logInSuccess, logInRequest } from "../reducers/user";
 import Router from "next/router";
 
 function signUpAPI(signUpData) {
@@ -31,15 +31,11 @@ function withdrawAPI() {
 function* signUp(action) {
   try {
     const result = yield call(signUpAPI, action.payload);
-    yield put(signUpSuccess());
-    const filteredResult = Object.assign({}, result.data);
-    delete filteredResult.password;
+    yield put(logInRequest(result.data));
 
-    yield put(logInSuccess(filteredResult));
-    yield call(Router.push, "/");
+    yield put(signUpSuccess());
   } catch (e) {
-    console.log(e);
-    yield put(signUpFailure(e));
+    yield put(signUpFailure(e.response.data));
   }
 }
 
@@ -47,10 +43,10 @@ function* withdraw() {
   try {
     // yield call(withdrawAPI)
     yield delay(2000);
-    yield put(withdrawSuccess(data));
+    yield put(withdrawSuccess());
   } catch (e) {
     console.log(e);
-    yield put(withdrawFailure());
+    yield put(withdrawFailure(e));
   }
 }
 

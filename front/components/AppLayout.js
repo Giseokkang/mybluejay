@@ -1,13 +1,12 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import Link from "next/link";
-import { FaSearch, FaHome } from "react-icons/fa";
-import { logIn } from "../reducers/user";
+import { FaSearch, FaHome, FaUser } from "react-icons/fa";
 import useUser from "../hooks/useUser";
 import usePopUp from "../hooks/usePopUp";
-import usePost from "../hooks/usePost";
 import router from "next/router";
+import device from "../utils/device";
 
 const Container = styled.div`
   width: 100%;
@@ -24,6 +23,7 @@ const Container = styled.div`
     props.isOnPopUp || props.isSettingOn ? "none" : null};
   background-color: white;
   z-index: 5;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
 `;
 
 const ItemsContainer = styled.div`
@@ -32,10 +32,10 @@ const ItemsContainer = styled.div`
 `;
 
 const LinkContainer = styled.div`
-  width: 100px;
+  width: 80px;
   height: 70%;
-  margin-left: 20px;
   font-size: 30px;
+  margin-left: 10px;
   color: #70a1ff;
   display: flex;
   justify-content: center;
@@ -43,6 +43,10 @@ const LinkContainer = styled.div`
   opacity: 0.8;
   &:hover {
     opacity: 1;
+  }
+
+  @media ${device.tablet} {
+    width: 40px;
   }
 `;
 
@@ -68,6 +72,10 @@ const Btn = styled.div`
     transform: scale(0.98);
     opacity: 1;
   }
+
+  @media ${device.mobileL} {
+    display: ${props => props.signup && "none"};
+  }
 `;
 
 const SearchForm = styled.form`
@@ -80,9 +88,17 @@ const SearchForm = styled.form`
   outline: none;
   opacity: 0.7;
   transition: all 0.2s ease-in-out;
-  margin-right: 140px;
+  /* margin-right: 140px; */
   &:hover {
     opacity: 1;
+  }
+
+  @media ${device.tablet} {
+    width: 250px;
+  }
+
+  @media ${device.mobileL} {
+    display: none;
   }
 `;
 
@@ -134,9 +150,9 @@ const AppLayout = ({ children }) => {
               </a>
             </LinkContainer>
           </Link>
-          <Link href="/profile">
+          <Link prefetch href="/profile">
             <LinkContainer>
-              <a>Profile</a>
+              <FaUser></FaUser>
             </LinkContainer>
           </Link>
         </ItemsContainer>
@@ -154,20 +170,20 @@ const AppLayout = ({ children }) => {
 
         <BtnContainer>
           {user && user.isLoggedin ? (
-            <Link href="/">
+            <Link prefetch href="/">
               <Btn backgroundColor="#70a1ff" onClick={() => onLogOutRequest()}>
                 <a>Log out</a>
               </Btn>
             </Link>
           ) : (
             <>
-              <Link href="/signup">
-                <Btn backgroundColor="#70a1ff">
+              <Link prefetch href="/signup">
+                <Btn backgroundColor="#70a1ff" signup={true}>
                   <a>Sign Up</a>
                 </Btn>
               </Link>
 
-              <Link href="/login">
+              <Link prefetch href="/login">
                 <Btn backgroundColor="#2ed573">
                   <a>Login</a>
                 </Btn>

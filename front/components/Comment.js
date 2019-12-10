@@ -1,21 +1,15 @@
 import React from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import ProfilePicture from "./ProfilePicture";
 import Link from "next/link";
-import { FaTimes, FaRegHeart } from "react-icons/fa";
+import PropTypes from "prop-types";
+
+import { FaTimes } from "react-icons/fa";
 import { getFullDay } from "../utils/function";
 import { useRouter } from "next/router";
 import useUser from "../hooks/useUser";
 import usePopUp from "../hooks/usePopUp";
-
-const fadeIn = keyframes`
-  from{
-    opacity:0;
-  }
-  to {
-    opacity:1;
-  }
-  `;
+import { fadeIn } from "../utils/animations";
 
 const Container = styled.div`
   width: 100%;
@@ -95,6 +89,8 @@ const Description = styled.span`
   margin-top: 10px;
   overflow: auto;
   min-height: 20px;
+  white-space: pre;
+  line-height: 18px;
 `;
 
 const ALink = styled.a`
@@ -197,6 +193,17 @@ const Comment = ({ info }) => {
       </Container>
     </>
   );
+};
+
+Comment.propTypes = {
+  info: PropTypes.shape({
+    PostId: PropTypes.number.isRequired,
+    User: PropTypes.object.isRequired,
+    UserId: PropTypes.number,
+    createdAt: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    updatedAt: PropTypes.string.isRequired
+  })
 };
 
 export default Comment;

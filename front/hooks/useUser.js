@@ -14,7 +14,9 @@ import {
   deleteProfileImageRequest,
   onSetting,
   offSetting,
-  loadOtherRequest
+  loadOtherRequest,
+  loadFollowRequest,
+  turnOffFollowList
 } from "../reducers/user";
 
 const useUser = () => {
@@ -40,6 +42,14 @@ const useUser = () => {
   const onUnfollowUserRequest = useCallback(
     nickname => dispatch(unfollowUserRequest(nickname)),
     [dispatch]
+  );
+
+  const onLoadFollowRequest = useCallback(nickname =>
+    dispatch(loadFollowRequest(nickname), [dispatch])
+  );
+
+  const onTurnOffFollowList = useCallback(() =>
+    dispatch(turnOffFollowList(), [dispatch])
   );
 
   const onUploadBackgroundImageRequest = useCallback(
@@ -80,6 +90,8 @@ const useUser = () => {
     onLoadUserRequest,
     onFollowUserRequest,
     onUnfollowUserRequest,
+    onLoadFollowRequest,
+    onTurnOffFollowList,
     onUploadBackgroundImageRequest,
     onUploadProfileImageRequest,
     onEditUserRequest,

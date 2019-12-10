@@ -173,6 +173,7 @@ const UploadForm = () => {
       const {
         target: { value }
       } = e;
+
       setDescription(value);
       if (value.trim()) {
         setIsAvailableUpload(true);

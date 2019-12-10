@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React from "react";
 import styled from "styled-components";
 import ProfilePicture from "./ProfilePicture";
 import { FaTrashAlt, FaRegCommentDots } from "react-icons/fa";
@@ -8,7 +8,6 @@ import usePost from "../hooks/usePost";
 import usePopUp from "../hooks/usePopUp";
 import useUser from "../hooks/useUser";
 import Slider from "react-slick";
-import ImageZoom from "./ImageZoom";
 import { useRouter } from "next/router";
 import { getFullDay } from "../utils/function";
 
@@ -103,6 +102,8 @@ const Description = styled.span`
   overflow: auto;
   min-height: 20px;
   margin-top: 20px;
+  white-space: pre;
+  line-height: 18px;
   -ms-overflow-style: none; // IE에서 스크롤바 감춤
   &::-webkit-scrollbar {
     display: none !important; // 윈도우 크롬 등
@@ -155,17 +156,10 @@ const IconsContainer = styled.div`
 `;
 
 const PostingCard = ({ post }) => {
-  const {
-    onDeletePost,
-    onLikePost,
-    onUnlikePost,
-    post: { mainPosts }
-  } = usePost();
-  const { isOnPopUp, turnOnPopUp, turnOffPopUp } = usePopUp();
+  const { onLikePost, onUnlikePost } = usePost();
+  const { turnOnPopUp } = usePopUp();
   const { user } = useUser();
   const { pathname } = useRouter();
-
-  const [isZoom, setIsZoom] = useState(false);
 
   const settings = {
     dots: true,
@@ -243,25 +237,13 @@ const PostingCard = ({ post }) => {
                         <div key={image.src}>
                           <Image
                             imageUrl={`http://localhost:8000/${image.src}`}
-                            // src={`http://localhost:8000/${image.src}`}
                             alt="image"
                             key={image.src}
-                            // onClick={e => {
-                            //   e.stopPropagation();
-                            //   setIsZoom(true);
-                            // }}
                           />
                         </div>
                       ))}
                     </Slider>
                   </div>
-
-                  {/* {isZoom && (
-                    <ImageZoom
-                      images={images}
-                      onClick={() => setIsZoom(false)}
-                    ></ImageZoom>
-                  )} */}
                 </>
               )}
               {post.Images && post.Images.length === 1 && (

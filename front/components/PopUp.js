@@ -26,7 +26,7 @@ const PopUpContainer = styled.div`
   width: 400px;
   height: 200px;
   background-color: white;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-radius: 20px;
   margin-top: 170px;
   animation: ${transform} 0.3s ease-in-out;
@@ -35,6 +35,7 @@ const PopUpContainer = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 `;
 
 const Title = styled.span`
@@ -71,10 +72,9 @@ const Button = styled.button`
 
 const PopUp = () => {
   const { onDeletePost, onDeleteComment } = usePost();
-  const { isOnPopUp, id, turnOnPopUp, turnOffPopUp } = usePopUp();
+  const { id, turnOffPopUp } = usePopUp();
   const router = useRouter();
   const { pathname } = router;
-  console.log(id);
 
   return (
     <Container onClick={turnOffPopUp}>

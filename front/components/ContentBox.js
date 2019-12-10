@@ -6,21 +6,19 @@ import { BORDER_COLOR } from "../utils/colors";
 import PostingCard from "./PostingCard";
 import Loader from "react-loader-spinner";
 import usePopUp from "../hooks/usePopUp";
+import device from "../utils/device";
 
 const Container = styled.div`
   border-right: 1px solid ${BORDER_COLOR};
   border-left: 1px solid ${BORDER_COLOR};
   background-color: white;
+
+  @media ${device.mobileL} {
+    width: 100vw;
+  }
 `;
 
-const PostingBox = styled.div`
-  /* overflow: ${props => (props.isOnPopUp ? "hidden" : "scroll")}; */
-  /* height: calc(100vh - 247px);
-  -ms-overflow-style: none; // IE에서 스크롤바 감춤
-  &::-webkit-scrollbar {
-    display: none !important; // 윈도우 크롬 등
-  } */
-`;
+const PostingBox = styled.div``;
 
 const ContentBox = () => {
   const {

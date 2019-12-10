@@ -17,6 +17,8 @@ const LOAD_FOLLOW_REQUEST = "user/LOAD_FOLLOW_REQUEST";
 const LOAD_FOLLOW_SUCCESS = "user/LOAD_FOLLOW_SUCCESS";
 const LOAD_FOLLOW_FAILURE = "user/LOAD_FOLLOW_FAILURE";
 
+const TURN_OFF_FOLLOW_LIST = "user/TURN_OFF_FOLLOW_LIST";
+
 const FOLLOW_USER_REQUEST = "user/FOLLOW_USER_REQUEST";
 const FOLLOW_USER_SUCCESS = "user/FOLLOW_USER_SUCCESS";
 const FOLLOW_USER_FAILURE = "user/FOLLOW_USER_FAILURE";
@@ -61,7 +63,7 @@ export const logInSuccess = data => ({
   type: LOG_IN_SUCCESS,
   payload: data
 });
-export const logInFailue = () => ({ type: LOG_IN_FAILURE });
+export const logInFailue = e => ({ type: LOG_IN_FAILURE, payload: e });
 
 export const logOutRequest = () => ({ type: LOG_OUT_REQUEST });
 export const logOutSuccess = () => ({ type: LOG_OUT_SUCCESS });
@@ -77,9 +79,20 @@ export const loadUserSuccess = data => ({
 });
 export const loadUserFailure = e => ({ type: LOAD_USER_FAILURE, payload: e });
 
-export const loadFollowRequest = () => ({ type: LOAD_FOLLOW_REQUEST });
-export const loadFollowSuccess = () => ({ type: LOAD_FOLLOW_SUCCESS });
-export const loadFollowFailure = () => ({ type: LOAD_FOLLOW_FAILURE });
+export const loadFollowRequest = nickname => ({
+  type: LOAD_FOLLOW_REQUEST,
+  payload: nickname
+});
+export const loadFollowSuccess = data => ({
+  type: LOAD_FOLLOW_SUCCESS,
+  payload: data
+});
+export const loadFollowFailure = e => ({
+  type: LOAD_FOLLOW_FAILURE,
+  payload: e
+});
+
+export const turnOffFollowList = () => ({ type: TURN_OFF_FOLLOW_LIST });
 
 export const followUserRequest = nickname => ({
   type: FOLLOW_USER_REQUEST,
@@ -187,7 +200,9 @@ const initialState = {
   followerList: [], // 팔로워 목록
   peopleInformation: null, // 다른 회원 정보,
   isEditting: false,
-  isSettingOn: false // 에디터 활성화
+  isSettingOn: false, // 에디터 활성화
+  isLoading: false,
+  isFollowListOn: false
 };
 
 // reducer
@@ -205,6 +220,7 @@ const user = (state = initialState, action) => {
         draft.isLoggingIn = false;
         draft.myInformation = action.payload;
         draft.loginErrorReason = "";
+
         break;
       }
 
@@ -227,26 +243,26 @@ const user = (state = initialState, action) => {
       }
 
       case LOG_OUT_FAILURE: {
-        draft.loginErrorReason = action.payload;
+        draft.errorMessage = action.payload;
         draft.isLoggingOut = false;
         break;
       }
 
       case LOAD_USER_REQUEST: {
         draft.isLoggingIn = true;
-        draft.loginErrorReason = "";
+        draft.errorMessage = "";
         break;
       }
       case LOAD_USER_SUCCESS: {
         draft.isLoggedin = true;
         draft.isLoggingIn = false;
         draft.myInformation = action.payload;
-        draft.loginErrorReason = "";
+        draft.errorMessage = "";
         break;
       }
 
       case LOAD_USER_FAILURE: {
-        draft.loginErrorReason = action.payload;
+        draft.errorMessage = action.payload;
         draft.isLoggingIn = false;
         draft.myInformation = {};
         break;
@@ -289,6 +305,33 @@ const user = (state = initialState, action) => {
 
       case UNFOLLOW_USER_FAILURE: {
         draft.errorMessage = action.payload;
+        break;
+      }
+
+      case LOAD_FOLLOW_REQUEST: {
+        draft.isFollowListOn = true;
+        draft.isLoading = true;
+        break;
+      }
+
+      case LOAD_FOLLOW_SUCCESS: {
+        draft.isLoading = false;
+        draft.followingList = action.payload.Followings;
+        draft.followerList = action.payload.Followers;
+
+        break;
+      }
+
+      case LOAD_FOLLOW_FAILURE: {
+        draft.isLoading = false;
+        draft.errorMessage = action.payload;
+        break;
+      }
+
+      case TURN_OFF_FOLLOW_LIST: {
+        draft.isFollowListOn = false;
+        draft.followingList = [];
+        draft.followerList = [];
         break;
       }
 

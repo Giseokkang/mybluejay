@@ -1,15 +1,7 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
 import LoginForm from "../components/LoginForm";
-
-const fadeIn = keyframes`
-  from{
-    opacity:0;
-  }
-  to {
-    opacity:1;
-  }
-  `;
+import { fadeIn } from "../utils/animations";
 
 const Container = styled.div`
   width: 100%;

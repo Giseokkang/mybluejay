@@ -8,10 +8,9 @@ import { useRouter } from "next/router";
 const Container = styled.div`
   width: 100%;
   max-height: 500px;
-  /* pointer-events: ${props => (props.isLoggedin ? null : "none")}; */
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const FormContainer = styled.form`
@@ -121,6 +120,7 @@ const CommentUpload = () => {
           disabled={user.isLoggedin ? false : true}
           onChange={onChangeDescription}
           value={description}
+          required
         ></UploadInput>
 
         <SubmitButton isAvailableUpload={isAvailableUpload} type="submit">

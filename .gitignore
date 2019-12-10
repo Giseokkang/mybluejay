@@ -35,7 +35,7 @@ build/Release
 # Dependency directories
 /front/node_modules/
 /back/node_modules/
-/back/upload
+/back/uploads
 
 jspm_packages/
 

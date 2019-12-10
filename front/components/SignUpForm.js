@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { useInput } from "../utils/useInput";
 import useMembers from "../hooks/useMembers";
-import useUser from "../hooks/useUser";
-import Router from "next/router";
+import device from "../utils/device";
 
 const Container = styled.div`
   width: 30%;
@@ -14,6 +13,27 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 50px 80px;
+
+  @media ${device.laptop} {
+    width: 40%;
+  }
+
+  @media ${device.tablet} {
+    width: 50%;
+    height: 90%;
+  }
+
+  @media ${device.mobileL} {
+    width: 90%;
+    height: 90%;
+    padding: 40px 55px;
+  }
+
+  @media ${device.mobileS} {
+    width: 90%;
+    height: 90%;
+    padding: 40px 30px;
+  }
 `;
 
 const TitleContainer = styled.div`
@@ -21,6 +41,10 @@ const TitleContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 25px;
+
+  @media ${device.mobileL} {
+    margin-bottom: 0px;
+  }
 `;
 
 const Title = styled.span`
@@ -53,6 +77,10 @@ const Input = styled.input`
   &:hover,
   &:focus {
     opacity: 1;
+  }
+
+  @media ${device.mobileL} {
+    width: 80%;
   }
 `;
 
@@ -108,6 +136,17 @@ const SocialLoginBtn = styled.button`
   &:hover {
     opacity: 1;
   }
+  @media ${device.laptop} {
+    font-size: 20px;
+    padding: 0;
+  }
+`;
+
+const SocialLoginTitle = styled.span`
+  margin-left: 7px;
+  @media ${device.laptop} {
+    display: none;
+  }
 `;
 
 const RequiredMessage = styled.span`
@@ -118,13 +157,17 @@ const RequiredMessage = styled.span`
 const SignUpForm = () => {
   const [nickname, onChangeNickname] = useInput("");
   const [email, onChangeEmail] = useInput("");
-  const [password, onChangePassword] = useInput("");
+  const [password, setPassword] = useState();
+  const [verifyPassword, setVerifyPassword] = useState();
+
   const [isSamePassword, setIsSamePassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [onPasswordErrorMessage, setOnPasswordErrorMessage] = useState(false);
 
-  const { onLogInRequest, user } = useUser();
-  const { onSignUpRequest, members } = useMembers();
+  const {
+    onSignUpRequest,
+    members: { signUpErrorMessage }
+  } = useMembers();
 
   const onSubmit = useCallback(
     e => {
@@ -147,11 +190,28 @@ const SignUpForm = () => {
     [nickname, email, password, isSamePassword, isChecked]
   );
 
-  const onChangeIsSamePassword = useCallback(
+  const onChangePassword = useCallback(
     e => {
       const {
         target: { value }
       } = e;
+      setPassword(value);
+      if (value === verifyPassword) {
+        setIsSamePassword(true);
+        setOnPasswordErrorMessage(false);
+      } else {
+        setOnPasswordErrorMessage(true);
+      }
+    },
+    [password, verifyPassword, isSamePassword, onPasswordErrorMessage]
+  );
+
+  const onChangeVerifyPassword = useCallback(
+    e => {
+      const {
+        target: { value }
+      } = e;
+      setVerifyPassword(value);
       if (value === password) {
         setIsSamePassword(true);
         setOnPasswordErrorMessage(false);
@@ -159,7 +219,7 @@ const SignUpForm = () => {
         setOnPasswordErrorMessage(true);
       }
     },
-    [isSamePassword, onPasswordErrorMessage]
+    [password, verifyPassword, isSamePassword, onPasswordErrorMessage]
   );
 
   const onChangeChecked = useCallback(
@@ -198,10 +258,13 @@ const SignUpForm = () => {
           type="password"
           placeholder="Verify password"
           required
-          onChange={onChangeIsSamePassword}
+          onChange={onChangeVerifyPassword}
         ></Input>
         {onPasswordErrorMessage && (
           <RequiredMessage>비밀번호가 같지 않습니다.</RequiredMessage>
+        )}
+        {signUpErrorMessage && (
+          <RequiredMessage>{signUpErrorMessage}</RequiredMessage>
         )}
         <CheckBoxContainer>
           <CheckBox
@@ -218,12 +281,12 @@ const SignUpForm = () => {
       </Form>
       <SocailLoginBtnContainer>
         <SocialLoginBtn backgroundColor="#0984e3">
-          <FaFacebook style={{ marginRight: 7 }} />
-          FaceBook
+          <FaFacebook />
+          <SocialLoginTitle>FaceBook</SocialLoginTitle>
         </SocialLoginBtn>
         <SocialLoginBtn backgroundColor="#D54733">
-          <FaGoogle style={{ marginRight: 7 }} />
-          Google
+          <FaGoogle />
+          <SocialLoginTitle>Google</SocialLoginTitle>
         </SocialLoginBtn>
       </SocailLoginBtnContainer>
     </Container>

@@ -13,7 +13,10 @@ const WITHDRAW_FAILURE = "members/WITHDRAW_FAILURE";
 
 export const signUpRequest = data => ({ type: SIGN_UP_REQUEST, payload: data });
 export const signUpSuccess = data => ({ type: SIGN_UP_SUCCESS, payload: data });
-export const signUpFailure = () => ({ type: SIGN_UP_FAILURE });
+export const signUpFailure = error => ({
+  type: SIGN_UP_FAILURE,
+  payload: error
+});
 export const withdrawRequest = data => ({
   type: WITHDRAW_REQUEST,
   payload: data
@@ -26,27 +29,42 @@ export const withdrawFailure = () => ({ type: WITHDRAW_FAILURE });
 
 // InitialState
 
-const initialState = [];
+const initialState = {
+  signUpErrorMessage: ""
+};
 
 // Reducer
 
 const members = (state = initialState, action) => {
-  switch (action.type) {
-    case SIGN_UP_REQUEST:
-      return state;
-    case SIGN_UP_SUCCESS:
-      return state;
-    case SIGN_UP_FAILURE:
-      return state;
-    case WITHDRAW_REQUEST:
-      return state;
-    case WITHDRAW_SUCCESS:
-      return state.filter(member => member.id !== action.payload);
-    case WITHDRAW_FAILURE:
-      return state;
-    default:
-      return state;
-  }
+  return produce(state, draft => {
+    switch (action.type) {
+      case SIGN_UP_REQUEST: {
+        draft.signUpErrorMessage = "";
+        break;
+      }
+      case SIGN_UP_SUCCESS: {
+        draft.signUpErrorMessage = "";
+
+        break;
+      }
+      case SIGN_UP_FAILURE: {
+        draft.signUpErrorMessage = action.payload;
+        break;
+      }
+      case WITHDRAW_REQUEST: {
+        break;
+      }
+      case WITHDRAW_SUCCESS: {
+        break;
+      }
+      case WITHDRAW_FAILURE: {
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  });
 };
 
 // Export

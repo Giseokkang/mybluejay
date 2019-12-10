@@ -1,10 +1,21 @@
 import React, { useState, useCallback, useRef } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { BORDER_COLOR, SKYBLUE } from "../utils/colors";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import useUser from "../hooks/useUser";
 import { MdClear } from "react-icons/md";
-import { useRouter } from "next/router";
+
+const fadeIn = keyframes`
+  0%{
+    opacity:0;
+    
+    transform:translateY(500px) scale(0.1)
+  }
+  100% {
+    opacity:1;
+    transform:translateY(0)
+  }
+  `;
 
 const Container = styled.div`
   width: 100vw;
@@ -19,7 +30,7 @@ const Container = styled.div`
 const EditorContainer = styled.form`
   width: 600px;
   height: 650px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-radius: 15px;
   background-color: white;
   margin-bottom: 80px;
@@ -27,6 +38,8 @@ const EditorContainer = styled.form`
   flex-direction: column;
   align-items: center;
   position: relative;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  animation: ${fadeIn} 0.5s ease-in-out;
 `;
 
 const TitleContainer = styled.div`

@@ -60,8 +60,7 @@ const Tabs = () => {
   } = useUser();
   const router = useRouter();
   const {
-    query: { id },
-    pathname
+    query: { id }
   } = router;
 
   const getUserPost = useCallback(() => {
@@ -149,7 +148,7 @@ const Tabs = () => {
             </Link>
           ))
         ) : (
-          userPosts && <EmptyPosts>게시글이 존재하지 않습니다.</EmptyPosts>
+          <EmptyPosts>게시글이 존재하지 않습니다.</EmptyPosts>
         )}
       </UserPostsContainer>
     </>

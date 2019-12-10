@@ -1,11 +1,10 @@
 import React, { useState, useCallback } from "react";
 import Link from "next/link";
-import Router from "next/router";
 import styled from "styled-components";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { useInput } from "../utils/useInput";
-import useMembers from "../hooks/useMembers";
 import useUser from "../hooks/useUser";
+import device from "../utils/device";
 
 const Container = styled.div`
   width: 30%;
@@ -15,6 +14,29 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 50px 80px;
+
+  @media ${device.laptopL} {
+  }
+
+  @media ${device.laptop} {
+    width: 40%;
+    height: 70%;
+  }
+
+  @media ${device.tablet} {
+    width: 50%;
+  }
+
+  @media ${device.mobileL} {
+    width: 90%;
+    height: 70%;
+    padding: 40px 55px;
+  }
+
+  @media ${device.mobileS} {
+    width: 90%;
+    padding: 40px 30px;
+  }
 `;
 
 const TitleContainer = styled.div`
@@ -22,6 +44,10 @@ const TitleContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 25px;
+
+  @media ${device.mobileL} {
+    margin-bottom: 0px;
+  }
 `;
 
 const Title = styled.span`
@@ -73,6 +99,12 @@ const SignUpBtn = styled.button`
   }
 `;
 
+const ErrorMessage = styled.span`
+  text-align: center;
+  color: red;
+  font-size: 15px;
+`;
+
 const SignUpMessage = styled.div`
   display: flex;
   justify-content: center;
@@ -108,14 +140,28 @@ const SocialLoginBtn = styled.button`
   &:hover {
     opacity: 1;
   }
+
+  @media ${device.laptop} {
+    font-size: 20px;
+    padding: 0;
+  }
+`;
+
+const SocialLoginTitle = styled.span`
+  margin-left: 7px;
+  @media ${device.laptop} {
+    display: none;
+  }
 `;
 
 const LoginForm = () => {
-  const [onPasswordErrorMessage, setOnPasswordErrorMessage] = useState(false);
   const [email, onChangeEmail] = useInput("");
   const [password, onChangePassword] = useInput("");
 
-  const { onLogInRequest } = useUser();
+  const {
+    onLogInRequest,
+    user: { loginErrorReason }
+  } = useUser();
 
   const onSubmit = useCallback(
     e => {
@@ -146,6 +192,7 @@ const LoginForm = () => {
           onChange={onChangePassword}
         ></Input>
         <SignUpBtn type="submit">로그인</SignUpBtn> 
+        {loginErrorReason && <ErrorMessage>{loginErrorReason}</ErrorMessage>}
       </Form>
 
       <SignUpMessage>
@@ -155,12 +202,12 @@ const LoginForm = () => {
       </SignUpMessage>
       <SocailLoginBtnContainer>
         <SocialLoginBtn backgroundColor="#0984e3">
-          <FaFacebook style={{ marginRight: 7 }} />
-          FaceBook
+          <FaFacebook />
+          <SocialLoginTitle>FaceBook</SocialLoginTitle>
         </SocialLoginBtn>
         <SocialLoginBtn backgroundColor="#D54733">
-          <FaGoogle style={{ marginRight: 7 }} />
-          Google
+          <FaGoogle />
+          <SocialLoginTitle>Google</SocialLoginTitle>
         </SocialLoginBtn>
       </SocailLoginBtnContainer>
     </Container>

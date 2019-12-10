@@ -34,7 +34,10 @@ import {
   uploadProfileImageRequest,
   editUserSuccess,
   editUserFailure,
-  editUserRequest
+  editUserRequest,
+  loadFollowRequest,
+  loadFollowSuccess,
+  loadFollowFailure
 } from "../reducers/user";
 import Router from "next/router";
 import {
@@ -55,8 +58,7 @@ function* logIn(action) {
     yield put(logInSuccess(result.data));
     yield call(Router.push, "/");
   } catch (e) {
-    console.log(e);
-    yield put(logInFailue(e));
+    yield put(logInFailue(e.response.data));
   }
 }
 
@@ -156,6 +158,24 @@ function* watchUnFollowUser() {
   yield takeLatest(unfollowUserRequest().type, unfollowUser);
 }
 
+function loadFollowAPI(nickname) {
+  return axios.post(`api/user/${nickname}/load/follow`);
+}
+
+function* loadFollow(action) {
+  try {
+    const result = yield call(loadFollowAPI, action.payload);
+    yield put(loadFollowSuccess(result.data));
+  } catch (e) {
+    console.log(e);
+    yield put(loadFollowFailure(e));
+  }
+}
+
+function* watchLoadFollow() {
+  yield takeLatest(loadFollowRequest().type, loadFollow);
+}
+
 function uploadBackgroundImageAPI(formData) {
   return axios.post(`api/user/upload/background`, formData, {
     withCredentials: true
@@ -241,6 +261,7 @@ export default function* userSaga() {
     fork(watchLoadUser),
     fork(watchFollowUser),
     fork(watchUnFollowUser),
+    fork(watchLoadFollow),
     fork(watchUploadBackgroundImage),
     fork(watchUploadProfileImage),
     fork(watchEditUser),

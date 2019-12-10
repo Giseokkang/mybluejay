@@ -10,15 +10,8 @@ import Comment from "../../components/Comment";
 import CommentUpload from "../../components/CommentUpload";
 import useUser from "../../hooks/useUser";
 import { loadPostRequest, loadCommentsRequest } from "../../reducers/post";
-
-const fadeIn = keyframes`
-  from{
-    opacity:0;
-  }
-  to {
-    opacity:1;
-  }
-  `;
+import device from "../../utils/device";
+import { fadeIn } from "../../utils/animations";
 
 const Container = styled.div`
   width: 100%;
@@ -34,6 +27,30 @@ const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
   grid-gap: 20px;
+
+  @media ${device.laptop} {
+    grid-template-columns: 1fr 2.5fr 1fr;
+    grid-gap: 0;
+    width: 100%;
+  }
+
+  @media ${device.tablet} {
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-gap: 0;
+    width: 100%;
+  }
+
+  @media ${device.mobileL} {
+    grid-template-columns: 0 1fr 0;
+    width: 100%;
+    display: flex;
+  }
+
+  @media ${device.mobileL} {
+    grid-template-columns: 0 1fr 0%;
+    width: 100%;
+    display: flex;
+  }
 `;
 
 const MenuBox = styled.div``;
@@ -63,30 +80,33 @@ const Post = () => {
 
   return (
     <>
-      <Helmet
-        title={`${post.User.nickname}님의 글`}
-        description={post.content}
-        meta={[
-          { name: "description", content: post.content },
-          {
-            name: "og:title",
-            content: `${post.User.nickname}님의 글`
-          },
-          {
-            name: "og:description",
-            content: post.content
-          },
-          {
-            name: "og:image",
-            content:
-              post.Images[0] && `http://localhost:8000/${post.Images[0].src}`
-          },
-          {
-            name: "og:url",
-            content: `http://localhost:3000/post/${post.id}`
-          }
-        ]}
-      />
+      {post && (
+        <Helmet
+          title={`${post.User.nickname}님의 글`}
+          description={post.content}
+          meta={[
+            { name: "description", content: post.content },
+            {
+              name: "og:title",
+              content: `${post.User.nickname}님의 글`
+            },
+            {
+              name: "og:description",
+              content: post.content
+            },
+            {
+              name: "og:image",
+              content:
+                post.Images[0] && `http://localhost:8000/${post.Images[0].src}`
+            },
+            {
+              name: "og:url",
+              content: `http://localhost:3000/post/${post.id}`
+            }
+          ]}
+        />
+      )}
+
       {isOnPopUp && <PopUp></PopUp>}
       <Container isOnPopUp={isOnPopUp}>
         <GridContainer>
