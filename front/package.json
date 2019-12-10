@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "next",
-    "build": "BUNDLE_ANALYZE=both next build",
+    "build": "ANALYZE=true next build",
     "prestart": "npm run build",
     "start": "NODE_ENV=production PORT=80 pm2 next start"
   },
