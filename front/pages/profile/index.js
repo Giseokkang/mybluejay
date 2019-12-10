@@ -4,7 +4,7 @@ import ProfileCard from "../../components/ProfileCard";
 import { useRouter } from "next/router";
 import useUser from "../../hooks/useUser";
 import Setting from "../../components/Setting";
-import UnloggedIn from "../../components/unLoggedIn";
+import UnLoggedIn from "../../components/unLoggedIn";
 import usePopUp from "../../hooks/usePopUp";
 import PopUp from "../../components/PopUp";
 import FollowList from "../../components/FollowList";
@@ -104,7 +104,7 @@ const Profile = () => {
               user.isLoggedin ? (
                 <ProfileCard info={user.myInformation} />
               ) : (
-                <UnloggedIn></UnloggedIn>
+                <UnLoggedIn></UnLoggedIn>
               )
             ) : (
               <ProfileCard info={user.peopleInformation} />
