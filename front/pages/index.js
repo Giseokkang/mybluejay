@@ -3,7 +3,6 @@ import styled from "styled-components";
 import usePost from "../hooks/usePost";
 import usePopUp from "../hooks/usePopUp";
 import PopUp from "../components/PopUp";
-import { useRouter } from "next/router";
 import { loadMainPostsRequest } from "../reducers/post";
 import ContentBox from "../components/ContentBox";
 import device from "../utils/device";

@@ -4,7 +4,7 @@ import { CHARACTER_COLOR, SKYBLUE, BORDER_COLOR } from "../utils/colors";
 import usePost from "../hooks/usePost";
 import { useRouter } from "next/router";
 import useUser from "../hooks/useUser";
-import PostingCard from "../components/PostingCard";
+import PostingCard from "./PostingCard";
 import Comment from "./Comment";
 import Link from "next/link";
 import EmptyPosts from "./EmptyPosts";
