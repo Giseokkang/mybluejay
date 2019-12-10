@@ -34,10 +34,14 @@ build/Release
 
 # Dependency directories
 /front/node_modules/
+/front/bundles/
 /back/node_modules/
 /back/uploads
 
 jspm_packages/
+
+#pem
+react-nodebird.pem
 
 # Distribution directories
 dist/
