@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev:server": "nodemon --exec babel-node init.js --delay 2 ",
-    "start": "pm2 start index.js"
+    "start": "pm2 start init.js"
   },
   "author": "Giseok",
   "license": "MIT",
