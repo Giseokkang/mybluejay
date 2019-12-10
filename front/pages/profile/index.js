@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import ProfileCard from "../../components/ProfileCard";
 import { useRouter } from "next/router";
 import useUser from "../../hooks/useUser";
 import Setting from "../../components/Setting";
-import UnLoggedIn from "../../components/unLoggedIn";
 import usePopUp from "../../hooks/usePopUp";
 import PopUp from "../../components/PopUp";
 import FollowList from "../../components/FollowList";
 import device from "../../utils/device";
 import { fadeIn } from "../../utils/animations";
+import UnLoggedIn from "../../components/unLoggedIn";
 
 const Container = styled.div`
   width: 100%;

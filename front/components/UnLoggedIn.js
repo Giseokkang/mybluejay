@@ -15,7 +15,7 @@ const Title = styled.span`
   font-weight: 700;
 `;
 
-const UnloggedIn = () => {
+const UnLoggedIn = () => {
   return (
     <Container>
       <Link href="/login">
@@ -27,4 +27,4 @@ const UnloggedIn = () => {
   );
 };
 
-export default UnloggedIn;
+export default UnLoggedIn;
