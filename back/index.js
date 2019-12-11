@@ -14,7 +14,7 @@ import routes from "./routes";
 import userRouter from "./router/userRouter";
 import postRouter from "./router/postRouter";
 import hashtagRouter from "./router/hashtagRouter";
-import commentRouter from "./router/CommentRouter";
+import commentRouter from "./router/commentRouter";
 
 dotenv.config();
 
