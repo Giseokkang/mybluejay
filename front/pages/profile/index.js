@@ -9,7 +9,7 @@ import PopUp from "../../components/PopUp";
 import FollowList from "../../components/FollowList";
 import device from "../../utils/device";
 import { fadeIn } from "../../utils/animations";
-import UnLoggedIn from "../../components/unLoggedIn";
+import UnLoggedIn from "../../components/UnLoggedIn";
 
 const Container = styled.div`
   width: 100%;
