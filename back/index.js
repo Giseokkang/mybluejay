@@ -55,6 +55,10 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get("/", (req, res) => {
+  res.send("서버 정상 동작 중");
+});
+
 app.use(routes.user, userRouter);
 app.use(routes.post, postRouter);
 app.use(routes.hashtag, hashtagRouter);
