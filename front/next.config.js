@@ -7,7 +7,6 @@ const CompressionPlugin = require("compression-webpack-plugin");
 module.exports = withBundleAnalyzer({
   distDir: ".next",
   webpack(config) {
-    console.log(config);
     const prod = process.env.NODE_ENV === "production";
     const plugins = [...config.plugins];
     if (prod) {
