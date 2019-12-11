@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import LoginForm from "../components/LoginForm";
-import SignUpForm from "../components/signUpForm";
+import SignUpForm from "../components/SignUpForm";
 import useUser from "../hooks/useUser";
 import Router from "next/router";
 import { fadeIn } from "../utils/animations";
