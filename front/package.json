@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next",
     "build": "ANALYZE=true next build",
-    "prestart": "npm run build",
+    "prestart": "NODE_PATH=./ npm run build",
     "start": "NODE_ENV=production PORT=80 pm2 start server.js"
   },
   "author": "Giseok",
