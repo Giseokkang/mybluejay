@@ -64,7 +64,7 @@ const NodeBird = ({ Component, store, pageProps }) => {
           },
           {
             rel: "shortcut icon",
-            href: "http://localhost:8000/favicon.ico"
+            href: "/favicon.ico"
           }
         ]}
       />

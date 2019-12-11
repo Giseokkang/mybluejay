@@ -24,7 +24,6 @@ passportConfig();
 
 app.use(helmet());
 app.use(morgan("dev"));
-app.use("/", express.static("favicon"));
 app.use("/uploads", express.static("uploads"));
 
 app.use(hpp());
