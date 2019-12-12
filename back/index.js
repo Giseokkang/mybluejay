@@ -30,7 +30,7 @@ if (prod) {
   app.use(morgan("combined"));
   app.use(
     cors({
-      origin: "http://mybluejay.net",
+      origin: /mybluejay\.com$/,
       credentials: true
     })
   );
