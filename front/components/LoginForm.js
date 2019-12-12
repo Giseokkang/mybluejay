@@ -82,7 +82,6 @@ const Input = styled.input`
 `;
 
 const SignUpBtn = styled.button`
-  all: unset;
   border-radius: 10px;
   width: 85%;
   height: 30px;
@@ -94,6 +93,7 @@ const SignUpBtn = styled.button`
   text-align: center;
   cursor: pointer;
   opacity: 0.9;
+  outline: none;
   &:hover {
     opacity: 1;
   }
@@ -137,6 +137,7 @@ const SocialLoginBtn = styled.button`
   background-color: ${props => props.backgroundColor};
   cursor: pointer;
   opacity: 0.9;
+  outline: none;
   &:hover {
     opacity: 1;
   }
@@ -201,11 +202,21 @@ const LoginForm = () => {
         </Link>
       </SignUpMessage>
       <SocailLoginBtnContainer>
-        <SocialLoginBtn backgroundColor="#0984e3">
+        <SocialLoginBtn
+          backgroundColor="#0984e3"
+          onClick={() => {
+            alert("구현 중 입니다.");
+          }}
+        >
           <FaFacebook />
           <SocialLoginTitle>FaceBook</SocialLoginTitle>
         </SocialLoginBtn>
-        <SocialLoginBtn backgroundColor="#D54733">
+        <SocialLoginBtn
+          backgroundColor="#D54733"
+          onClick={() => {
+            alert("구현 중 입니다.");
+          }}
+        >
           <FaGoogle />
           <SocialLoginTitle>Google</SocialLoginTitle>
         </SocialLoginBtn>

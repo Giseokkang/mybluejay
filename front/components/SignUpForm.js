@@ -13,6 +13,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 50px 80px;
+  /* position: relative; */
 
   @media ${device.laptop} {
     width: 40%;
@@ -85,10 +86,9 @@ const Input = styled.input`
 `;
 
 const SignUpBtn = styled.button`
-  all: unset;
   border-radius: 10px;
   width: 85%;
-  height: 30px;
+  height: 40px;
   padding: 8px 15px;
   background-color: #c34c8a;
   color: white;
@@ -97,6 +97,7 @@ const SignUpBtn = styled.button`
   text-align: center;
   cursor: pointer;
   opacity: 0.9;
+  outline: none;
   &:hover {
     opacity: 1;
   }
@@ -116,6 +117,8 @@ const CheckBox = styled.input``;
 const SocailLoginBtnContainer = styled.div`
   display: flex;
   justify-content: space-around;
+  /* position: absolute;
+  bottom: 10px; */
 `;
 
 const SocialLoginBtn = styled.button`
@@ -133,6 +136,7 @@ const SocialLoginBtn = styled.button`
   background-color: ${props => props.backgroundColor};
   cursor: pointer;
   opacity: 0.9;
+  outline: none;
   &:hover {
     opacity: 1;
   }
@@ -280,11 +284,21 @@ const SignUpForm = () => {
         <SignUpBtn type="submit">가입 하기</SignUpBtn> 
       </Form>
       <SocailLoginBtnContainer>
-        <SocialLoginBtn backgroundColor="#0984e3">
+        <SocialLoginBtn
+          backgroundColor="#0984e3"
+          onClick={() => {
+            alert("구현 중 입니다.");
+          }}
+        >
           <FaFacebook />
           <SocialLoginTitle>FaceBook</SocialLoginTitle>
         </SocialLoginBtn>
-        <SocialLoginBtn backgroundColor="#D54733">
+        <SocialLoginBtn
+          backgroundColor="#D54733"
+          onClick={() => {
+            alert("구현 중 입니다.");
+          }}
+        >
           <FaGoogle />
           <SocialLoginTitle>Google</SocialLoginTitle>
         </SocialLoginBtn>
