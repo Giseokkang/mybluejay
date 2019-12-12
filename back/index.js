@@ -18,22 +18,33 @@ import commentRouter from "./router/commentRouter";
 
 dotenv.config();
 
+const prod = process.env.NODE_ENV === "production";
+
 const app = express();
 db.sequelize.sync();
 passportConfig();
 
-app.use(helmet());
-app.use(morgan("dev"));
+if (prod) {
+  app.use(hpp());
+  app.use(helmet());
+  app.use(morgan("combined"));
+  app.use(
+    cors({
+      origin: "http://mybluejay.net",
+      credentials: true
+    })
+  );
+} else {
+  app.use(morgan("dev"));
+  app.use(
+    cors({
+      origin: true,
+      credentials: true
+    })
+  );
+}
+
 app.use("/uploads", express.static("uploads"));
-
-app.use(hpp());
-
-app.use(
-  cors({
-    origin: true,
-    credentials: true
-  })
-);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -46,7 +57,9 @@ app.use(
     // eslint-disable-next-line no-undef
     secret: process.env.COOKIE_SECRET,
     cookie: {
-      httpOnly: true
+      httpOnly: true,
+      secure: false,
+      domain: prod && ".mybluejay.net"
     },
     name: "wmnfidnesaid"
   })
