@@ -45,7 +45,6 @@ function* withdraw() {
     yield delay(2000);
     yield put(withdrawSuccess());
   } catch (e) {
-    console.log(e);
     yield put(withdrawFailure(e));
   }
 }

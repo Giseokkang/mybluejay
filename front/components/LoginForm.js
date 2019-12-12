@@ -8,7 +8,7 @@ import device from "../utils/device";
 
 const Container = styled.div`
   width: 30%;
-  height: 60%;
+  height: 65%;
   background-color: white;
   border-radius: 20px;
   display: flex;
@@ -83,9 +83,9 @@ const Input = styled.input`
 
 const SignUpBtn = styled.button`
   border-radius: 10px;
-  width: 85%;
-  height: 30px;
-  padding: 8px 15px;
+  width: 90%;
+  height: 45px;
+  padding: 8px 20px;
   background-color: #c34c8a;
   color: white;
   font-weight: 700;
@@ -119,19 +119,19 @@ const SignUpMessage = styled.div`
 
 const SocailLoginBtnContainer = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 `;
 
-const SocialLoginBtn = styled.button`
+const SocialLoginBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40%;
+  width: 45%;
   height: 45px;
   padding: 8px 15px;
   color: white;
   font-weight: 600;
-  font-size: 17px;
+  font-size: 16px;
   text-align: center;
   border-radius: 10px;
   background-color: ${props => props.backgroundColor};

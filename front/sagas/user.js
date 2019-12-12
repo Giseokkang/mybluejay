@@ -81,7 +81,6 @@ function* logOut() {
     yield call(logOutAPI);
     yield put(logOutSuccess());
   } catch (e) {
-    console.log(e);
     yield put(logOutFailure(e));
   }
 }
@@ -101,7 +100,6 @@ function* loadUser() {
     const result = yield call(loadUserAPI);
     yield put(loadUserSuccess(result.data));
   } catch (e) {
-    console.log(e);
     yield put(loadUserFailure(e));
   }
 }
@@ -125,7 +123,6 @@ function* followUser(action) {
     const result = yield call(followUserAPI, action.payload);
     yield put(followUserSuccess(result.data));
   } catch (e) {
-    console.log(e);
     yield put(followUserFailure(e));
   }
 }
@@ -149,7 +146,6 @@ function* unfollowUser(action) {
     const result = yield call(unfollowUserAPI, action.payload);
     yield put(unfollowUserSuccess(result.data));
   } catch (e) {
-    console.log(e);
     yield put(unfollowUserFailure(e));
   }
 }
@@ -167,7 +163,6 @@ function* loadFollow(action) {
     const result = yield call(loadFollowAPI, action.payload);
     yield put(loadFollowSuccess(result.data));
   } catch (e) {
-    console.log(e);
     yield put(loadFollowFailure(e));
   }
 }
@@ -187,7 +182,6 @@ function* uploadBackgroundImage(action) {
     const result = yield call(uploadBackgroundImageAPI, action.payload);
     yield put(uploadBackgroundImageSuccess(result.data));
   } catch (e) {
-    console.log(e);
     yield put(uploadBackgroundImageFailure(e));
   }
 }
@@ -207,7 +201,6 @@ function* uploadProfileImage(action) {
     const result = yield call(uploadProfileImageAPI, action.payload);
     yield put(uploadProfileImageSuccess(result.data));
   } catch (e) {
-    console.log(e);
     yield put(uploadProfileImageFailure(e));
   }
 }
@@ -228,7 +221,6 @@ function* editUser(action) {
     yield put(editUserSuccess(result.data));
     yield put(loadUserRequest());
   } catch (e) {
-    console.log(e);
     yield put(editUserFailure(e));
   }
 }

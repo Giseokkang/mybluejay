@@ -12,7 +12,7 @@ const Container = styled.div`
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  padding: 50px 80px;
+  padding: 30px 80px;
   /* position: relative; */
 
   @media ${device.laptop} {
@@ -41,7 +41,7 @@ const TitleContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 
   @media ${device.mobileL} {
     margin-bottom: 0px;
@@ -56,7 +56,7 @@ const Title = styled.span`
 
 const Form = styled.form`
   width: 100%;
-  height: 100%;
+  height: 80%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -87,9 +87,9 @@ const Input = styled.input`
 
 const SignUpBtn = styled.button`
   border-radius: 10px;
-  width: 85%;
+  width: 90%;
   height: 40px;
-  padding: 8px 15px;
+  padding: 8px 20px;
   background-color: #c34c8a;
   color: white;
   font-weight: 700;
@@ -121,7 +121,7 @@ const SocailLoginBtnContainer = styled.div`
   bottom: 10px; */
 `;
 
-const SocialLoginBtn = styled.button`
+const SocialLoginBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
