@@ -46,12 +46,6 @@ const GridContainer = styled.div`
     width: 100%;
     display: flex;
   }
-
-  @media ${device.mobileL} {
-    grid-template-columns: 0 1fr 0%;
-    width: 100%;
-    display: flex;
-  }
 `;
 
 const MenuBox = styled.div``;
@@ -60,6 +54,10 @@ const ContentBox = styled.div`
   border-right: 1px solid ${BORDER_COLOR};
   border-left: 1px solid ${BORDER_COLOR};
   background-color: white;
+
+  @media ${device.mobileL} {
+    width: 100%;
+  }
 `;
 
 const CommentBox = styled.div`

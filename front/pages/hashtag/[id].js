@@ -58,6 +58,10 @@ const ContentBox = styled.div`
   border-right: 1px solid ${BORDER_COLOR};
   border-left: 1px solid ${BORDER_COLOR};
   background-color: white;
+
+  @media ${device.mobileL} {
+    width: 100%;
+  }
 `;
 
 const PostingBox = styled.div`
