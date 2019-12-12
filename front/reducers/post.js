@@ -368,6 +368,7 @@ const post = (state = initialState, action) => {
       }
 
       case LOAD_HASHTAG_POSTS_FAILURE: {
+        draft.isLoading = false;
         draft.errorMessage = action.payload;
         break;
       }
@@ -405,6 +406,8 @@ const post = (state = initialState, action) => {
       }
 
       case ADD_POST_FAILURE: {
+        draft.isLoading = false;
+
         draft.errorMessage = action.payload;
         break;
       }
