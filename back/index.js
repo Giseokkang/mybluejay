@@ -25,6 +25,7 @@ db.sequelize.sync();
 passportConfig();
 
 if (prod) {
+  console.log(prod, "prod");
   app.use(hpp());
   app.use(helmet());
   app.use(morgan("combined"));
