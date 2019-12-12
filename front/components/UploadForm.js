@@ -53,6 +53,10 @@ const UploadInput = styled(Textarea)`
   max-height: 300px;
   margin-bottom: 50px;
 
+  :disabled {
+    background-color: white;
+  }
+
   &:focus {
     outline: none;
   }
@@ -117,10 +121,11 @@ const ImageDeleteIconContainer = styled.div`
 `;
 
 const SubmitButton = styled.button`
+  all: unset;
   position: absolute;
   background-color: #6fa1ff;
   color: white;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
   font-weight: 600;
   font-size: 14px;
   width: 70px;
