@@ -18,7 +18,7 @@ const NodeBird = ({ Component, store, pageProps }) => {
   return (
     <Provider store={store}>
       <Helmet
-        title="NodeBird"
+        title="MyBlueJay"
         htmlAttributes={{ lang: "ko" }}
         meta={[
           {
@@ -35,19 +35,23 @@ const NodeBird = ({ Component, store, pageProps }) => {
           },
           {
             name: "description",
-            content: "NodeBird SNS"
+            content: "MyBlueJay SNS"
           },
           {
             name: "og:title",
-            content: "NodeBird"
+            content: "MyBlueJay"
           },
           {
             name: "og:description",
-            content: "NodeBird SNS"
+            content: "MyBlueJay SNS"
           },
           {
             property: "og:type",
             content: "website"
+          },
+          {
+            property: "og:image",
+            content: "http://mybluejay.net/favicon.ico"
           }
         ]}
         link={[

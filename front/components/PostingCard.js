@@ -10,6 +10,7 @@ import useUser from "../hooks/useUser";
 import Slider from "react-slick";
 import { useRouter } from "next/router";
 import { getFullDay } from "../utils/function";
+import { backUrl } from "../config/config";
 
 const Container = styled.div`
   width: 100%;
@@ -236,7 +237,7 @@ const PostingCard = ({ post }) => {
                       {post.Images.map(image => (
                         <div key={image.src}>
                           <Image
-                            imageUrl={`http://localhost:8000/${image.src}`}
+                            imageUrl={`${backUrl}${image.src}`}
                             alt="image"
                             key={image.src}
                           />
@@ -256,7 +257,7 @@ const PostingCard = ({ post }) => {
                   }}
                 >
                   <Image
-                    imageUrl={`http://localhost:8000/${post.Images[0].src}`}
+                    imageUrl={`${backUrl}${post.Images[0].src}`}
                     alt="image"
                     key={post.Images[0].src}
                   />

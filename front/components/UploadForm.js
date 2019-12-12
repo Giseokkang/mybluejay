@@ -7,6 +7,7 @@ import usePost from "../hooks/usePost";
 import useUser from "../hooks/useUser";
 import { IoMdRemove } from "react-icons/io";
 import Loader from "react-loader-spinner";
+import { backUrl } from "../config/config";
 
 const Container = styled.div`
   width: 100%;
@@ -269,7 +270,7 @@ const UploadForm = () => {
             {imagePaths.map((path, i) => (
               <ImgContainer key={path}>
                 <Img
-                  src={`http://localhost:8000/${path}`}
+                  src={`${backUrl}${path}`}
                   style={{ width: "50px" }}
                   alt={path}
                 />

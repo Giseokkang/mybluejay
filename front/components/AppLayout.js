@@ -150,7 +150,7 @@ const AppLayout = ({ children }) => {
               </a>
             </LinkContainer>
           </Link>
-          <Link prefetch href="/profile">
+          <Link href="/profile">
             <LinkContainer>
               <FaUser></FaUser>
             </LinkContainer>
@@ -170,20 +170,20 @@ const AppLayout = ({ children }) => {
 
         <BtnContainer>
           {user && user.isLoggedin ? (
-            <Link prefetch href="/">
+            <Link href="/">
               <Btn backgroundColor="#70a1ff" onClick={() => onLogOutRequest()}>
                 <a>Log out</a>
               </Btn>
             </Link>
           ) : (
             <>
-              <Link prefetch href="/signup">
+              <Link href="/signup">
                 <Btn backgroundColor="#70a1ff" signup={true}>
                   <a>Sign Up</a>
                 </Btn>
               </Link>
 
-              <Link prefetch href="/login">
+              <Link href="/login">
                 <Btn backgroundColor="#2ed573">
                   <a>Login</a>
                 </Btn>

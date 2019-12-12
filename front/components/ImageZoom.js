@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { FaArrowLeft } from "react-icons/fa";
+import { backUrl } from "../config/config";
 
 const Container = styled.div`
   width: 100vw;
@@ -79,7 +80,7 @@ const ImageZoom = ({ imageUrl, setIsZoom }) => {
       </BackIconContainer>
       <Image
         onClick={e => e.stopPropagation()}
-        imageUrl={`http://localhost:8000/${imageUrl}`}
+        imageUrl={`${backUrl}${imageUrl}`}
         // src={`http://localhost:8000/${image.src}`}
         alt="image"
       />

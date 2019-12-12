@@ -12,6 +12,7 @@ import useUser from "../../hooks/useUser";
 import { loadPostRequest, loadCommentsRequest } from "../../reducers/post";
 import device from "../../utils/device";
 import { fadeIn } from "../../utils/animations";
+import { backUrl } from "../../config/config";
 
 const Container = styled.div`
   width: 100%;
@@ -97,11 +98,12 @@ const Post = () => {
             {
               name: "og:image",
               content:
-                post.Images[0] && `http://localhost:8000/${post.Images[0].src}`
+                post.Images[0] &&
+                `http://api.mybluejay.net/${post.Images[0].src}`
             },
             {
               name: "og:url",
-              content: `http://localhost:3000/post/${post.id}`
+              content: `http://mybluejay.net/post/${post.id}`
             }
           ]}
         />
