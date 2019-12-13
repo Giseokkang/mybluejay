@@ -4,6 +4,8 @@ import { BORDER_COLOR, SKYBLUE } from "../utils/colors";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import useUser from "../hooks/useUser";
 import { MdClear } from "react-icons/md";
+import img from "react-image";
+import Loader from "react-loader-spinner";
 
 const fadeIn = keyframes`
   0%{
@@ -87,7 +89,7 @@ const SaveBtn = styled.button`
   }
 `;
 
-const ProfileBackground = styled.div`
+const ProfileBackground = styled(img)`
   width: 100%;
   height: 200px;
   background-color: gray;
@@ -112,7 +114,7 @@ const BackgrounImageDeleteIconContainer = styled.div`
   }
 `;
 
-const ProfileImage = styled.div`
+const ProfileImage = styled(img)`
   width: 130px;
   height: 130px;
   position: absolute;
@@ -313,6 +315,15 @@ const Setting = () => {
             ref={backgroundImageInput}
             onChange={onChangeBackgroundImage}
             accept="image/*"
+            loader={
+              <Loader
+                type="Oval"
+                color="white"
+                height={25}
+                width={25}
+                fontWeight={700}
+              ></Loader>
+            }
           ></input>
           <BackgrounImageDeleteIconContainer
             onClick={onClickDeleteBackgroundImage}
@@ -326,6 +337,15 @@ const Setting = () => {
             myInformation.profileImage && myInformation.profileImage
               ? `${myInformation.profileImage}`
               : null
+          }
+          loader={
+            <Loader
+              type="Oval"
+              color="white"
+              height={25}
+              width={25}
+              fontWeight={700}
+            ></Loader>
           }
         >
           <input

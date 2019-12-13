@@ -7,6 +7,7 @@ import usePost from "../hooks/usePost";
 import useUser from "../hooks/useUser";
 import { IoMdRemove } from "react-icons/io";
 import Loader from "react-loader-spinner";
+import img from "react-image";
 
 const Container = styled.div`
   width: 100%;
@@ -97,7 +98,7 @@ const ImgContainer = styled.div`
   position: relative;
 `;
 
-const Img = styled.img`
+const Img = styled(img)`
   width: 150px;
   margin-left: 5px;
 `;
@@ -281,7 +282,20 @@ const UploadForm = () => {
           <UploadImageContainer>
             {imagePaths.map((path, i) => (
               <ImgContainer key={path}>
-                <Img src={`${path}`} style={{ width: "50px" }} alt={path} />
+                <Img
+                  src={`${path}`}
+                  style={{ width: "50px" }}
+                  alt={path}
+                  loader={
+                    <Loader
+                      type="Oval"
+                      color="skyblue"
+                      height={18}
+                      width={18}
+                      fontWeight={700}
+                    ></Loader>
+                  }
+                />
                 <ImageDeleteIconContainer onClick={onClickDeleteImage(i)}>
                   <IoMdRemove />
                 </ImageDeleteIconContainer>
