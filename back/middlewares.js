@@ -1,67 +1,70 @@
 import multer from "multer";
-// import multerS3 from "multer-s3";
-// import aws from "aws-sdk";
-import path from "path";
+import multerS3 from "multer-s3";
+import aws from "aws-sdk";
 
-// const s3 = new aws.S3({
-//   accessKeyId: process.env.AWS_ACCESS_KEY,
-//   secretAccessKey: process.env.AWS_SECRET_KEY,
-//   region: "ap-northeast-1"
-// });
-
-// const multerVideo = multer({
-//   storage: multerS3({
-//     s3,
-//     acl: "public-read",
-//     bucket: "wetubestorage/video"
-//   })
-// });
-
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, "uploads/postImages");
-  },
-  filename: function(req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const basename = path.basename(file.originalname, ext); // 제로초.png, ext===.png, basename===제로초
-    cb(null, basename + Date.now() + ext);
-  }
+aws.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+  region: "ap-northease-2"
 });
+
+// const storage = multer.diskStorage({
+//   destination: function(req, file, cb) {
+//     cb(null, "uploads/postImages");
+//   },
+//   filename: function(req, file, cb) {
+//     const ext = path.extname(file.originalname);
+//     const basename = path.basename(file.originalname, ext); // 제로초.png, ext===.png, basename===제로초
+//     cb(null, basename + Date.now() + ext);
+//   }
+// });
 
 export const imageUpload = multer({
-  storage: storage,
+  storage: multerS3({
+    s3: new aws.S3(),
+    acl: "public-read",
+    bucket: "mybluejaystorage/postImages"
+  }),
   limits: { fileSize: 20 * 1024 * 1024 }
 });
 
-const backgroundStorage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, "uploads/backgrounds");
-  },
-  filename: function(req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const basename = path.basename(file.originalname, ext); // 제로초.png, ext===.png, basename===제로초
-    cb(null, basename + Date.now() + ext);
-  }
-});
+// const backgroundStorage = multer.diskStorage({
+//   destination: function(req, file, cb) {
+//     cb(null, "uploads/backgrounds");
+//   },
+//   filename: function(req, file, cb) {
+//     const ext = path.extname(file.originalname);
+//     const basename = path.basename(file.originalname, ext); // 제로초.png, ext===.png, basename===제로초
+//     cb(null, basename + Date.now() + ext);
+//   }
+// });
 
 export const backgroundImageUpload = multer({
-  storage: backgroundStorage,
+  storage: multerS3({
+    s3: new aws.S3(),
+    acl: "public-read",
+    bucket: "mybluejaystorage/backgrounds"
+  }),
   limits: { fileSize: 20 * 1024 * 1024 }
 });
 
-const avatarStorage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, "uploads/avatars");
-  },
-  filename: function(req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const basename = path.basename(file.originalname, ext); // 제로초.png, ext===.png, basename===제로초
-    cb(null, basename + Date.now() + ext);
-  }
-});
+// const avatarStorage = multer.diskStorage({
+//   destination: function(req, file, cb) {
+//     cb(null, "uploads/avatars");
+//   },
+//   filename: function(req, file, cb) {
+//     const ext = path.extname(file.originalname);
+//     const basename = path.basename(file.originalname, ext); // 제로초.png, ext===.png, basename===제로초
+//     cb(null, basename + Date.now() + ext);
+//   }
+// });
 
 export const avatarUpload = multer({
-  storage: avatarStorage,
+  storage: multerS3({
+    s3: new aws.S3(),
+    acl: "public-read",
+    bucket: "mybluejaystorage/avatars"
+  }),
   limits: { fileSize: 20 * 1024 * 1024 }
 });
 

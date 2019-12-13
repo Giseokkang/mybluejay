@@ -4,7 +4,6 @@ import { BORDER_COLOR, SKYBLUE } from "../utils/colors";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import useUser from "../hooks/useUser";
 import { MdClear } from "react-icons/md";
-import { backUrl } from "../config/config";
 
 const fadeIn = keyframes`
   0%{
@@ -303,7 +302,7 @@ const Setting = () => {
           onClick={onClickBackgroundImageUpload}
           src={
             myInformation.backgroundImage && myInformation.backgroundImage
-              ? `${backUrl}${myInformation.backgroundImage}`
+              ? `${myInformation.backgroundImage}`
               : null
           }
         >
@@ -324,7 +323,7 @@ const Setting = () => {
           onClick={onClickProfileImageUpload}
           src={
             myInformation.profileImage && myInformation.profileImage
-              ? `${backUrl}${myInformation.profileImage}`
+              ? `${myInformation.profileImage}`
               : null
           }
         >

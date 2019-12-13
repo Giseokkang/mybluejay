@@ -9,7 +9,6 @@ import Tabs from "./Tabs";
 import usePost from "../hooks/usePost";
 import { getFullDay } from "../utils/function";
 import ImageZoom from "./ImageZoom";
-import { backUrl } from "../config/config";
 
 const Container = styled.div`
   display: flex;
@@ -187,7 +186,7 @@ const ProfileCard = ({ info }) => {
               info.Avatar &&
               info.Avatar.background_src &&
               info.Avatar.background_src
-                ? `${backUrl}${info.Avatar.background_src}`
+                ? `${info.Avatar.background_src}`
                 : null
             }
             onClick={() => {
@@ -202,7 +201,7 @@ const ProfileCard = ({ info }) => {
                 info.Avatar &&
                 info.Avatar.profile_src &&
                 info.Avatar.profile_src
-                  ? `${backUrl}${info.Avatar.profile_src}`
+                  ? `${info.Avatar.profile_src}`
                   : null
               }
               onClick={e => {

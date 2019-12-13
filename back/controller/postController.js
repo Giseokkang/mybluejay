@@ -151,7 +151,7 @@ export const postUploadPost = async (req, res, next) => {
 };
 
 export const postUploadImages = (req, res) => {
-  res.json(req.files.map(v => v.path));
+  res.json(req.files.map(v => v.location));
 };
 
 export const postEditPost = (req, res) => {

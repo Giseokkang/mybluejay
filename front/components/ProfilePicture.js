@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import { backUrl } from "../config/config";
 
 const Container = styled.div`
   width: 45px;
@@ -15,9 +14,7 @@ const Container = styled.div`
 
 const ProfilePicture = ({ profileSrc }) => {
   return (
-    <Container
-      profileSrc={profileSrc ? `${backUrl}${profileSrc}` : null}
-    ></Container>
+    <Container profileSrc={profileSrc ? `${profileSrc}` : null}></Container>
   );
 };
 

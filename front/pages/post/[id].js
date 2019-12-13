@@ -12,7 +12,6 @@ import useUser from "../../hooks/useUser";
 import { loadPostRequest, loadCommentsRequest } from "../../reducers/post";
 import device from "../../utils/device";
 import { fadeIn } from "../../utils/animations";
-import { backUrl } from "../../config/config";
 
 const Container = styled.div`
   width: 100%;

@@ -351,7 +351,7 @@ export const getUserLikedPosts = async (req, res, next) => {
 };
 export const uploadBackgroundImage = (req, res, next) => {
   try {
-    res.json(req.file.path);
+    res.json(req.file.location);
   } catch (e) {
     console.error(e);
     next(e);
@@ -359,7 +359,7 @@ export const uploadBackgroundImage = (req, res, next) => {
 };
 export const uploadAvatar = (req, res, next) => {
   try {
-    res.json(req.file.path);
+    res.json(req.file.location);
   } catch (e) {
     console.error(e);
     next(e);
