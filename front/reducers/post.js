@@ -259,7 +259,8 @@ const initialState = {
   isUploading: false,
   imagePaths: [],
   mainPosts: [],
-  isLoading: false
+  isLoading: false,
+  isImageUploading: false
 };
 
 // Reducer
@@ -374,14 +375,17 @@ const post = (state = initialState, action) => {
       }
 
       case UPLOAD_IMAGE_REQUEST: {
+        draft.isImageUploading = true;
         break;
       }
       case UPLOAD_IMAGE_SUCCESS: {
+        draft.isImageUploading = false;
         action.payload.forEach(v => draft.imagePaths.push(v));
         break;
       }
 
       case UPLOAD_IMAGE_FAILURE: {
+        draft.isImageUploading = false;
         draft.errorMessage = action.payload;
         break;
       }

@@ -202,7 +202,9 @@ const initialState = {
   isEditting: false,
   isSettingOn: false, // 에디터 활성화
   isLoading: false,
-  isFollowListOn: false
+  isFollowListOn: false,
+  isBackgroundImageUploading: false,
+  isProfileImageUploading: false
 };
 
 // reducer
@@ -336,15 +338,18 @@ const user = (state = initialState, action) => {
       }
 
       case UPLOAD_BACKGROUND_IMAGE_REQUEST: {
+        draft.isBackgroundImageUploading = true;
         break;
       }
 
       case UPLOAD_BACKGROUND_IMAGE_SUCCESS: {
+        draft.isBackgroundImageUploading = false;
         draft.myInformation.backgroundImage = action.payload;
         break;
       }
 
       case UPLOAD_BACKGROUND_IMAGE_FAILURE: {
+        draft.isBackgroundImageUploading = false;
         draft.errorMessage = action.payload;
         break;
       }
@@ -355,15 +360,18 @@ const user = (state = initialState, action) => {
       }
 
       case UPLOAD_PROFILE_IMAGE_REQUEST: {
+        draft.isProfileImageUploading = true;
         break;
       }
 
       case UPLOAD_PROFILE_IMAGE_SUCCESS: {
+        draft.isProfileImageUploading = false;
         draft.myInformation.profileImage = action.payload;
         break;
       }
 
       case UPLOAD_PROFILE_IMAGE_FAILURE: {
+        draft.isProfileImageUploading = false;
         draft.errorMessage = action.payload;
         break;
       }
