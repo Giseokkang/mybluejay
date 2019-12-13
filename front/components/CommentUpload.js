@@ -49,6 +49,7 @@ const LimitCharacters = styled.span`
 `;
 
 const SubmitButton = styled.button`
+  all: unset;
   position: absolute;
   background-color: #6fa1ff;
   color: white;

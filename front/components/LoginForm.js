@@ -8,7 +8,7 @@ import device from "../utils/device";
 
 const Container = styled.div`
   width: 30%;
-  height: 65%;
+  height: 63%;
   background-color: white;
   border-radius: 20px;
   display: flex;
@@ -43,7 +43,7 @@ const TitleContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 
   @media ${device.mobileL} {
     margin-bottom: 0px;
@@ -82,9 +82,10 @@ const Input = styled.input`
 `;
 
 const SignUpBtn = styled.button`
+  all: unset;
   border-radius: 10px;
-  width: 90%;
-  height: 45px;
+  width: 80%;
+  height: 35px;
   padding: 8px 20px;
   background-color: #c34c8a;
   color: white;

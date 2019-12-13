@@ -64,6 +64,7 @@ const Title = styled.span`
 `;
 
 const SaveBtn = styled.button`
+  all: unset;
   width: 50px;
   height: 30px;
   padding: 5px;

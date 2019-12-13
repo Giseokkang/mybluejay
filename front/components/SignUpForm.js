@@ -41,7 +41,7 @@ const TitleContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 
   @media ${device.mobileL} {
     margin-bottom: 0px;
@@ -86,9 +86,10 @@ const Input = styled.input`
 `;
 
 const SignUpBtn = styled.button`
+  all: unset;
   border-radius: 10px;
-  width: 90%;
-  height: 40px;
+  width: 75%;
+  height: 32px;
   padding: 8px 20px;
   background-color: #c34c8a;
   color: white;
