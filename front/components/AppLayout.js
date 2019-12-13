@@ -24,6 +24,10 @@ const Container = styled.div`
   background-color: white;
   z-index: 5;
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+
+  @media ${device.mobileL} {
+    position: static;
+  }
 `;
 
 const ItemsContainer = styled.div`
@@ -122,6 +126,7 @@ const SearchIconContainer = styled.div`
 `;
 
 const AppLayout = ({ children }) => {
+  const [onScroll, setOnScroll] = useState();
   const { user, onLogOutRequest, onLoadUserRequest } = useUser();
   const { isOnPopUp } = usePopUp();
 
