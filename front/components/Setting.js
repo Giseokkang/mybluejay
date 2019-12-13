@@ -4,7 +4,6 @@ import { BORDER_COLOR, SKYBLUE } from "../utils/colors";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import useUser from "../hooks/useUser";
 import { MdClear } from "react-icons/md";
-import img from "react-image";
 import Loader from "react-loader-spinner";
 
 const fadeIn = keyframes`
@@ -89,7 +88,7 @@ const SaveBtn = styled.button`
   }
 `;
 
-const ProfileBackground = styled(img)`
+const ProfileBackground = styled.div`
   width: 100%;
   height: 200px;
   background-color: gray;
@@ -114,7 +113,7 @@ const BackgrounImageDeleteIconContainer = styled.div`
   }
 `;
 
-const ProfileImage = styled(img)`
+const ProfileImage = styled.div`
   width: 130px;
   height: 130px;
   position: absolute;
@@ -190,8 +189,17 @@ const LimitCharacters = styled.span`
   right: 2px;
 `;
 
+const LoaderContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Setting = () => {
   const {
+    user,
     user: { myInformation },
     onUploadBackgroundImageRequest,
     onUploadProfileImageRequest,
@@ -308,6 +316,17 @@ const Setting = () => {
               : null
           }
         >
+          {user.isBackgroundImageUploading && (
+            <LoaderContainer>
+              <Loader
+                type="Oval"
+                color="skyblue"
+                height={38}
+                width={38}
+                fontWeight={700}
+              ></Loader>
+            </LoaderContainer>
+          )}
           <input
             type="file"
             multiple
@@ -315,15 +334,6 @@ const Setting = () => {
             ref={backgroundImageInput}
             onChange={onChangeBackgroundImage}
             accept="image/*"
-            loader={
-              <Loader
-                type="Oval"
-                color="white"
-                height={25}
-                width={25}
-                fontWeight={700}
-              ></Loader>
-            }
           ></input>
           <BackgrounImageDeleteIconContainer
             onClick={onClickDeleteBackgroundImage}
@@ -338,16 +348,18 @@ const Setting = () => {
               ? `${myInformation.profileImage}`
               : null
           }
-          loader={
-            <Loader
-              type="Oval"
-              color="white"
-              height={25}
-              width={25}
-              fontWeight={700}
-            ></Loader>
-          }
         >
+          {user.isProfileImageUploading && (
+            <LoaderContainer>
+              <Loader
+                type="Oval"
+                color="skyblue"
+                height={38}
+                width={38}
+                fontWeight={700}
+              ></Loader>
+            </LoaderContainer>
+          )}
           <input
             type="file"
             multiple
