@@ -377,7 +377,7 @@ const user = (state = initialState, action) => {
       }
 
       case DELETE_PROFILE_IMAGE_REQUEST: {
-        draft.profileImage = null;
+        draft.myInformation.profileImage = null;
         break;
       }
 
