@@ -312,6 +312,7 @@ const Setting = () => {
             hidden
             ref={backgroundImageInput}
             onChange={onChangeBackgroundImage}
+            accept="image/*"
           ></input>
           <BackgrounImageDeleteIconContainer
             onClick={onClickDeleteBackgroundImage}
@@ -333,6 +334,7 @@ const Setting = () => {
             hidden
             ref={profileImageInput}
             onChange={onChangeProfileImage}
+            accept="image/*"
           ></input>
           <ProfileImageDeleteIconContainer onClick={onClickDeleteProfileImage}>
             <MdClear />

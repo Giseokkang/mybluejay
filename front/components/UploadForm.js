@@ -240,6 +240,7 @@ const UploadForm = () => {
             disabled={user.isLoggedin ? false : true}
             onChange={onChangeDescription}
             value={description}
+            accept="image/*"
           />
           <LimitCharacters color={description.length > 500 ? "red" : "black"}>
             {description.length} / 500
