@@ -63,10 +63,14 @@ const SubmitButton = styled.button`
   right: 5px;
   cursor: pointer;
   opacity: ${props => (props.isAvailableUpload ? 1 : 0.6)};
-  transition: all 0.3s linear;
+  transition: opacity 0.3s linear;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  &:focus {
-    outline: none;
+  outline: none;
+  &:hover {
+    transform: scale(0.98);
   }
 `;
 

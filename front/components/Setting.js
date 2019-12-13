@@ -65,9 +65,9 @@ const Title = styled.span`
 
 const SaveBtn = styled.button`
   all: unset;
-  width: 50px;
-  height: 30px;
-  padding: 5px;
+  width: 45px;
+  height: 25px;
+  padding: 4px 5px;
   background-color: ${props => (props.isAvailableSet ? SKYBLUE : "gray")};
   pointer-events: ${props => (props.isAvailableSet ? null : "none")};
   border-radius: 5px;
@@ -76,7 +76,7 @@ const SaveBtn = styled.button`
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
   opacity: 0.9;
 
