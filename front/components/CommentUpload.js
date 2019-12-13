@@ -50,9 +50,12 @@ const LimitCharacters = styled.span`
 
 const SubmitButton = styled.button`
   all: unset;
+
   position: absolute;
   background-color: #6fa1ff;
   color: white;
+  -webkit-text-fill-color: white;
+
   letter-spacing: 3px;
   font-weight: 600;
   font-size: 14px;
@@ -68,7 +71,6 @@ const SubmitButton = styled.button`
   justify-content: center;
   align-items: center;
 
-  outline: none;
   &:hover {
     transform: scale(0.98);
   }

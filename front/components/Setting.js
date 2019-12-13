@@ -72,6 +72,8 @@ const SaveBtn = styled.button`
   pointer-events: ${props => (props.isAvailableSet ? null : "none")};
   border-radius: 5px;
   color: white;
+  -webkit-text-fill-color: white;
+
   display: flex;
   justify-content: center;
   align-items: center;

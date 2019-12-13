@@ -61,6 +61,8 @@ const Button = styled.button`
   height: 30px;
   background-color: ${props => props.backgroundColor};
   color: white;
+  -webkit-text-fill-color: white;
+
   border-radius: 10px;
   cursor: pointer;
   opacity: 0.8;

@@ -125,6 +125,8 @@ const SubmitButton = styled.button`
   position: absolute;
   background-color: #6fa1ff;
   color: white;
+  -webkit-text-fill-color: white;
+
   letter-spacing: 2px;
   font-weight: 600;
   font-size: 14px;
@@ -264,9 +266,10 @@ const UploadForm = () => {
               >
                 <Loader
                   type="Oval"
-                  color="#00BFFF"
+                  color="white"
                   height={18}
                   width={18}
+                  fontWeight={700}
                 ></Loader>
               </div>
             ) : (
