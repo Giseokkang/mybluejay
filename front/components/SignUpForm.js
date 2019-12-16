@@ -29,12 +29,12 @@ const Container = styled.div`
   @media ${device.mobileL} {
     width: 90%;
     height: 80%;
-    padding: 0 50px;
+    padding: 10px 50px;
   }
 
   @media ${device.mobileS} {
     width: 90%;
-    padding: 0 30px;
+    padding: 10px 30px;
   }
 `;
 
@@ -42,7 +42,6 @@ const TitleContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 15px;
   margin-top: 15px;
 
   @media ${device.mobileL} {
@@ -55,10 +54,6 @@ const Title = styled.span`
   font-weight: 600;
   font-size: 27px;
   color: black;
-
-  @media ${device.mobileL} {
-    font-size: 20px;
-  }
 `;
 
 const Form = styled.form`
@@ -90,11 +85,6 @@ const Input = styled.input`
   @media ${device.laptop} {
     width: 80%;
     height: 20px;
-    margin-bottom: 20px;
-  }
-
-  @media ${device.mobileL} {
-    width: 80%;
     margin-bottom: 20px;
   }
 `;
