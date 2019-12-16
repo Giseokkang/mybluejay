@@ -409,3 +409,11 @@ export const editUser = async (req, res, next) => {
     next(e);
   }
 };
+
+export const googleLogin = () => {
+  passport.authenticate("google", { scope: ["profile"] });
+};
+
+export const googleLoginCallback = (req, res) => {
+  res.send("success");
+};

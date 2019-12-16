@@ -1,6 +1,7 @@
 import passport from "passport";
 import db from "../models";
 import local from "./local";
+import google from "./google";
 
 export default () => {
   passport.serializeUser((user, done) => {
@@ -42,4 +43,5 @@ export default () => {
   });
 
   local();
+  google();
 };

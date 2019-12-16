@@ -4,6 +4,7 @@ import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { useInput } from "../utils/useInput";
 import useMembers from "../hooks/useMembers";
 import device from "../utils/device";
+import Link from "next/link";
 
 const Container = styled.div`
   width: 30%;
@@ -296,15 +297,12 @@ const SignUpForm = () => {
           <FaFacebook />
           <SocialLoginTitle>FaceBook</SocialLoginTitle>
         </SocialLoginBtn>
-        <SocialLoginBtn
-          backgroundColor="#D54733"
-          onClick={() => {
-            alert("구현 중 입니다.");
-          }}
-        >
-          <FaGoogle />
-          <SocialLoginTitle>Google</SocialLoginTitle>
-        </SocialLoginBtn>
+        <Link href="/auto/google">
+          <SocialLoginBtn backgroundColor="#D54733">
+            <FaGoogle />
+            <SocialLoginTitle>Google</SocialLoginTitle>
+          </SocialLoginBtn>
+        </Link>
       </SocailLoginBtnContainer>
     </Container>
   );
