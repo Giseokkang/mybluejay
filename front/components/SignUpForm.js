@@ -4,11 +4,10 @@ import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { useInput } from "../utils/useInput";
 import useMembers from "../hooks/useMembers";
 import device from "../utils/device";
-import Link from "next/link";
 
 const Container = styled.div`
   width: 30%;
-  height: 80%;
+  height: 70%;
   background-color: white;
   border-radius: 20px;
   display: flex;
@@ -22,18 +21,18 @@ const Container = styled.div`
 
   @media ${device.tablet} {
     width: 50%;
-    height: 90%;
+    height: 70%;
   }
 
   @media ${device.mobileL} {
     width: 90%;
-    height: 90%;
+    height: 70%;
     padding: 40px 55px;
   }
 
   @media ${device.mobileS} {
     width: 90%;
-    height: 90%;
+    height: 70%;
     padding: 40px 30px;
   }
 `;
@@ -43,6 +42,7 @@ const TitleContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 15px;
+  margin-top: 15px;
 
   @media ${device.mobileL} {
     margin-bottom: 0px;
@@ -287,7 +287,7 @@ const SignUpForm = () => {
         </CheckBoxContainer>
         <SignUpBtn type="submit">가입 하기</SignUpBtn> 
       </Form>
-      <SocailLoginBtnContainer>
+      {/* <SocailLoginBtnContainer>
         <SocialLoginBtn
           backgroundColor="#0984e3"
           onClick={() => {
@@ -297,13 +297,16 @@ const SignUpForm = () => {
           <FaFacebook />
           <SocialLoginTitle>FaceBook</SocialLoginTitle>
         </SocialLoginBtn>
-        <Link href="/auto/google">
-          <SocialLoginBtn backgroundColor="#D54733">
-            <FaGoogle />
-            <SocialLoginTitle>Google</SocialLoginTitle>
-          </SocialLoginBtn>
-        </Link>
-      </SocailLoginBtnContainer>
+        <SocialLoginBtn
+          backgroundColor="#D54733"
+          onClick={() => {
+            alert("구현 중 입니다.");
+          }}
+        >
+          <FaGoogle />
+          <SocialLoginTitle>Google</SocialLoginTitle>
+        </SocialLoginBtn>
+      </SocailLoginBtnContainer> */}
     </Container>
   );
 };

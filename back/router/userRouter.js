@@ -15,9 +15,7 @@ import {
   uploadAvatar,
   uploadBackgroundImage,
   editUser,
-  postLoadFollow,
-  googleLogin,
-  googleLoginCallback
+  postLoadFollow
 } from "../controller/userController";
 import {
   onlyPrivate,
@@ -33,9 +31,6 @@ userRouter.post(routes.userLogIn, postUserLogIn);
 userRouter.post(routes.userLogOut, postUserLogOut);
 userRouter.post(routes.userSignUp, postUserSignUp);
 userRouter.post(routes.userWithdraw, postUserWithdraw);
-
-userRouter.get(routes.google, googleLogin);
-userRouter.get(routes.googleCallback, googleLoginCallback);
 
 userRouter.post(
   routes.uploadBackgroundImage,

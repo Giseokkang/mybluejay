@@ -8,7 +8,7 @@ import device from "../utils/device";
 
 const Container = styled.div`
   width: 30%;
-  height: 63%;
+  height: 60%;
   background-color: white;
   border-radius: 20px;
   display: flex;
@@ -20,7 +20,7 @@ const Container = styled.div`
 
   @media ${device.laptop} {
     width: 40%;
-    height: 70%;
+    height: 60%;
   }
 
   @media ${device.tablet} {
@@ -29,7 +29,7 @@ const Container = styled.div`
 
   @media ${device.mobileL} {
     width: 90%;
-    height: 70%;
+    height: 60%;
     padding: 40px 55px;
   }
 
@@ -43,10 +43,10 @@ const TitleContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-bottom: 15px;
+  margin-bottom: 35px;
 
   @media ${device.mobileL} {
-    margin-bottom: 0px;
+    margin-bottom: 25px;
   }
 `;
 
@@ -204,7 +204,7 @@ const LoginForm = () => {
           <a>아이디가 없으신가요?</a>
         </Link>
       </SignUpMessage>
-      <SocailLoginBtnContainer>
+      {/* <SocailLoginBtnContainer>
         <SocialLoginBtn
           backgroundColor="#0984e3"
           onClick={() => {
@@ -223,7 +223,7 @@ const LoginForm = () => {
           <FaGoogle />
           <SocialLoginTitle>Google</SocialLoginTitle>
         </SocialLoginBtn>
-      </SocailLoginBtnContainer>
+      </SocailLoginBtnContainer> */}
     </Container>
   );
 };

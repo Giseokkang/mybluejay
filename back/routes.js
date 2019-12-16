@@ -46,16 +46,6 @@ const EDIT_COMMENT = "/:id/edit";
 
 // Images
 
-// Google
-
-const GOOGLE = "/auth/google";
-const GOOGLE_CALLBACK = "/auth/github/callback";
-
-// Facebook
-
-const FACEBOOK = "/auth/facebook";
-const FACEBOOK_CALLBACK = "/auth/facebook/callback";
-
 const routes = {
   user: USER,
   userDetail: id => {
@@ -170,11 +160,7 @@ const routes = {
       return `/comment/${id}/edit`;
     }
     return EDIT_COMMENT;
-  },
-  google: GOOGLE,
-  googleCallback: GOOGLE_CALLBACK,
-  facebook: FACEBOOK,
-  facebookCallback: FACEBOOK_CALLBACK
+  }
 };
 
 export default routes;
