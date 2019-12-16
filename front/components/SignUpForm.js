@@ -7,12 +7,14 @@ import device from "../utils/device";
 
 const Container = styled.div`
   width: 30%;
-  height: 70%;
+  height: 80%;
   background-color: white;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  padding: 30px 80px;
+  justify-content: center;
+  align-items: center;
+  padding: 0 80px;
   /* position: relative; */
 
   @media ${device.laptop} {
@@ -21,19 +23,19 @@ const Container = styled.div`
 
   @media ${device.tablet} {
     width: 50%;
-    height: 70%;
+    height: 80%;
   }
 
   @media ${device.mobileL} {
     width: 90%;
     height: 70%;
-    padding: 40px 55px;
+    padding: 20px 50px;
   }
 
   @media ${device.mobileS} {
     width: 90%;
     height: 70%;
-    padding: 40px 30px;
+    padding: 20px 30px;
   }
 `;
 
@@ -46,6 +48,7 @@ const TitleContainer = styled.div`
 
   @media ${device.mobileL} {
     margin-bottom: 0px;
+    margin-top: 0px;
   }
 `;
 
@@ -83,6 +86,7 @@ const Input = styled.input`
 
   @media ${device.mobileL} {
     width: 80%;
+    margin-bottom: 20px;
   }
 `;
 
