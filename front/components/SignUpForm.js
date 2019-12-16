@@ -28,14 +28,13 @@ const Container = styled.div`
 
   @media ${device.mobileL} {
     width: 90%;
-    height: 70%;
-    padding: 20px 50px;
+    height: 80%;
+    padding: 0 50px;
   }
 
   @media ${device.mobileS} {
     width: 90%;
-    height: 70%;
-    padding: 20px 30px;
+    padding: 0 30px;
   }
 `;
 
@@ -56,6 +55,10 @@ const Title = styled.span`
   font-weight: 600;
   font-size: 27px;
   color: black;
+
+  @media ${device.mobileL} {
+    font-size: 20px;
+  }
 `;
 
 const Form = styled.form`
@@ -84,6 +87,12 @@ const Input = styled.input`
     opacity: 1;
   }
 
+  @media ${device.laptop} {
+    width: 80%;
+    height: 20px;
+    margin-bottom: 20px;
+  }
+
   @media ${device.mobileL} {
     width: 80%;
     margin-bottom: 20px;
@@ -94,7 +103,7 @@ const SignUpBtn = styled.button`
   all: unset;
   border-radius: 10px;
   width: 75%;
-  height: 32px;
+  height: 25px;
   padding: 8px 20px;
   background-color: #c34c8a;
   color: white;
@@ -108,6 +117,11 @@ const SignUpBtn = styled.button`
   outline: none;
   &:hover {
     opacity: 1;
+  }
+
+  @media ${device.laptop} {
+    height: 20px;
+    padding: 8px 15px;
   }
 `;
 
