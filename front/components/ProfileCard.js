@@ -131,6 +131,10 @@ const FollowContainer = styled.div`
 const Follow = styled.span`
   margin-right: 10px;
   cursor: pointer;
+
+  &:hover {
+    color: ${SKYBLUE};
+  }
 `;
 
 const ProfileCard = ({ info }) => {

@@ -4,6 +4,7 @@ import { BORDER_COLOR, SKYBLUE, CHARACTER_COLOR } from "../utils/colors";
 import ProfilePicture from "./ProfilePicture";
 import useUser from "../hooks/useUser";
 import Link from "next/link";
+import device from "../utils/device";
 
 const transform = keyframes`
   from{
@@ -37,6 +38,10 @@ const FollowListContainer = styled.div`
   align-items: center;
   text-align: center;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+
+  @media ${device.tablet} {
+    margin-top: 50px;
+  }
 `;
 
 const MenuContainer = styled.div`
