@@ -202,8 +202,19 @@ const PostingCard = ({ post }) => {
                   <Time>{getFullDay(post.createdAt)}</Time>
                 </div>
                 {user.myInformation.id &&
-                  post.UserId &&
-                  user.myInformation.id === post.UserId && (
+                post.UserId &&
+                user.myInformation.id === post.UserId ? (
+                  <DeleteBtn
+                    onClick={e => {
+                      e.stopPropagation();
+                      turnOnPopUp({ postId: post.id });
+                    }}
+                  >
+                    <FaTrashAlt />
+                  </DeleteBtn>
+                ) : (
+                  user.myInformation.nickname &&
+                  user.myInformation.nickname === "admin" && (
                     <DeleteBtn
                       onClick={e => {
                         e.stopPropagation();
@@ -212,7 +223,8 @@ const PostingCard = ({ post }) => {
                     >
                       <FaTrashAlt />
                     </DeleteBtn>
-                  )}
+                  )
+                )}
               </PostingInfomationContainer>
             </UpsideContainer>
             <ContentContainer>
